@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Netlify Identity — required for Decap CMS login redirect */}
         <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" async />
       </head>
-      <body>
+      <body className="intro-lock">
         <OpeningMotion logo={settings.logo} />
         <Nav settings={settings} />
         <main>{children}</main>

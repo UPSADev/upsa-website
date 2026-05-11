@@ -14,7 +14,6 @@
     linear-gradient(135deg, var(--moss-deep) 0%, #163820 54%, #08170f 100%);
   color: #fff;
   isolation: isolate;
-  animation: openingFadeIn .28s ease-out both;
 }
 
 .opening-motion.is-leaving {
@@ -192,11 +191,6 @@
   transform: translateX(-120%);
   animation: openingSweep 1.15s .72s cubic-bezier(.7,0,.2,1) forwards;
   pointer-events: none;
-}
-
-@keyframes openingFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 @keyframes openingExit {

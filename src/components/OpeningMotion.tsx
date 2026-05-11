@@ -13,7 +13,10 @@ export default function OpeningMotion({ logo }: { logo: string }) {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (window.sessionStorage.getItem(INTRO_KEY) === 'true') {
-      const skipTimer = window.setTimeout(() => setVisible(false), 0);
+      const skipTimer = window.setTimeout(() => {
+        setVisible(false);
+        document.body.classList.remove('intro-lock');
+      }, 0);
       return () => window.clearTimeout(skipTimer);
     }
 
