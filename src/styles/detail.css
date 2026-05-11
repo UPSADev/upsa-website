@@ -1,0 +1,130 @@
+/* ============================================================
+   DETAIL PAGES (Event, Workshop single pages)
+   ============================================================ */
+
+.detail-hero {
+  min-height: 420px;
+  background: var(--moss-deep) center / cover no-repeat;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding-top: var(--nav-h);
+}
+.detail-hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(0deg, rgba(14,44,27,.92) 0%, rgba(14,44,27,.4) 55%, rgba(14,44,27,.55) 100%);
+}
+.detail-hero-inner {
+  position: relative;
+  z-index: 1;
+  padding: 48px 56px;
+  max-width: 900px;
+  color: #fff;
+}
+.detail-back {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.55);
+  display: inline-block;
+  margin-bottom: 20px;
+  transition: color .2s;
+}
+.detail-back:hover { color: rgba(255,255,255,.9); }
+.detail-hero-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
+.detail-category {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.55);
+}
+.detail-hero-inner h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 52px);
+  line-height: 1.06;
+  letter-spacing: -.025em;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+}
+.detail-hero-info {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  font-size: 13px;
+  color: rgba(255,255,255,.65);
+}
+
+/* Body layout */
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 56px;
+  padding: 56px 56px 100px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.detail-lead {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 1.55;
+  color: var(--ink);
+  font-variation-settings: "opsz" 72, "SOFT" 40;
+  margin-bottom: 32px;
+}
+
+/* Prose / rich text from markdown */
+.prose { font-size: 15px; line-height: 1.74; color: var(--ink-2); }
+.prose h2 { font-family: 'Fraunces', serif; font-weight: 300; font-size: 28px; margin: 36px 0 14px; letter-spacing: -.015em; color: var(--ink); }
+.prose h3 { font-size: 17px; font-weight: 600; margin: 28px 0 10px; color: var(--ink); }
+.prose p { margin-bottom: 18px; }
+.prose ul, .prose ol { margin: 0 0 18px 20px; }
+.prose li { margin-bottom: 8px; }
+.prose a { color: var(--moss); text-decoration: underline; }
+.prose strong { color: var(--ink); }
+
+/* Sidebar info card */
+.detail-sidebar {}
+.detail-info-card {
+  position: sticky;
+  top: calc(var(--nav-h) + 24px);
+  background: var(--paper-deep);
+  border: var(--hairline);
+  border-radius: var(--radius-sm);
+  padding: 28px 24px;
+}
+.detail-info-card h3 {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin-bottom: 20px;
+}
+.detail-info-card dl { display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; }
+.detail-info-card dt {
+  font-family: 'Geist Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-top: 1px;
+}
+.detail-info-card dd { font-size: 13.5px; color: var(--ink); }
+
+@media (max-width: 1024px) {
+  .detail-hero-inner { padding: 40px 32px; }
+  .detail-layout { padding: 48px 32px 80px; gap: 40px; }
+}
+@media (max-width: 768px) {
+  .detail-hero-inner { padding: 32px 20px; }
+  .detail-layout { grid-template-columns: 1fr; padding: 36px 20px 64px; }
+  .detail-info-card { position: static; }
+}
+@media (max-width: 480px) {
+  .detail-hero-inner { padding: 24px 16px; }
+  .detail-layout { padding: 28px 16px 48px; }
+}

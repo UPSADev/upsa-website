@@ -1,0 +1,106 @@
+/* ============================================================
+   RESOURCES PAGE
+   ============================================================ */
+
+/* Sticky category nav */
+.res-nav {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 40;
+  background: var(--paper);
+  border-bottom: var(--hairline);
+  padding: 12px 0;
+}
+.res-nav .container {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.res-nav .container::-webkit-scrollbar { display: none; }
+
+.res-nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  border: var(--hairline);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink-2);
+  white-space: nowrap;
+  transition: background .2s, color .2s, border-color .2s;
+  flex-shrink: 0;
+}
+.res-nav-item:hover {
+  background: var(--moss);
+  color: #fff;
+  border-color: var(--moss);
+}
+
+/* Page body */
+.res-page { padding-bottom: 0; }
+
+.res-section {
+  padding: 72px 0;
+  border-bottom: var(--hairline);
+}
+.res-section:nth-child(even) { background: var(--paper-deep); }
+
+.res-section-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 36px;
+}
+.res-icon { font-size: 32px; }
+
+.res-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.res-card {
+  background: var(--paper);
+  border: var(--hairline);
+  border-radius: var(--radius-sm);
+  padding: 24px 26px;
+  transition: box-shadow .25s;
+}
+.res-section:nth-child(even) .res-card { background: var(--paper); }
+.res-card:hover { box-shadow: 0 8px 28px -8px rgba(26,31,24,.1); }
+.res-card h3 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.res-card p  { font-size: 13.5px; line-height: 1.72; color: var(--ink-2); }
+
+/* Emergency callout at the bottom */
+.res-emergency {
+  background: var(--moss-deep);
+  padding: 32px 0;
+}
+.res-emergency .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.res-emergency span {
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255,255,255,.9);
+}
+
+@media (max-width: 1024px) {
+  .res-section { padding: 56px 0; }
+}
+@media (max-width: 768px) {
+  .res-grid { grid-template-columns: 1fr; }
+  .res-section { padding: 48px 0; }
+  .res-emergency .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

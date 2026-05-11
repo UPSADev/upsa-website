@@ -1,0 +1,59 @@
+---
+logo: /images/logos/upsa-logo.png
+footerDescription: United Pakistani Students & Alumni Association. A nationwide nonprofit network connecting students and alumni at 35+ US universities.
+contactEmail: info@unitedpsa.org
+websiteUrl: https://unitedpsa.org
+ctaLabel: Join the Network
+ctaHref: /join
+navLinks:
+  - label: Team
+    href: /team
+  - label: Chapters
+    href: /chapters
+  - label: Resources
+    href: /resources
+  - label: Emergency
+    href: /emergency
+socialLinks:
+  - label: LinkedIn
+    href: https://www.linkedin.com/company/united-pakistani-students-alumni-association
+  - label: Instagram
+    href: https://www.instagram.com/united_psa
+  - label: Facebook
+    href: https://www.facebook.com/profile.php?id=61574420823759
+footerColumns:
+  - title: Network
+    links:
+      - label: About UPSA
+        href: /about
+      - label: Leadership Team
+        href: /team
+      - label: University Chapters
+        href: /chapters
+      - label: Join the Network
+        href: /join
+  - title: Community
+    links:
+      - label: Events
+        href: /events
+      - label: Workshops
+        href: /workshops
+      - label: City Meetups
+        href: /meetups
+      - label: Resources
+        href: /resources
+      - label: Emergency Support
+        href: /emergency
+  - title: Connect
+    links:
+      - label: Email
+        href: mailto:info@unitedpsa.org
+      - label: Website
+        href: https://unitedpsa.org
+      - label: Instagram
+        href: https://www.instagram.com/united_psa
+      - label: LinkedIn
+        href: https://www.linkedin.com/company/united-pakistani-students-alumni-association
+      - label: Contact Us
+        href: /contact
+---

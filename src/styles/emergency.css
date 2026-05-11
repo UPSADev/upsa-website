@@ -1,0 +1,137 @@
+/* ============================================================
+   EMERGENCY PAGE
+   ============================================================ */
+
+.emergency-hero {
+  background: #7B1111;
+  color: #fff;
+  padding: calc(var(--nav-h) + 56px) 56px 72px;
+  position: relative;
+  overflow: hidden;
+}
+.emergency-hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 10% 100%, rgba(0,0,0,.35) 0%, transparent 60%);
+}
+.eh-inner { position: relative; max-width: 720px; }
+.eh-tag {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px; letter-spacing: .36em; text-transform: uppercase;
+  color: rgba(255,255,255,.5); display: block; margin-bottom: 20px;
+}
+.emergency-hero h1 {
+  font-family: 'Fraunces', serif; font-weight: 300;
+  font-size: clamp(36px, 5vw, 64px); line-height: 1.04;
+  letter-spacing: -.03em;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+}
+.emergency-hero h1 em { font-style: italic; font-weight: 400; color: rgba(255,255,255,.75); }
+.emergency-hero p {
+  margin-top: 20px; font-size: 16px; line-height: 1.7;
+  color: rgba(255,255,255,.7); max-width: 540px;
+}
+.eh-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-top: 36px; padding: 16px 28px;
+  background: #fff; color: #7B1111;
+  border-radius: var(--radius-pill); font-size: 14px; font-weight: 600;
+  transition: background .25s;
+}
+.eh-btn:hover { background: rgba(255,255,255,.9); }
+
+/* Hotlines */
+.emergency-section { padding: 64px 0; border-bottom: var(--hairline); }
+.emergency-section--alt { background: var(--paper-deep); }
+
+.urgent-note {
+  background: var(--paper);
+  padding: 34px 0;
+}
+.urgent-note h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #7B1111;
+}
+.urgent-note p {
+  margin-top: 10px;
+  max-width: 840px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.hotlines-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 36px;
+}
+.hotline-card {
+  background: var(--paper-deep); border: var(--hairline);
+  border-radius: var(--radius-sm); padding: 20px 22px;
+  transition: box-shadow .25s;
+}
+.hotline-card:hover { box-shadow: 0 8px 28px -8px rgba(26,31,24,.12); }
+.hotline-icon { font-size: 24px; flex-shrink: 0; }
+.hotline-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.hotline-number {
+  font-family: 'Fraunces', serif; font-weight: 400; font-size: 18px;
+  color: var(--moss); margin: 4px 0;
+  font-variation-settings: "opsz" 72, "SOFT" 40;
+}
+.hotline-number a { color: var(--moss); }
+.hotline-number a:hover { text-decoration: underline; }
+.hotline-note { font-size: 11.5px; color: var(--ink-3); }
+
+/* Resource categories */
+.er-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.er-icon { font-size: 28px; }
+
+.er-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.er-card {
+  background: var(--paper); border: var(--hairline);
+  border-radius: var(--radius-sm); padding: 24px;
+}
+.er-card h3 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.er-card p { font-size: 13.5px; line-height: 1.72; color: var(--ink-2); }
+.er-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.er-links a {
+  display: inline-flex;
+  padding: 7px 11px;
+  border: 1px solid rgba(31,77,50,.28);
+  border-radius: var(--radius-pill);
+  color: var(--moss);
+  font-size: 12px;
+  font-weight: 600;
+}
+.er-links a:hover {
+  background: var(--moss);
+  color: #fff;
+}
+
+/* Final reach-out */
+.emergency-reach { padding: 80px 0; }
+
+@media (max-width: 1024px) {
+  .emergency-hero { padding: calc(var(--nav-h) + 40px) 32px 56px; }
+  .hotlines-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .emergency-hero { padding: calc(var(--nav-h) + 28px) 20px 48px; }
+  .hotlines-grid { grid-template-columns: 1fr; }
+  .er-grid { grid-template-columns: 1fr; }
+  .emergency-section { padding: 48px 0; }
+}
+@media (max-width: 480px) {
+  .emergency-hero { padding: calc(var(--nav-h) + 20px) 16px 40px; }
+}

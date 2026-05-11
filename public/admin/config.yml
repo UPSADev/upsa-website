@@ -1,0 +1,417 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: public/uploads
+public_folder: /uploads
+
+# Enables local CMS testing with: npx decap-server
+local_backend: true
+
+collections:
+
+  - name: pages
+    label: Site Pages & Settings
+    files:
+      - name: site
+        label: Site Navigation & Footer
+        file: content/pages/site.md
+        fields:
+          - { label: Logo, name: logo, widget: image }
+          - { label: Footer Description, name: footerDescription, widget: text }
+          - { label: Contact Email, name: contactEmail, widget: string }
+          - { label: Website URL, name: websiteUrl, widget: string }
+          - { label: Header CTA Label, name: ctaLabel, widget: string }
+          - { label: Header CTA Link, name: ctaHref, widget: string }
+          - label: Main Nav Links
+            name: navLinks
+            widget: list
+            fields:
+              - { label: Label, name: label, widget: string }
+              - { label: Link, name: href, widget: string }
+          - label: Social Links
+            name: socialLinks
+            widget: list
+            fields:
+              - { label: Label, name: label, widget: string }
+              - { label: Link, name: href, widget: string }
+          - label: Footer Columns
+            name: footerColumns
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - label: Links
+                name: links
+                widget: list
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Link, name: href, widget: string }
+      - name: home
+        label: Homepage Copy
+        file: content/pages/home.md
+        fields:
+          - { label: Hero Line 1, name: heroTitleLine1, widget: string }
+          - { label: Hero Line 2, name: heroTitleLine2, widget: string }
+          - { label: Hero Line 3, name: heroTitleLine3, widget: string }
+          - { label: Hero Emphasis, name: heroEmphasis, widget: string }
+          - { label: Hero Description, name: heroDescription, widget: text }
+          - { label: Hero Primary Label, name: heroPrimaryLabel, widget: string }
+          - { label: Hero Primary Link, name: heroPrimaryHref, widget: string }
+          - { label: Hero Secondary Label, name: heroSecondaryLabel, widget: string }
+          - { label: Hero Secondary Link, name: heroSecondaryHref, widget: string }
+          - label: Hero Stats
+            name: heroStats
+            widget: list
+            fields:
+              - { label: Value, name: value, widget: string }
+              - { label: Suffix, name: suffix, widget: string, required: false }
+              - { label: Label, name: label, widget: string }
+          - { label: Chapter Marquee, name: chapters, widget: list, field: { label: Chapter, name: chapter, widget: string } }
+          - { label: About Tag, name: aboutTag, widget: string }
+          - { label: About Title, name: aboutTitle, widget: string }
+          - { label: About Title Emphasis, name: aboutTitleEmphasis, widget: string, required: false }
+          - { label: About Paragraphs, name: aboutParagraphs, widget: list, field: { label: Paragraph, name: paragraph, widget: text } }
+          - { label: Founder Quote, name: founderQuote, widget: text }
+          - { label: Founder Credit, name: founderCredit, widget: string }
+          - { label: About CTA Label, name: aboutCtaLabel, widget: string }
+          - { label: About CTA Link, name: aboutCtaHref, widget: string }
+          - { label: Emergency Strip Title, name: emergencyTitle, widget: string }
+          - { label: Emergency Strip Description, name: emergencyDescription, widget: text }
+          - { label: Emergency Strip CTA Label, name: emergencyCtaLabel, widget: string }
+          - { label: Emergency Strip CTA Link, name: emergencyCtaHref, widget: string }
+          - { label: Upcoming Meetups Tag, name: meetupsTag, widget: string }
+          - { label: Upcoming Meetups Title, name: meetupsTitle, widget: string }
+          - { label: Upcoming Meetups Title Emphasis, name: meetupsTitleEmphasis, widget: string, required: false }
+          - { label: Past Meetups Tag, name: pastMeetupsTag, widget: string }
+          - { label: Past Meetups Title, name: pastMeetupsTitle, widget: string }
+          - { label: Past Meetups Title Emphasis, name: pastMeetupsTitleEmphasis, widget: string, required: false }
+          - { label: Workshops Tag, name: workshopsTag, widget: string }
+          - { label: Workshops Title, name: workshopsTitle, widget: string }
+          - { label: Workshops Title Emphasis, name: workshopsTitleEmphasis, widget: string, required: false }
+          - { label: Values Tag, name: valuesTag, widget: string }
+          - { label: Values Title, name: valuesTitle, widget: string }
+          - { label: Values Title Emphasis, name: valuesTitleEmphasis, widget: string, required: false }
+          - label: Core Values
+            name: values
+            widget: list
+            fields:
+              - { label: Number, name: number, widget: string }
+              - { label: Title, name: title, widget: string }
+              - { label: Emphasis, name: emphasis, widget: string, required: false }
+              - { label: Description, name: description, widget: text }
+          - { label: Join Tag, name: joinTag, widget: string }
+          - { label: Join Title, name: joinTitle, widget: string }
+          - { label: Join Title Emphasis, name: joinTitleEmphasis, widget: string, required: false }
+          - { label: Join Description, name: joinDescription, widget: text }
+          - { label: Join Primary Label, name: joinPrimaryLabel, widget: string }
+          - { label: Join Primary Link, name: joinPrimaryHref, widget: string }
+          - { label: Join Secondary Label, name: joinSecondaryLabel, widget: string }
+          - { label: Join Secondary Link, name: joinSecondaryHref, widget: string }
+      - name: about
+        label: About Page
+        file: content/pages/about.md
+        fields:
+          - { label: Hero Tag, name: heroTag, widget: string }
+          - { label: Hero Title, name: heroTitle, widget: string }
+          - { label: Hero Title Emphasis, name: heroTitleEmphasis, widget: string, required: false }
+          - { label: Hero Description, name: heroDescription, widget: text }
+          - { label: Story Tag, name: storyTag, widget: string }
+          - { label: Story Title, name: storyTitle, widget: string }
+          - { label: Story Title Emphasis, name: storyTitleEmphasis, widget: string, required: false }
+          - { label: Story Paragraphs, name: storyParagraphs, widget: list, field: { label: Paragraph, name: paragraph, widget: text } }
+          - { label: Founder Tag, name: founderTag, widget: string }
+          - { label: Founder Quote, name: founderQuote, widget: text }
+          - { label: Founder Credit, name: founderCredit, widget: string }
+          - { label: Mission Title, name: missionTitle, widget: string }
+          - { label: Mission Description, name: missionDescription, widget: text }
+          - { label: Vision Title, name: visionTitle, widget: string }
+          - { label: Vision Description, name: visionDescription, widget: text }
+          - { label: Culture Tag, name: cultureTag, widget: string }
+          - { label: Culture Title, name: cultureTitle, widget: string }
+          - { label: Culture Title Emphasis, name: cultureTitleEmphasis, widget: string, required: false }
+          - { label: Culture Description, name: cultureDescription, widget: text }
+          - label: Culture Cards
+            name: cultureCards
+            widget: list
+            fields:
+              - { label: Icon Text, name: icon, widget: string }
+              - { label: Title, name: title, widget: string }
+              - { label: Description, name: desc, widget: text }
+          - { label: Values Tag, name: valuesTag, widget: string }
+          - { label: Values Title, name: valuesTitle, widget: string }
+          - { label: Values Title Emphasis, name: valuesTitleEmphasis, widget: string, required: false }
+          - label: Values
+            name: values
+            widget: list
+            fields:
+              - { label: Number, name: n, widget: string }
+              - { label: Title, name: title, widget: string }
+              - { label: Body, name: body, widget: text }
+          - label: Stats
+            name: stats
+            widget: list
+            fields:
+              - { label: Number, name: n, widget: string }
+              - { label: Label, name: l, widget: string }
+          - { label: CTA Title, name: ctaTitle, widget: string }
+          - { label: CTA Title Emphasis, name: ctaTitleEmphasis, widget: string, required: false }
+          - { label: CTA Primary Label, name: ctaPrimaryLabel, widget: string }
+          - { label: CTA Primary Link, name: ctaPrimaryHref, widget: string }
+          - { label: CTA Secondary Label, name: ctaSecondaryLabel, widget: string }
+          - { label: CTA Secondary Link, name: ctaSecondaryHref, widget: string }
+      - name: join
+        label: Join Page
+        file: content/pages/join.md
+        fields:
+          - { label: Hero Tag, name: heroTag, widget: string }
+          - { label: Hero Title, name: heroTitle, widget: string }
+          - { label: Hero Title Emphasis, name: heroTitleEmphasis, widget: string, required: false }
+          - { label: Hero Description, name: heroDescription, widget: text }
+          - label: Join Paths
+            name: paths
+            widget: list
+            fields:
+              - { label: Tag, name: tag, widget: string }
+              - { label: Title, name: title, widget: string }
+              - { label: Description, name: desc, widget: text }
+              - { label: Perks, name: perks, widget: list, field: { label: Perk, name: perk, widget: string } }
+              - { label: Form URL, name: url, widget: string }
+              - { label: CTA Label, name: cta, widget: string }
+              - { label: Accent CSS Value, name: accent, widget: string, hint: "Example: var(--moss)" }
+          - { label: Process Tag, name: processTag, widget: string }
+          - { label: Process Title, name: processTitle, widget: string }
+          - { label: Process Title Emphasis, name: processTitleEmphasis, widget: string, required: false }
+          - label: Steps
+            name: steps
+            widget: list
+            fields:
+              - { label: Number, name: n, widget: string }
+              - { label: Title, name: title, widget: string }
+              - { label: Description, name: desc, widget: text }
+          - { label: Questions Text, name: questionsText, widget: string }
+          - { label: Questions CTA Label, name: questionsCtaLabel, widget: string }
+          - { label: Questions CTA Link, name: questionsCtaHref, widget: string }
+      - name: contact
+        label: Contact Page
+        file: content/pages/contact.md
+        fields:
+          - { label: Hero Tag, name: heroTag, widget: string }
+          - { label: Hero Title, name: heroTitle, widget: string }
+          - { label: Hero Title Emphasis, name: heroTitleEmphasis, widget: string, required: false }
+          - { label: Hero Description, name: heroDescription, widget: text }
+          - { label: Info Tag, name: infoTag, widget: string }
+          - { label: Info Title, name: infoTitle, widget: string }
+          - { label: Info Title Emphasis, name: infoTitleEmphasis, widget: string, required: false }
+          - label: Contact Items
+            name: contacts
+            widget: list
+            fields:
+              - { label: Icon Text, name: icon, widget: string }
+              - { label: Label, name: label, widget: string }
+              - { label: Link, name: href, widget: string }
+              - { label: Display Text, name: text, widget: string }
+          - label: Social Links
+            name: socials
+            widget: list
+            fields:
+              - { label: Label, name: label, widget: string }
+              - { label: Link, name: href, widget: string }
+          - { label: Success Title, name: successTitle, widget: string }
+          - { label: Success Description, name: successDescription, widget: text }
+          - { label: Submit Button Label, name: submitLabel, widget: string }
+      - name: resources
+        label: Resources Page
+        file: content/pages/resources.md
+        fields:
+          - { label: Hero Tag, name: heroTag, widget: string }
+          - { label: Hero Title, name: heroTitle, widget: string }
+          - { label: Hero Title Emphasis, name: heroTitleEmphasis, widget: string, required: false }
+          - { label: Hero Description, name: heroDescription, widget: text }
+          - label: Categories
+            name: categories
+            widget: list
+            fields:
+              - { label: ID, name: id, widget: string }
+              - { label: Icon/Number, name: icon, widget: string }
+              - { label: Title, name: title, widget: string }
+              - label: Items
+                name: items
+                widget: list
+                fields:
+                  - { label: Title, name: title, widget: string }
+                  - { label: Description, name: desc, widget: text }
+          - { label: Emergency Text, name: emergencyText, widget: text }
+          - { label: Emergency CTA Label, name: emergencyCtaLabel, widget: string }
+          - { label: Emergency CTA Link, name: emergencyCtaHref, widget: string }
+      - name: emergency
+        label: Emergency Page
+        file: content/pages/emergency.md
+        fields:
+          - { label: Hero Tag, name: heroTag, widget: string }
+          - { label: Hero Title, name: heroTitle, widget: string }
+          - { label: Hero Title Emphasis, name: heroTitleEmphasis, widget: string, required: false }
+          - { label: Hero Description, name: heroDescription, widget: text }
+          - { label: Emergency Email, name: emergencyEmail, widget: string }
+          - { label: Urgent Title, name: urgentTitle, widget: string }
+          - { label: Urgent Description, name: urgentDescription, widget: text }
+          - label: Hotlines
+            name: hotlines
+            widget: list
+            fields:
+              - { label: Name, name: name, widget: string }
+              - { label: Number/Text, name: number, widget: string }
+              - { label: Note, name: note, widget: text }
+              - { label: Link, name: href, widget: string }
+          - label: Emergency Resource Sections
+            name: sections
+            widget: list
+            fields:
+              - { label: Category, name: cat, widget: string }
+              - label: Items
+                name: items
+                widget: list
+                fields:
+                  - { label: Title, name: title, widget: string }
+                  - { label: Description, name: desc, widget: text }
+                  - label: Links
+                    name: links
+                    widget: list
+                    required: false
+                    fields:
+                      - { label: Label, name: label, widget: string }
+                      - { label: Link, name: href, widget: string }
+          - { label: Reach Title, name: reachTitle, widget: string }
+          - { label: Reach Title Emphasis, name: reachTitleEmphasis, widget: string, required: false }
+          - { label: Reach Description, name: reachDescription, widget: text }
+
+  # ── EVENTS ──────────────────────────────────────────────────────────────────
+  - name: events
+    label: Events
+    label_singular: Event
+    folder: content/events
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: End Date, name: endDate, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, required: false }
+      - { label: Location, name: location, widget: string, hint: "e.g. Chicago, IL or Online" }
+      - { label: State, name: state, widget: string, required: false, hint: "e.g. Illinois" }
+      - label: Category
+        name: category
+        widget: select
+        options: [Social, Professional, Cultural, Workshop, Conference, Other]
+      - label: Status
+        name: status
+        widget: select
+        options: [upcoming, past]
+        default: upcoming
+      - { label: Featured, name: featured, widget: boolean, default: false, required: false }
+      - { label: Short Description, name: description, widget: text }
+      - { label: Cover Image, name: image, widget: image, required: false }
+      - { label: Register / RSVP URL, name: registerUrl, widget: string, required: false }
+      - { label: Full Details (Markdown), name: body, widget: markdown, required: false }
+
+  # ── WORKSHOPS ────────────────────────────────────────────────────────────────
+  - name: workshops
+    label: Workshops
+    label_singular: Workshop
+    folder: content/workshops
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: Location, name: location, widget: string }
+      - { label: Host, name: host, widget: string, hint: "e.g. UPSA Chicago Chapter" }
+      - label: Type
+        name: type
+        widget: select
+        options: [Workshop, Seminar, Webinar, Panel, Other]
+        default: Workshop
+      - label: Status
+        name: status
+        widget: select
+        options: [upcoming, past]
+        default: upcoming
+      - { label: Featured, name: featured, widget: boolean, default: false, required: false }
+      - { label: Show on Homepage, name: displayOnHomepage, widget: boolean, default: false, required: false, hint: "Turn on to include this workshop/session on the homepage." }
+      - { label: Homepage Order, name: homepageOrder, widget: number, required: false, hint: "Lower numbers appear first on the homepage." }
+      - { label: Seats Available, name: seats, widget: number, required: false }
+      - { label: Short Description, name: description, widget: text }
+      - { label: Flyer / Cover Image, name: image, widget: image, required: false, hint: "Use a vertical flyer/poster when this appears on the homepage." }
+      - { label: Register URL, name: registerUrl, widget: string, required: false }
+      - { label: Full Details (Markdown), name: body, widget: markdown, required: false }
+
+  # ── MEETUPS ──────────────────────────────────────────────────────────────────
+  - name: meetups
+    label: City Meetups
+    label_singular: Meetup
+    folder: content/meetups
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    fields:
+      - { label: Title, name: title, widget: string, hint: "e.g. Chicago Meetup — Spring 2026" }
+      - { label: City, name: city, widget: string, hint: "e.g. Chicago" }
+      - { label: State, name: state, widget: string, hint: "e.g. Illinois" }
+      - { label: State Code, name: stateCode, widget: string, hint: "e.g. IL" }
+      - { label: Date, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - label: Status
+        name: status
+        widget: select
+        options: [upcoming, past]
+        default: past
+      - { label: Cover Photo, name: coverImage, widget: image }
+      - { label: Homepage Image, name: homepageImage, widget: image, required: false, hint: "For upcoming meetups, use a wide city skyline/cityscape image. For past meetups, use a real meetup photo." }
+      - { label: Register URL, name: registerUrl, widget: string, required: false, hint: "Used for upcoming meetup registration buttons." }
+      - { label: Show on Homepage, name: displayOnHomepage, widget: boolean, default: false, required: false }
+      - { label: Homepage Order, name: homepageOrder, widget: number, required: false, hint: "Lower numbers appear first on the homepage." }
+      - label: Photo Gallery
+        name: photos
+        widget: list
+        field: { label: Photo, name: photo, widget: image }
+        hint: "Upload all photos from the meetup — they appear in the gallery"
+      - { label: Attendees (count), name: attendees, widget: number, required: false }
+      - { label: Short Description, name: description, widget: text }
+      - { label: Full Recap (Markdown), name: body, widget: markdown, required: false }
+
+  # ── TEAM ─────────────────────────────────────────────────────────────────────
+  - name: team
+    label: Team Members
+    label_singular: Team Member
+    folder: content/team
+    create: true
+    slug: "{{slug}}"
+    identifier_field: name
+    fields:
+      - { label: Full Name, name: name, widget: string }
+      - { label: Role / Title, name: role, widget: string, hint: "e.g. Founder & President" }
+      - { label: Display Order, name: order, widget: number, default: 99, hint: "Lower number appears first (1 = top)" }
+      - { label: Short Bio, name: bio, widget: text, required: false }
+      - { label: Photo, name: photo, widget: image, required: false }
+      - { label: LinkedIn URL, name: linkedin, widget: string, required: false }
+      - { label: Email, name: email, widget: string, required: false }
+      - { label: Extended Bio (Markdown), name: body, widget: markdown, required: false }
+
+  # ── CHAPTERS ─────────────────────────────────────────────────────────────────
+  - name: chapters
+    label: University Chapters
+    label_singular: Chapter
+    folder: content/chapters
+    create: true
+    slug: "{{slug}}"
+    identifier_field: university
+    fields:
+      - { label: University Name, name: university, widget: string }
+      - { label: City, name: city, widget: string }
+      - { label: State, name: state, widget: string, hint: "e.g. Illinois" }
+      - { label: State Code, name: stateCode, widget: string, hint: "e.g. IL" }
+      - { label: Year Founded, name: founded, widget: string, required: false, hint: "e.g. 2022" }
+      - { label: Member Count, name: memberCount, widget: number, required: false }
+      - { label: Chapter Logo, name: logo, widget: image, required: false }
+      - { label: Instagram URL, name: instagram, widget: string, required: false }
+      - { label: Email, name: email, widget: string, required: false }
+      - { label: Notes (Markdown), name: body, widget: markdown, required: false }

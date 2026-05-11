@@ -1,0 +1,279 @@
+.intro-lock {
+  overflow: hidden;
+}
+
+.opening-motion {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(232,239,229,.18), transparent 30%),
+    linear-gradient(135deg, var(--moss-deep) 0%, #163820 54%, #08170f 100%);
+  color: #fff;
+  isolation: isolate;
+  animation: openingFadeIn .28s ease-out both;
+}
+
+.opening-motion.is-leaving {
+  animation: openingExit .55s cubic-bezier(.7,0,.2,1) forwards;
+}
+
+.opening-map {
+  position: absolute;
+  inset: 0;
+  opacity: .72;
+  transform: scale(1.03);
+}
+
+.opening-map::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background-image:
+    linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
+  background-size: 68px 68px;
+  mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 68%);
+  animation: openingGrid 1.5s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.opening-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.72), transparent);
+  transform-origin: left center;
+  opacity: 0;
+  animation: openingTrace 1.15s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+.line-a {
+  left: 12%;
+  top: 34%;
+  width: 32vw;
+  transform: rotate(12deg) scaleX(0);
+}
+
+.line-b {
+  left: 40%;
+  top: 24%;
+  width: 44vw;
+  transform: rotate(154deg) scaleX(0);
+  animation-delay: .12s;
+}
+
+.line-c {
+  left: 28%;
+  top: 66%;
+  width: 48vw;
+  transform: rotate(-17deg) scaleX(0);
+  animation-delay: .2s;
+}
+
+.line-d {
+  left: 62%;
+  top: 55%;
+  width: 28vw;
+  transform: rotate(72deg) scaleX(0);
+  animation-delay: .32s;
+}
+
+.opening-dot {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 1px solid rgba(255,255,255,.78);
+  border-radius: 50%;
+  background: rgba(232,239,229,.28);
+  box-shadow: 0 0 28px rgba(232,239,229,.5);
+  opacity: 0;
+  transform: scale(.45);
+  animation: openingDot .65s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+.dot-a { left: 15%; top: 33%; animation-delay: .24s; }
+.dot-b { left: 39%; top: 41%; animation-delay: .34s; }
+.dot-c { left: 67%; top: 24%; animation-delay: .44s; }
+.dot-d { left: 30%; top: 65%; animation-delay: .54s; }
+.dot-e { left: 78%; top: 59%; animation-delay: .64s; }
+
+.opening-center {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 22px;
+  padding: 24px;
+  transform: translateY(10px);
+  opacity: 0;
+  animation: openingCenter .72s .72s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+.opening-motion.is-leaving .opening-center,
+.opening-motion.is-leaving .opening-map,
+.opening-motion.is-leaving .opening-sweep {
+  animation: openingElementsExit .42s cubic-bezier(.7,0,.2,1) forwards;
+}
+
+.opening-logo-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 132px;
+}
+
+.opening-logo-wrap::before,
+.opening-logo-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  transform: scale(.7);
+  opacity: 0;
+  animation: openingRing 1.4s .58s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+.opening-logo-wrap::after {
+  inset: 10px;
+  animation-delay: .72s;
+}
+
+.opening-logo {
+  position: relative;
+  z-index: 1;
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.28);
+}
+
+.opening-wordmark {
+  display: grid;
+  gap: 8px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.opening-wordmark span {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(44px, 8vw, 86px);
+  font-weight: 300;
+  line-height: .9;
+  letter-spacing: 0;
+  font-variation-settings: "opsz" 144, "SOFT" 20;
+  clip-path: inset(0 100% 0 0);
+  animation: openingReveal .78s .86s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+.opening-wordmark small {
+  display: block;
+  max-width: min(520px, calc(100vw - 40px));
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  line-height: 1.7;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.62);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: openingCaption .62s 1.08s ease-out forwards;
+}
+
+.opening-sweep {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(100deg, transparent 0%, rgba(255,255,255,.16) 45%, transparent 62%);
+  transform: translateX(-120%);
+  animation: openingSweep 1.15s .72s cubic-bezier(.7,0,.2,1) forwards;
+  pointer-events: none;
+}
+
+@keyframes openingFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes openingExit {
+  to {
+    opacity: 0;
+    transform: scale(1.035);
+    visibility: hidden;
+  }
+}
+
+@keyframes openingElementsExit {
+  to { opacity: 0; transform: translateY(-14px) scale(.98); }
+}
+
+@keyframes openingGrid {
+  from { opacity: 0; transform: scale(1.08); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes openingTrace {
+  to { opacity: 1; transform: rotate(var(--trace-rotate, 0deg)) scaleX(1); }
+}
+
+.line-a { --trace-rotate: 12deg; }
+.line-b { --trace-rotate: 154deg; }
+.line-c { --trace-rotate: -17deg; }
+.line-d { --trace-rotate: 72deg; }
+
+@keyframes openingDot {
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes openingCenter {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes openingRing {
+  45% { opacity: 1; }
+  to { opacity: 0; transform: scale(1.24); }
+}
+
+@keyframes openingReveal {
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes openingCaption {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes openingSweep {
+  to { transform: translateX(120%); }
+}
+
+@media (max-width: 640px) {
+  .opening-logo-wrap {
+    width: 112px;
+    height: 112px;
+  }
+
+  .opening-logo {
+    width: 94px;
+    height: 94px;
+  }
+
+  .opening-wordmark small {
+    font-size: 9px;
+    letter-spacing: .18em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opening-motion,
+  .opening-motion *,
+  .opening-motion::before,
+  .opening-motion::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

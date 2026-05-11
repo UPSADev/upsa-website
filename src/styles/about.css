@@ -1,0 +1,208 @@
+/* ============================================================
+   ABOUT PAGE
+   ============================================================ */
+
+/* Story */
+.about-story { padding: 80px 0; border-bottom: var(--hairline); }
+
+.story-grid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 64px;
+  align-items: start;
+}
+
+.story-text p {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+.story-text p + p { margin-top: 16px; }
+
+.story-note-col {}
+.story-note {
+  background: var(--moss-deep);
+  border-radius: var(--radius-sm);
+  padding: 36px 32px;
+  position: relative;
+}
+.story-note::before {
+  content: '\201C';
+  position: absolute;
+  top: 16px; left: 28px;
+  font-family: 'Fraunces', serif;
+  font-size: 72px;
+  line-height: 1;
+  color: rgba(255,255,255,.15);
+  pointer-events: none;
+  font-variation-settings: "opsz" 144;
+}
+
+.story-note-tag {
+  font-family: 'Geist Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  display: block;
+  margin-bottom: 20px;
+}
+.story-note blockquote {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: rgba(255,255,255,.85);
+  font-style: italic;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.story-note cite {
+  display: block;
+  margin-top: 20px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  color: rgba(255,255,255,.5);
+}
+
+/* Mission & Vision */
+.about-mv {
+  padding: 80px 0;
+  background: var(--paper-deep);
+  border-bottom: var(--hairline);
+}
+
+.mv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  border: var(--hairline);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.mv-box {
+  background: var(--paper);
+  padding: 40px 44px;
+}
+.mv-box p {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
+/* Culture */
+.about-culture { padding: 80px 0; border-bottom: var(--hairline); }
+
+.about-culture-sub {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  max-width: 540px;
+}
+
+.culture-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 44px;
+}
+.culture-card {
+  background: var(--paper-deep);
+  border: var(--hairline);
+  border-radius: var(--radius-sm);
+  padding: 28px 24px;
+  transition: box-shadow .25s;
+}
+.culture-card:hover { box-shadow: 0 8px 24px -8px rgba(26,31,24,.1); }
+.culture-icon { font-size: 28px; display: block; margin-bottom: 14px; }
+.culture-card h3 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.culture-card p  { font-size: 13px; line-height: 1.65; color: var(--ink-2); }
+
+/* Values */
+.about-values {
+  padding: 80px 0;
+  background: var(--paper-deep);
+  border-bottom: var(--hairline);
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 44px;
+}
+.value-item {
+  padding: 28px 0;
+  border-top: 2px solid var(--moss);
+}
+.value-num {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .3em;
+  color: var(--moss);
+  display: block;
+  margin-bottom: 12px;
+}
+.value-item h3 { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.value-item p  { font-size: 13.5px; line-height: 1.65; color: var(--ink-2); }
+
+/* Stats bar */
+.about-stats {
+  background: var(--moss-deep);
+  padding: 48px 0;
+}
+.about-stats .container {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.about-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+.about-stat-n {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(32px, 4vw, 52px);
+  color: #fff;
+  line-height: 1;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+}
+.about-stat-l {
+  font-size: 11.5px;
+  letter-spacing: .06em;
+  color: rgba(255,255,255,.55);
+  text-transform: uppercase;
+}
+
+/* Join CTA */
+.about-cta { padding: 80px 0; }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .story-grid { grid-template-columns: 1fr; gap: 40px; }
+  .culture-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .about-story,
+  .about-mv,
+  .about-culture,
+  .about-values,
+  .about-cta { padding: 56px 0; }
+
+  .mv-grid { grid-template-columns: 1fr; }
+  .mv-box { padding: 32px 28px; }
+  .values-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-stats .container { justify-content: center; }
+}
+@media (max-width: 480px) {
+  .culture-grid { grid-template-columns: 1fr; }
+  .values-grid { grid-template-columns: 1fr; }
+  .about-stats .container { gap: 32px; }
+}
