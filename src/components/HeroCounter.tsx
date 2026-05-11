@@ -16,6 +16,7 @@ export default function HeroCounter({ value, suffix }: { value: string; suffix?:
   const target = useMemo(() => parseStatValue(value), [value]);
   const [current, setCurrent] = useState(target ? 0 : null);
   const counterRef = useRef<HTMLSpanElement>(null);
+  const hasRunRef = useRef(false);
 
   useEffect(() => {
     if (!target) return;
@@ -26,7 +27,26 @@ export default function HeroCounter({ value, suffix }: { value: string; suffix?:
     const targetValue = target;
     let frame = 0;
     let startTime = 0;
+    let mutationObserver: MutationObserver | null = null;
     const duration = 1500;
+
+    function runWhenIntroIsDone() {
+      if (hasRunRef.current) return;
+
+      if (document.body.classList.contains('intro-lock')) {
+        mutationObserver = new MutationObserver(() => {
+          if (document.body.classList.contains('intro-lock')) return;
+          mutationObserver?.disconnect();
+          runWhenIntroIsDone();
+        });
+
+        mutationObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        return;
+      }
+
+      hasRunRef.current = true;
+      frame = window.requestAnimationFrame(animate);
+    }
 
     function animate(time: number) {
       if (!startTime) startTime = time;
@@ -42,7 +62,7 @@ export default function HeroCounter({ value, suffix }: { value: string; suffix?:
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
-        frame = window.requestAnimationFrame(animate);
+        runWhenIntroIsDone();
         observer.disconnect();
       },
       { threshold: 0.4 }
@@ -52,6 +72,7 @@ export default function HeroCounter({ value, suffix }: { value: string; suffix?:
 
     return () => {
       observer.disconnect();
+      mutationObserver?.disconnect();
       window.cancelAnimationFrame(frame);
     };
   }, [target]);
