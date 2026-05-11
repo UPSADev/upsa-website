@@ -294,8 +294,8 @@ collections:
     identifier_field: title
     fields:
       - { label: Title, name: title, widget: string }
-      - { label: Date, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
-      - { label: End Date, name: endDate, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, required: false }
+      - { label: Date, name: date, widget: date, format: "YYYY-MM-DD" }
+      - { label: End Date, name: endDate, widget: date, format: "YYYY-MM-DD", required: false }
       - { label: Location, name: location, widget: string, hint: "e.g. Chicago, IL or Online" }
       - { label: State, name: state, widget: string, required: false, hint: "e.g. Illinois" }
       - label: Category
@@ -323,7 +323,7 @@ collections:
     identifier_field: title
     fields:
       - { label: Title, name: title, widget: string }
-      - { label: Date, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: Date, name: date, widget: date, format: "YYYY-MM-DD" }
       - { label: Location, name: location, widget: string }
       - { label: Host, name: host, widget: string, hint: "e.g. UPSA Chicago Chapter" }
       - label: Type
@@ -358,7 +358,7 @@ collections:
       - { label: City, name: city, widget: string, hint: "e.g. Chicago" }
       - { label: State, name: state, widget: string, hint: "e.g. Illinois" }
       - { label: State Code, name: stateCode, widget: string, hint: "e.g. IL" }
-      - { label: Date, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: Date, name: date, widget: date, format: "YYYY-MM-DD" }
       - label: Status
         name: status
         widget: select

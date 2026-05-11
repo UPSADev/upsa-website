@@ -406,17 +406,36 @@ export function getChapters(): Chapter[] {
 // ---- Helpers ----
 
 // Formats "2026-06-15" → "June 15, 2026"
+function parseContentDate(value: unknown): Date | null {
+  if (value instanceof Date && !Number.isNaN(value.getTime())) return value;
+  if (typeof value !== 'string') return null;
+
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+
+  const dateOnly = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  const normalized = dateOnly ? `${dateOnly[1]}-${dateOnly[2]}-${dateOnly[3]}T12:00:00` : trimmed;
+  const parsed = new Date(normalized);
+
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
 export function formatDate(iso: string): string {
-  const d = new Date(iso + 'T12:00:00');
+  const d = parseContentDate(iso);
+  if (!d) return 'Date TBD';
+
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 export function formatDateWithWeekday(iso: string): string {
-  const d = new Date(iso + 'T12:00:00');
+  const d = parseContentDate(iso);
+  if (!d) return 'Date TBD';
+
   return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 // Returns true if the date is in the future
 export function isUpcoming(iso: string): boolean {
-  return new Date(iso + 'T12:00:00') > new Date();
+  const d = parseContentDate(iso);
+  return d ? d > new Date() : false;
 }
