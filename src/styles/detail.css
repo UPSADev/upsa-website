@@ -10,6 +10,21 @@
   align-items: flex-end;
   padding-top: var(--nav-h);
 }
+
+.detail-hero--event {
+  background:
+    radial-gradient(ellipse 72% 90% at 10% 100%, rgba(123,17,17,.5), transparent 58%),
+    linear-gradient(135deg, var(--moss-deep), #1f4d32 62%, #7b1111);
+}
+
+.detail-hero--event::before {
+  content: "";
+  position: absolute;
+  inset: 28px;
+  border: 1px solid rgba(255,255,255,.16);
+  pointer-events: none;
+}
+
 .detail-hero-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(0deg, rgba(14,44,27,.92) 0%, rgba(14,44,27,.4) 55%, rgba(14,44,27,.55) 100%);

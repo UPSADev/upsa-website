@@ -525,16 +525,23 @@ h1.hero-h1 em {
   align-items: start;
 }
 
+.learning-feature {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) 1fr;
+  align-items: stretch;
+}
+
 .session-poster {
   position: relative;
   display: grid;
   place-items: center;
-  min-height: 260px;
+  min-height: auto;
+  aspect-ratio: 8.5 / 11;
   background-position: center;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   background-color: var(--paper);
-  border-bottom: var(--hairline);
+  border-right: var(--hairline);
   color: var(--moss);
   overflow: hidden;
 }
@@ -559,7 +566,7 @@ h1.hero-h1 em {
 
 .past-session-card {
   display: grid;
-  grid-template-columns: 136px 1fr;
+  grid-template-columns: 150px 1fr;
   gap: 18px;
   padding: 16px;
   border: var(--hairline);
@@ -568,8 +575,9 @@ h1.hero-h1 em {
 }
 
 .past-session-card .session-poster {
-  min-height: 170px;
+  min-height: auto;
   border: var(--hairline);
+  border-radius: var(--radius-sm);
 }
 
 .past-session-card h4 {
@@ -732,8 +740,18 @@ h1.hero-h1 em {
   .events-grid { grid-template-columns: 1fr; }
   .meetup-program-grid,
   .past-meetups-grid { grid-template-columns: 1fr; }
+  .learning-feature { grid-template-columns: 1fr; }
+  .learning-feature .session-poster {
+    width: min(100%, 360px);
+    justify-self: center;
+    border-right: none;
+    border-bottom: var(--hairline);
+  }
   .past-session-card { grid-template-columns: 1fr; }
-  .past-session-card .session-poster { min-height: 220px; }
+  .past-session-card .session-poster {
+    width: min(100%, 320px);
+    justify-self: center;
+  }
   .pillars-grid { grid-template-columns: 1fr; }
   .pillar { border-right: none; border-bottom: var(--hairline); }
   .emergency-strip { flex-direction: column; align-items: flex-start; padding: 28px 20px; }

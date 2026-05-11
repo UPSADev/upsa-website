@@ -22,7 +22,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
   return (
     <>
       {/* Hero banner */}
-      <div className="detail-hero" style={event.image ? {backgroundImage:`url(${event.image})`} : undefined}>
+      <div className="detail-hero detail-hero--event">
         <div className="detail-hero-overlay" />
         <div className="detail-hero-inner">
           <Link href="/events" className="detail-back">← Back to Events</Link>
