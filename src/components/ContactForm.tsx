@@ -16,7 +16,7 @@ export default function ContactForm({
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
-    fetch('/', {
+    fetch('/__forms.html', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString(),
@@ -37,7 +37,6 @@ export default function ContactForm({
     <form
       name="contact"
       method="POST"
-      data-netlify="true"
       onSubmit={handleSubmit}
       className="contact-form"
     >
