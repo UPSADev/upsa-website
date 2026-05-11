@@ -9,6 +9,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
+  const [desktopDropdown, setDesktopDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -17,23 +18,50 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
   }, []);
 
   useEffect(() => {
-    const onResize = () => { if (window.innerWidth > 768) setMenuOpen(false); };
+    const onResize = () => {
+      if (window.innerWidth > 1180) setMenuOpen(false);
+    };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
   useEffect(() => {
+    function onPointerDown(event: PointerEvent) {
+      const target = event.target as HTMLElement | null;
+      if (!target?.closest('.nav-drop-group')) setDesktopDropdown(null);
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') setDesktopDropdown(null);
+    }
+
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [menuOpen]);
 
   function close() {
     setMenuOpen(false);
     setOpenSection(null);
+    setDesktopDropdown(null);
   }
 
   function toggleSection(id: string) {
-    setOpenSection(prev => prev === id ? null : id);
+    setOpenSection(prev => (prev === id ? null : id));
+  }
+
+  function toggleDesktopDropdown(id: string) {
+    setDesktopDropdown(prev => (prev === id ? null : id));
   }
 
   return (
@@ -44,32 +72,56 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
         </Link>
 
         <div className="nav-links">
-          <div className="nav-drop-group">
-            <button className="nav-drop-trigger">About <span className="nav-caret">▾</span></button>
+          <div className={`nav-drop-group${desktopDropdown === 'about' ? ' open' : ''}`}>
+            <button
+              type="button"
+              className="nav-drop-trigger"
+              aria-haspopup="true"
+              aria-expanded={desktopDropdown === 'about'}
+              onClick={() => toggleDesktopDropdown('about')}
+            >
+              About <span className="nav-caret">v</span>
+            </button>
             <div className="nav-dropdown">
-              <Link href="/about">Our Story</Link>
-              <Link href="/about#mission">Our Mission</Link>
-              <Link href="/about#values">Our Values</Link>
+              <Link href="/about" onClick={close}>Our Story</Link>
+              <Link href="/about#mission" onClick={close}>Our Mission</Link>
+              <Link href="/about#values" onClick={close}>Our Values</Link>
             </div>
           </div>
 
-          <div className="nav-drop-group">
-            <button className="nav-drop-trigger">Community <span className="nav-caret">▾</span></button>
+          <div className={`nav-drop-group${desktopDropdown === 'community' ? ' open' : ''}`}>
+            <button
+              type="button"
+              className="nav-drop-trigger"
+              aria-haspopup="true"
+              aria-expanded={desktopDropdown === 'community'}
+              onClick={() => toggleDesktopDropdown('community')}
+            >
+              Community <span className="nav-caret">v</span>
+            </button>
             <div className="nav-dropdown">
-              <Link href="/events">Events</Link>
-              <Link href="/workshops">Workshops & Seminars</Link>
-              <Link href="/meetups">City Meetups</Link>
+              <Link href="/events" onClick={close}>Events</Link>
+              <Link href="/workshops" onClick={close}>Workshops & Seminars</Link>
+              <Link href="/meetups" onClick={close}>City Meetups</Link>
             </div>
           </div>
 
           {settings.navLinks.map(link => (
-            <Link href={link.href} key={link.href}>{link.label}</Link>
+            <Link href={link.href} key={link.href} onClick={close}>{link.label}</Link>
           ))}
         </div>
 
-        <Link href={settings.ctaHref} className="nav-cta">{settings.ctaLabel} →</Link>
+        <Link href={settings.ctaHref} className="nav-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
 
-        <button className={`nav-burger${menuOpen ? ' open' : ''}`} onClick={() => setMenuOpen(o => !o)} aria-label="Toggle menu">
+        <button
+          className={`nav-burger${menuOpen ? ' open' : ''}`}
+          onClick={() => {
+            setMenuOpen(open => !open);
+            setDesktopDropdown(null);
+          }}
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+        >
           <span /><span /><span />
         </button>
       </nav>
@@ -99,7 +151,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
           </div>
         ))}
 
-        <Link href={settings.ctaHref} className="m-cta" onClick={close}>{settings.ctaLabel} →</Link>
+        <Link href={settings.ctaHref} className="m-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
       </div>
     </>
   );
