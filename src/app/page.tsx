@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import HeroCounter from '@/components/HeroCounter';
 import { formatDate, formatDateWithWeekday, getHomeContent, getMeetups, getWorkshops } from '@/lib/content';
 import '@/styles/home.css';
 
@@ -48,7 +49,7 @@ export default function HomePage() {
         <div className="hero-stats">
           {home.heroStats?.map(stat => (
             <div className="stat-item" key={stat.label}>
-              <span className="stat-num">{stat.value}{stat.suffix && <em>{stat.suffix}</em>}</span>
+              <HeroCounter value={stat.value} suffix={stat.suffix} />
               <span className="stat-label">{stat.label}</span>
             </div>
           ))}
