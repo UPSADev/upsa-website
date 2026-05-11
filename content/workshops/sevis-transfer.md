@@ -1,6 +1,6 @@
 ---
 title: Sevis Transfer
-date: 2026-05-19
+date: 2026-06-16
 location: Zoom Online
 host: UPSA Career Development Team
 type: Seminar
