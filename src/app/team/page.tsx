@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { getTeam } from '@/lib/content';
 import '@/styles/team.css';
 

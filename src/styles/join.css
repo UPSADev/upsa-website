@@ -172,3 +172,7 @@
     align-items: flex-start;
   }
 }
+@media (max-width: 480px) {
+  .join-card { padding: 30px 22px 26px; }
+  .join-card-btn { width: 100%; }
+}

@@ -6,7 +6,9 @@
 .hero {
   position: relative;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100svh;
+  height: auto;
   min-height: 680px;
   max-height: 960px;
   overflow: hidden;
@@ -720,21 +722,39 @@ h1.hero-h1 em {
   .meetup-program-grid,
   .past-meetups-grid { grid-template-columns: repeat(2, 1fr); }
   .learning-grid { grid-template-columns: 1fr; }
+  .learning-feature {
+    grid-template-columns: minmax(220px, 280px) 1fr;
+  }
   .about-grid { gap: 48px; }
 }
 @media (max-width: 768px) {
   .home-section { padding: 64px 20px; }
+  .hero {
+    min-height: 100svh;
+    max-height: none;
+  }
   .landmark-photo {
     width: 86vw;
     opacity: .18;
     right: -34vw;
   }
-  .hero-frame { padding-left: 20px; padding-right: 20px; padding-top: calc(var(--nav-h) + 20px); }
-  .hero-stats { padding: 16px 20px 24px; gap: 24px; }
+  .hero-frame {
+    min-height: 0;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: calc(var(--nav-h) + 34px);
+    padding-bottom: 24px;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 16px 20px 24px;
+    gap: 18px 24px;
+  }
   .stat-num { font-size: 30px; }
   h1.hero-h1 { font-size: clamp(34px, 10vw, 52px); line-height: 1.03; }
   .hero-sub { font-size: 14px; margin-top: 16px; }
-  .hero-actions { margin-top: 24px; }
+  .hero-actions { margin-top: 24px; align-items: stretch; }
   .about-grid { grid-template-columns: 1fr; }
   .about-visual { aspect-ratio: 16/9; }
   .events-grid { grid-template-columns: 1fr; }
@@ -755,14 +775,29 @@ h1.hero-h1 em {
   .pillars-grid { grid-template-columns: 1fr; }
   .pillar { border-right: none; border-bottom: var(--hairline); }
   .emergency-strip { flex-direction: column; align-items: flex-start; padding: 28px 20px; }
+  .es-btn { width: 100%; justify-content: center; }
   .chapter-strip { padding: 16px 0; }
 }
 @media (max-width: 480px) {
   .home-section { padding: 48px 16px; }
   .landmark-photo { display: none; }
-  h1.hero-h1 { font-size: clamp(30px, 10vw, 44px); }
+  h1.hero-h1 { font-size: clamp(30px, 12vw, 44px); }
   .hero-frame { padding-left: 16px; padding-right: 16px; }
-  .hero-stats { padding: 14px 16px 20px; }
+  .hero-stats { padding: 14px 16px 20px; gap: 16px; }
+  .hero-btn-white,
+  .hero-btn-ghost {
+    width: 100%;
+    justify-content: center;
+  }
+  .event-card-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .past-meetup-copy,
+  .event-card-body {
+    padding: 18px 16px 20px;
+  }
   .meetup-thumb { flex: 0 0 80vw; }
 }
 

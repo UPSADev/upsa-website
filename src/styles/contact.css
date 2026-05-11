@@ -192,3 +192,9 @@
   .contact-form { padding: 28px 22px; }
   .cf-row { grid-template-columns: 1fr; }
 }
+@media (max-width: 480px) {
+  .contact-form { padding: 24px 16px; }
+  .cf-submit { width: 100%; justify-content: center; }
+  .c-item { gap: 10px; }
+  .c-item a { font-size: 13px; }
+}

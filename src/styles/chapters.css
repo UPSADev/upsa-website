@@ -135,5 +135,16 @@
 @media (max-width: 480px) {
   .ch-grid { padding: 0 16px; }
   .ch-state-header { padding: 0 16px; }
+  .ch-state-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .ch-card {
+    gap: 12px;
+    padding: 18px 16px;
+  }
+  .ch-link {
+    letter-spacing: .14em;
+  }
   .ch-static-grid { grid-template-columns: 1fr; }
 }

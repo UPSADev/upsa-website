@@ -225,15 +225,19 @@ nav.top.scrolled .nav-burger span { background: var(--ink); }
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   nav.top { padding: 0 32px; }
-  .nav-links { gap: 22px; }
-}
-@media (max-width: 768px) {
-  nav.top { display: flex; justify-content: space-between; padding: 0 20px; }
   .nav-links, .nav-cta { display: none; }
   .nav-burger { display: flex; }
+  nav.top {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+@media (max-width: 768px) {
+  nav.top { padding: 0 20px; }
   .nav-logo { height: 46px; }
+  .mobile-menu { padding-bottom: max(36px, env(safe-area-inset-bottom)); }
 }
 @media (max-width: 480px) {
   nav.top { padding: 0 16px; }

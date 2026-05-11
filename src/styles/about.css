@@ -202,7 +202,14 @@
   .about-stats .container { justify-content: center; }
 }
 @media (max-width: 480px) {
+  .story-note { padding: 30px 22px; }
+  .mv-box { padding: 28px 20px; }
+  .culture-card { padding: 24px 20px; }
   .culture-grid { grid-template-columns: 1fr; }
   .values-grid { grid-template-columns: 1fr; }
-  .about-stats .container { gap: 32px; }
+  .about-stats .container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 20px;
+  }
 }

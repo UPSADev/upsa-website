@@ -134,4 +134,9 @@
 }
 @media (max-width: 480px) {
   .emergency-hero { padding: calc(var(--nav-h) + 20px) 16px 40px; }
+  .eh-btn { width: 100%; justify-content: center; }
+  .urgent-note { padding: 28px 0; }
+  .hotline-card,
+  .er-card { padding: 20px 16px; }
+  .er-links a { width: 100%; justify-content: center; }
 }
