@@ -809,3 +809,66 @@ h1.hero-h1 em {
     animation: none !important;
   }
 }
+
+
+/* ============================================================
+   TRANSLATION HOVER - ADD THIS TO BOTTOM OF home.css
+   ============================================================ */
+/* ============================================================
+   SCRATCH REVEAL - WORKING VERSION
+   ============================================================ */
+.translatable {
+    position: relative !important;
+    display: inline-block !important;
+    cursor: pointer !important;
+    overflow: visible !important;
+    line-height: 1.4 !important;
+}
+.translatable::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: var(--moss-deep) !important;
+    z-index: 5 !important;
+    clip-path: circle(0% at 50% 50%) !important;  /* Start fully clipped */
+    transition: clip-path 0.8s ease, opacity 0.8s ease !important;
+}
+.translatable:hover::before {
+    clip-path: circle(120% at 50% 50%) !important;  /* Expand to reveal */
+    opacity: 0 !important;
+}
+
+.translatable::after {
+    content: attr(data-translation) !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: linear-gradient(135deg, #809f83, #216042, #0f6020) !important;
+    color: #fff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    padding: 4px 8px !important;
+    border-radius: 8px !important;
+    z-index: 10 !important;
+    opacity: 0.1 !important;
+    transition: opacity 0.8s ease !important;
+}
+
+.translatable:hover::after {
+    opacity: 1 !important;
+}
+
+/* Button text stays visible */
+.translatable > * {
+    position: relative !important;
+    z-index: 30 !important;
+}

@@ -70,9 +70,6 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
         <Link href="/" className="nav-brand" onClick={close}>
           <Image src={settings.logo} alt="UPSA" width={52} height={52} className="nav-logo" priority unoptimized />
         </Link>
- <span className="nav-brand-text" style={{ marginLeft: '0.75rem', color: '#113a16'}}>
-            United Pakistani Students & Alumni Association
-          </span>
 
         <div className="nav-links">
           <div className={`nav-drop-group${desktopDropdown === 'about' ? ' open' : ''}`}>

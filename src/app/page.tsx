@@ -29,6 +29,28 @@ export default function HomePage() {
 
   return (
     <>
+   {/* 🧪 FIXED TEST - WRAP IN CONTAINER */}
+    <div style={{ 
+      padding: '60px', 
+      background: 'linear-gradient(135deg, #f0f0f0, #e0e0e0)', 
+      margin: '70px 0',
+      textAlign: 'center',
+      borderRadius: '20px',
+      boxShadow: '0 15px 40px rgba(31, 210, 31, 0.1)'
+    }}>
+      <a 
+        href="#" 
+        className="translatable" 
+        data-translation=" !خوش آمدید"
+      >
+        W E L C O M E  T O  U P S A!
+      </a>
+    </div>
+  
+     
+      {/* 🧪 END OF TRANSLATION TEST */}
+
+
       <section className="hero">
         <div className="hero-photo" />
         <div className="hero-veil" />
@@ -39,6 +61,8 @@ export default function HomePage() {
               {home.heroTitleLine2} <span style={{fontStyle:'italic',color:'rgba(255,255,255,.4)'}}>&#38;</span><br />
               {emphasizedText(home.heroTitleLine3, home.heroEmphasis)}
             </h1>
+             
+
             <p className="hero-sub">{home.heroDescription}</p>
             <div className="hero-actions">
               <Link href={home.heroPrimaryHref || '/about'} className="hero-btn-white">{home.heroPrimaryLabel} &rarr;</Link>
