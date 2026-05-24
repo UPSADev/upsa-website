@@ -39,28 +39,12 @@
 }
 .cal-nav-btn:hover { background: var(--moss); color: #fff; border-color: var(--moss); }
 
-.cal-next-event-btn {
-  all: unset;
-  cursor: pointer;
-  margin-left: auto;
-  font-family: 'Geist Mono', monospace;
-  font-size: 10px;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: var(--moss);
-  transition: letter-spacing .2s;
-  padding: 8px 16px;
-  border: 1px solid var(--moss-soft);
-  border-radius: var(--radius-pill);
-  white-space: nowrap;
-}
-.cal-next-event-btn:hover { letter-spacing: .28em; background: var(--moss-soft); }
-
 /* ---- Desktop grid ---- */
 .cal-grid-outer {
   border: var(--hairline);
-  border-radius: var(--radius-sm);
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow: 0 6px 32px -8px rgba(26,31,24,.13);
 }
 
 .cal-days-header {
@@ -387,7 +371,6 @@
   .cal-list { display: flex; }
   .events-cal-page { padding: 32px 20px 64px; }
   .cal-nav-title { font-size: 32px; }
-  .cal-next-event-btn { display: none; }
   .cal-modal { padding: 36px 28px 32px; }
   .cal-modal-title { font-size: 24px; }
   .cal-modal-meta-item { font-size: 14px; }

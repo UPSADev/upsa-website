@@ -4,7 +4,7 @@ date: "2026-06-28"
 location: Online
 host: UPSA National
 type: Webinar
-status: upcoming
+status: past
 featured: true
 displayOnHomepage: true
 homepageOrder: 1

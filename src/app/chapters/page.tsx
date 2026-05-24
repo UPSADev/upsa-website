@@ -66,7 +66,7 @@ export default function ChaptersPage() {
             </section>
           ))
         ) : (
-          // Fallback static list until CMS is populated
+          // No chapters in CMS yet — show the static list
           <div className="ch-static">
             <div className="container">
               <p className="ch-static-note">

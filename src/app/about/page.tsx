@@ -37,7 +37,7 @@ export default function AboutPage() {
               <div className="story-note">
                 <span className="story-note-tag">{content.founderTag}</span>
                 <blockquote>&ldquo;{content.founderQuote}&rdquo;</blockquote>
-                <cite>- {content.founderCredit}</cite>
+                <cite>{content.founderCredit}</cite>
               </div>
             </div>
           </div>
@@ -67,7 +67,6 @@ export default function AboutPage() {
           <div className="culture-grid">
             {content.cultureCards.map((card) => (
               <div className="culture-card" key={card.title}>
-                <span className="culture-icon">{card.icon}</span>
                 <h3>{card.title}</h3>
                 <p>{card.desc}</p>
               </div>
@@ -81,11 +80,11 @@ export default function AboutPage() {
           <span className="sec-tag">{content.valuesTag}</span>
           <h2 className="sec-h2">{emphasizedText(content.valuesTitle, content.valuesTitleEmphasis)}</h2>
           <div className="values-grid">
-            {content.values.map((value) => (
-              <div className="value-item" key={value.n}>
-                <span className="value-num">{value.n}</span>
+            {content.values?.map((value) => (
+              <div className="value-item" key={value.title}>
+                <span className="value-num">{value.number}</span>
                 <h3>{value.title}</h3>
-                <p>{value.body}</p>
+                <p>{value.description}</p>
               </div>
             ))}
           </div>

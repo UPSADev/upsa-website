@@ -9,7 +9,8 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
     <footer className="site-footer">
       <div className="f-grid">
         <div className="f-brand">
-          <Image src={settings.logo} alt="UPSA" width={52} height={52} className="f-logo" unoptimized />
+          <Image src={settings.logo} alt="UPSA" width={88} height={88} className="f-logo" unoptimized />
+          <span className="f-brand-name">United Pakistani Students &amp; Alumni Association</span>
           <p>{settings.footerDescription}</p>
         </div>
 

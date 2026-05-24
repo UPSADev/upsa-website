@@ -4,17 +4,17 @@ date: "2026-06-21"
 location: "Chicago, IL"
 state: Illinois
 category: Social
-status: upcoming
+status: past
 featured: true
 image: /images/events/event-1.jpg
 description: >
-  Our biggest night of the year — celebrating Pakistani students and alumni
+  Our biggest night of the year, celebrating Pakistani students and alumni
   across the United States. Formal dinner, awards, networking, and cultural
   performances. All chapters welcome.
 registerUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdGrEJAGWlThbtPHN9rWtxnBqcK_x1kzBDu-epTz7FHEUfkMA/viewform"
 ---
 
-Join us for the 3rd Annual UPSA Gala — an evening of community, recognition, and celebration.
+Join us for the 3rd Annual UPSA Gala, an evening of community, recognition, and celebration.
 
 ## What to Expect
 

@@ -55,16 +55,29 @@ function buildCells(year: number, month: number): (number | null)[] {
 
 export default function EventCalendar({ events }: { events: CalEvent[] }) {
   const today = new Date();
-  const [year, setYear]       = useState(today.getFullYear());
-  const [month, setMonth]     = useState(today.getMonth());
-  const [selected, setSelected] = useState<CalEvent | null>(null);
+  const [year, setYear]           = useState(today.getFullYear());
+  const [month, setMonth]         = useState(today.getMonth());
+  const [selected, setSelected]   = useState<CalEvent | null>(null);
+  const [userNavigated, setUserNavigated] = useState(false);
 
-  /* ---- month navigation ---- */
+  // Auto-advance to the real current month if the user hasn't manually navigated away
+  useEffect(() => {
+    if (userNavigated) return;
+    const tick = setInterval(() => {
+      const now = new Date();
+      setYear(now.getFullYear());
+      setMonth(now.getMonth());
+    }, 60_000);
+    return () => clearInterval(tick);
+  }, [userNavigated]);
+
   function prevMonth() {
+    setUserNavigated(true);
     if (month === 0) { setMonth(11); setYear(y => y - 1); }
     else setMonth(m => m - 1);
   }
   function nextMonth() {
+    setUserNavigated(true);
     if (month === 11) { setMonth(0); setYear(y => y + 1); }
     else setMonth(m => m + 1);
   }
@@ -111,11 +124,6 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
         <button className="cal-nav-btn" onClick={prevMonth} aria-label="Previous month" type="button">←</button>
         <h2 className="cal-nav-title">{MONTHS[month]} {year}</h2>
         <button className="cal-nav-btn" onClick={nextMonth} aria-label="Next month" type="button">→</button>
-        {nextEvent && (
-          <button className="cal-next-event-btn" onClick={jumpToNextEvent} type="button">
-            Next event: {nextEvent.title} →
-          </button>
-        )}
       </div>
 
       {/* ---- desktop calendar grid ---- */}

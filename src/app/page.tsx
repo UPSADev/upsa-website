@@ -59,35 +59,9 @@ export default function HomePage() {
         </div>
       </div>
 
-      <section className="home-section landmark-section liberty-section">
-        <div className="landmark-photo liberty-photo" aria-hidden="true" />
-        <div className="container" style={{maxWidth:'100%',padding:0}}>
-          <div className="about-grid">
-            <div className="about-body">
-              <span className="sec-tag">-- {home.aboutTag}</span>
-              <h2 className="sec-h2">{emphasizedText(home.aboutTitle, home.aboutTitleEmphasis)}</h2>
-              {home.aboutParagraphs?.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
-              <div className="founder-note">
-                <blockquote>&ldquo;{home.founderQuote}&rdquo;</blockquote>
-                <cite>-- {home.founderCredit}</cite>
-              </div>
-              <div style={{marginTop:32}}>
-                <Link href={home.aboutCtaHref || '/about'} className="btn-primary">{home.aboutCtaLabel} &rarr;</Link>
-              </div>
-            </div>
-            <div className="about-visual">
-              <div className="about-visual-overlay">
-                <div className="stat">35<em>+</em></div>
-                <small>Active chapters nationwide</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {pastMeetups.length > 0 && (
         <section className="home-section gathered-section">
-          <span className="sec-tag">-- {home.pastMeetupsTag}</span>
+          <span className="sec-tag">{home.pastMeetupsTag}</span>
           <h2 className="sec-h2">{emphasizedText(home.pastMeetupsTitle, home.pastMeetupsTitleEmphasis)}</h2>
           <div className="gathered-grid">
             {pastMeetups.map(meetup => (
@@ -117,7 +91,7 @@ export default function HomePage() {
 
       <section className="home-section alt landmark-section mazar-section">
         <div className="landmark-photo mazar-photo" aria-hidden="true" />
-        <span className="sec-tag">-- {home.valuesTag}</span>
+        <span className="sec-tag">{home.valuesTag}</span>
         <h2 className="sec-h2">{emphasizedText(home.valuesTitle, home.valuesTitleEmphasis)}</h2>
         <div className="pillars-grid">
           {home.values?.map(value => (
@@ -131,7 +105,7 @@ export default function HomePage() {
       </section>
 
       <section className="home-section" style={{textAlign:'center'}}>
-        <span className="sec-tag" style={{justifyContent:'center', display:'flex'}}>-- {home.joinTag}</span>
+        <span className="sec-tag" style={{justifyContent:'center', display:'flex'}}>{home.joinTag}</span>
         <h2 className="sec-h2" style={{maxWidth:680, margin:'0 auto'}}>
           {emphasizedText(home.joinTitle, home.joinTitleEmphasis)}
         </h2>

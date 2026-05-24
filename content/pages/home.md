@@ -3,7 +3,7 @@ heroTitleLine1: Bridging
 heroTitleLine2: generations
 heroTitleLine3: building futures.
 heroEmphasis: building
-heroDescription: Connecting Pakistani students and alumni across the United States — one alumni network built for the mentorship, opportunity, and belonging we wish we'd had.
+heroDescription: Connecting Pakistani students and alumni across the United States, one alumni network built for the mentorship, opportunity, and belonging we wish we'd had.
 heroPrimaryLabel: Learn About UPSA
 heroPrimaryHref: /about
 heroSecondaryLabel: Join the Network
@@ -38,58 +38,38 @@ chapters:
   - Cleveland State
   - U of Florida
   - U of Illinois
-aboutTag: 01 / About UPSA
-aboutTitle: A growing network, built by the community.
-aboutTitleEmphasis: by the community
-aboutParagraphs:
-  - UPSA unites Pakistani Student Associations across the United States - and the alumni who came through them - into a single, compounding network of opportunity.
-  - From Berkeley to Brooklyn, we exist to ensure no Pakistani student has to navigate American academic and professional life alone.
-founderQuote: When I founded UPSA, I wanted to build something I never had - a network where every Pakistani student in America could find mentorship, opportunity, and community from day one.
-founderCredit: Shahrukh Khan, Founder & President
-aboutCtaLabel: Our Full Story
-aboutCtaHref: /about
-emergencyTitle: Need help right now?
-emergencyDescription: Crisis support, immigration help, mental health resources - we're here 24/7.
-emergencyCtaLabel: Emergency Support
-emergencyCtaHref: /emergency
-meetupsTag: 02 / Upcoming City Meetups
-meetupsTitle: Find your people in the city.
-meetupsTitleEmphasis: people
-pastMeetupsTag: 02 / Places We've Gathered
+pastMeetupsTag: Places We've Gathered
 pastMeetupsTitle: Where we've gathered.
 pastMeetupsTitleEmphasis: gathered
-workshopsTag: 03 / Workshops & Seminars
-workshopsTitle: Learn what comes next.
-workshopsTitleEmphasis: next
-valuesTag: 03 / Core Values
-valuesTitle: A network built by the community.
-valuesTitleEmphasis: by the community
+valuesTag: What We Do
+valuesTitle: How we show up for you.
+valuesTitleEmphasis: show up for you
 values:
   - number: "01"
     title: Roots & Identity
     emphasis: Identity
-    description: Celebrating Pakistani heritage and keeping our culture alive, from Lahore to Los Angeles.
+    description: Being Pakistani in America means carrying two worlds at once. We celebrate that, the language, the food, the faith, the family weight, and make sure it is never something you have to explain or hide on a U.S. campus.
   - number: "02"
     title: Mentorship & Growth
     emphasis: Growth
-    description: Connecting students with alumni who have walked the same path and come out stronger.
+    description: Generic career advice doesn't account for visa timelines, name bias, or what it feels like to be the first in your family building a career abroad. Our mentors have been in your exact position and can tell you what actually worked.
   - number: "03"
     title: Opportunity First
     emphasis: Opportunity
-    description: Opening doors to internships, jobs, and career networks across every industry.
+    description: From OPT to full-time offers, from campus recruiting to industry connections, UPSA opens doors that most Pakistani students don't even know exist. We share the network we spent years building so you don't have to start from zero.
   - number: "04"
     title: Community Always
     emphasis: Always
-    description: Building friendships that last beyond graduation, across cities and time zones.
+    description: The friendships built through UPSA outlast graduation. Whether you're a student in Ithaca or a working professional in Houston, this network travels with you, across cities, career changes, and time zones.
   - number: "05"
     title: Service & Giving Back
     emphasis: Giving Back
-    description: Empowering the next wave of Pakistani students just as others once helped us.
+    description: Every senior who mentors a junior, every alum who answers a cold message, every chapter leader who shows up, that is how this network compounds. We give back because someone did it for us, and the cycle is what makes it last.
   - number: "06"
-    title: Emergency Ready
-    emphasis: Emergency
-    description: Providing immediate support when students face crises - legal, medical, or personal.
-joinTag: 04 / Get Involved
+    title: Peer Support
+    emphasis: Peer
+    description: When things get hard, you do not have to figure it out alone. UPSA connects you with students and alumni who have been through similar situations and can point you toward the right people, resources, and next steps.
+joinTag: Get Involved
 joinTitle: Find your place in the UPSA network.
 joinTitleEmphasis: UPSA network
 joinDescription: Whether you're a student, an alumnus, or a chapter looking to connect - there's a home for you here.

@@ -1,12 +1,13 @@
 ---
-title: Pakistan Independence Day — DC 2026
+title: "Pakistan Independence Day: DC 2026"
 date: "2026-08-14"
 location: "Washington, D.C."
 state: "District of Columbia"
 category: Cultural
-status: upcoming
+status: past
 featured: true
 image: /images/events/event-2.jpg
+registerUrl: "https://docs.google.com/forms/d/e/independence-day-dc-2026/viewform"
 description: >
   Jashan-e-Azadi with the UPSA Washington D.C. community. Pakistani food,
   music, and a celebration of Pakistani identity in the nation's capital.
@@ -21,4 +22,4 @@ This year's D.C. celebration will be held at a venue in the National Mall area, 
 - Flag hoisting ceremony
 - Henna and cultural stalls
 
-Free admission. All are welcome — bring your green and white!
+Free admission. All are welcome, bring your green and white!
