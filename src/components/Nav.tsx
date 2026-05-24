@@ -101,7 +101,6 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
             </button>
             <div className="nav-dropdown">
               <Link href="/events" onClick={close}>Events</Link>
-              <Link href="/workshops" onClick={close}>Workshops & Seminars</Link>
               <Link href="/meetups" onClick={close}>City Meetups</Link>
             </div>
           </div>
@@ -140,7 +139,6 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
           <button className="m-link" onClick={() => toggleSection('community')}>Community <span className="m-caret-icon">+</span></button>
           <div className="m-sub">
             <Link href="/events" onClick={close}>Events</Link>
-            <Link href="/workshops" onClick={close}>Workshops & Seminars</Link>
             <Link href="/meetups" onClick={close}>City Meetups</Link>
           </div>
         </div>

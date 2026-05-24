@@ -24,10 +24,10 @@ export default function HomePage() {
         <div className="hero-veil" />
         <div className="hero-frame">
           <div className="hero-content">
-            <div className="hero-bilingual" aria-label="Welcome">
-              <span>Welcome</span>
-              <span className="hero-bilingual-sep" aria-hidden="true">·</span>
-              <span className="hero-bilingual-ur" lang="ur">خوش آمدید</span>
+            <div className="hero-urdu" aria-label="Welcome — Khush Aamadeed">
+              <div className="hero-urdu-script" lang="ur">خوش آمدید</div>
+              <div className="hero-urdu-line" aria-hidden="true" />
+              <div className="hero-urdu-eng">Welcome</div>
             </div>
             <h1 className="hero-h1">
               {home.heroTitleLine1}<br />
@@ -94,15 +94,14 @@ export default function HomePage() {
               <Link href={`/meetups/${meetup.slug}`} className="gathered-card" key={meetup.slug}>
                 <div className="gathered-img">
                   <img src={meetup.homepageImage || meetup.coverImage} alt={`${meetup.city} meetup`} loading="lazy" />
-                  <div className="gathered-overlay">
-                    <div className="gathered-city">{meetup.city}</div>
-                    <div className="gathered-date">{formatDate(meetup.date)}</div>
-                  </div>
                 </div>
-                <div className="gathered-info">
-                  <h3>{meetup.title}</h3>
-                  <span className="gathered-cta">View Gallery →</span>
+                <div className="gathered-overlay">
+                  <span className="gathered-event-type">Community Meetup</span>
+                  <div className="gathered-city">{meetup.city}</div>
+                  <div className="gathered-state">{meetup.state}</div>
+                  <div className="gathered-date">{formatDate(meetup.date)}</div>
                 </div>
+                <span className="gathered-cta">View Photos →</span>
               </Link>
             ))}
           </div>
