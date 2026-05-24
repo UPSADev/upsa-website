@@ -1,25 +1,15 @@
 import Link from 'next/link';
 import HeroCounter from '@/components/HeroCounter';
-import { formatDate, formatDateWithWeekday, getHomeContent, getMeetups, getWorkshops } from '@/lib/content';
+import { formatDate, getHomeContent, getMeetups } from '@/lib/content';
 import '@/styles/home.css';
 
 export default function HomePage() {
   const home = getHomeContent();
   const chapters = home.chapters || [];
 
-  const homepageMeetups = getMeetups()
-    .filter(meetup => meetup.displayOnHomepage)
+  const pastMeetups = getMeetups()
+    .filter(meetup => meetup.displayOnHomepage && meetup.status === 'past')
     .sort((a, b) => (a.homepageOrder ?? 99) - (b.homepageOrder ?? 99));
-
-  const upcomingMeetups = homepageMeetups.filter(meetup => meetup.status === 'upcoming');
-  const pastMeetups = homepageMeetups.filter(meetup => meetup.status === 'past');
-
-  const homepageWorkshops = getWorkshops()
-    .filter(workshop => workshop.displayOnHomepage)
-    .sort((a, b) => (a.homepageOrder ?? 99) - (b.homepageOrder ?? 99));
-
-  const upcomingSessions = homepageWorkshops.filter(workshop => workshop.status === 'upcoming');
-  const pastSessions = homepageWorkshops.filter(workshop => workshop.status === 'past');
 
   function emphasizedText(text = '', emphasis = '') {
     if (!emphasis || !text.includes(emphasis)) return text;
@@ -34,6 +24,11 @@ export default function HomePage() {
         <div className="hero-veil" />
         <div className="hero-frame">
           <div className="hero-content">
+            <div className="hero-bilingual" aria-label="Welcome">
+              <span>Welcome</span>
+              <span className="hero-bilingual-sep" aria-hidden="true">·</span>
+              <span className="hero-bilingual-ur" lang="ur">خوش آمدید</span>
+            </div>
             <h1 className="hero-h1">
               {home.heroTitleLine1}<br />
               {home.heroTitleLine2} <span style={{fontStyle:'italic',color:'rgba(255,255,255,.4)'}}>&#38;</span><br />
@@ -90,102 +85,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="emergency-strip">
-        <div className="es-text">
-          <h3>{home.emergencyTitle}</h3>
-          <p>{home.emergencyDescription}</p>
-        </div>
-        <Link href={home.emergencyCtaHref || '/emergency'} className="es-btn">{home.emergencyCtaLabel} &rarr;</Link>
-      </div>
-
-      <section className="home-section alt meetup-program-section">
-        <span className="sec-tag">-- {home.meetupsTag}</span>
-        <h2 className="sec-h2">{emphasizedText(home.meetupsTitle, home.meetupsTitleEmphasis)}</h2>
-        <div className="meetup-program-grid">
-          {upcomingMeetups.map(meetup => (
-            <article className="meetup-card card" key={meetup.slug}>
-              <div className={`city-photo city-photo-${meetup.stateCode.toLowerCase()}`} style={{ backgroundImage: `url(${meetup.homepageImage || meetup.coverImage})` }}>
-                <span>{meetup.stateCode}</span>
-              </div>
-              <div className="event-card-body">
-                <div className="event-card-meta">
-                  <span className="badge badge-upcoming">Upcoming</span>
-                  <span className="event-date">{formatDate(meetup.date)}</span>
-                </div>
-                <h3>{meetup.city} Meetup</h3>
-                <p>{meetup.description}</p>
-                <div className="event-card-loc">{meetup.state}</div>
-                <div className="event-card-footer">
-                  <a href={meetup.registerUrl || '#'} className="event-card-link">Register Here &rarr;</a>
-                  <span className="badge badge-live"><span className="dot" /> Registration Open</span>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="home-section">
-        <span className="sec-tag">-- {home.pastMeetupsTag}</span>
-        <h2 className="sec-h2">{emphasizedText(home.pastMeetupsTitle, home.pastMeetupsTitleEmphasis)}</h2>
-        <div className="past-meetups-grid">
-          {pastMeetups.map(meetup => (
-            <article className="past-meetup-card" key={meetup.slug}>
-              <div className="past-meetup-img">
-                <img src={meetup.homepageImage || meetup.coverImage} alt={`${meetup.city} meetup`} loading="lazy" />
-                <div className="meetup-thumb-overlay">
-                  <div className="meetup-thumb-city">{meetup.city}</div>
-                  <div className="meetup-thumb-date">{formatDateWithWeekday(meetup.date)}</div>
-                </div>
-              </div>
-              <div className="past-meetup-copy">
-                <h3>{meetup.state} Meetup</h3>
-                <p>{meetup.description}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="home-section alt learning-section">
-        <span className="sec-tag">-- {home.workshopsTag}</span>
-        <h2 className="sec-h2">{emphasizedText(home.workshopsTitle, home.workshopsTitleEmphasis)}</h2>
-        <div className="learning-grid">
-          {upcomingSessions.map(session => (
-            <article className="learning-feature card" key={session.slug}>
-              <div className="session-poster session-poster-upcoming" style={session.image ? { backgroundImage: `url(${session.image})` } : undefined} aria-label={`${session.title} flyer`} />
-              <div className="event-card-body">
-                <div className="event-card-meta">
-                  <span className="badge badge-upcoming">Upcoming</span>
-                  <span className="event-date">{formatDate(session.date)}</span>
-                </div>
-                <h3>{session.title}</h3>
-                <p>{session.description}</p>
-                <div className="event-card-footer">
-                  <a href={session.registerUrl || '#'} className="event-card-link">Register for Your Spot &rarr;</a>
-                  <span className="badge badge-live"><span className="dot" /> Seats Open</span>
-                </div>
-              </div>
-            </article>
-          ))}
-          <div className="past-sessions">
-            <h3>Past Sessions</h3>
-            {pastSessions.map(session => (
-              <article className="past-session-card" key={session.slug}>
-                <div className="session-poster session-poster-past" style={session.image ? { backgroundImage: `url(${session.image})` } : undefined} aria-label={`${session.title} flyer`} />
-                <div>
-                  <div className="event-card-meta">
-                    <span className="badge badge-past">{session.type}</span>
-                    <span className="event-date">{formatDate(session.date)}</span>
+      {pastMeetups.length > 0 && (
+        <section className="home-section gathered-section">
+          <span className="sec-tag">-- {home.pastMeetupsTag}</span>
+          <h2 className="sec-h2">{emphasizedText(home.pastMeetupsTitle, home.pastMeetupsTitleEmphasis)}</h2>
+          <div className="gathered-grid">
+            {pastMeetups.map(meetup => (
+              <Link href={`/meetups/${meetup.slug}`} className="gathered-card" key={meetup.slug}>
+                <div className="gathered-img">
+                  <img src={meetup.homepageImage || meetup.coverImage} alt={`${meetup.city} meetup`} loading="lazy" />
+                  <div className="gathered-overlay">
+                    <div className="gathered-city">{meetup.city}</div>
+                    <div className="gathered-date">{formatDate(meetup.date)}</div>
                   </div>
-                  <h4>{session.title}</h4>
-                  <p>{session.description}</p>
                 </div>
-              </article>
+                <div className="gathered-info">
+                  <h3>{meetup.title}</h3>
+                  <span className="gathered-cta">View Gallery →</span>
+                </div>
+              </Link>
             ))}
           </div>
-        </div>
-      </section>
+          <div style={{marginTop:40, textAlign:'center'}}>
+            <Link href="/meetups" className="btn-outline">All Meetups &amp; Photos →</Link>
+          </div>
+        </section>
+      )}
 
       <section className="home-section alt landmark-section mazar-section">
         <div className="landmark-photo mazar-photo" aria-hidden="true" />

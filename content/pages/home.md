@@ -3,7 +3,7 @@ heroTitleLine1: Bridging
 heroTitleLine2: generations
 heroTitleLine3: building futures.
 heroEmphasis: building
-heroDescription: Thirty-five Pakistani Student Associations across the United States, one alumni network - built for the mentorship, opportunity, and belonging we wish we'd had.
+heroDescription: Connecting Pakistani students and alumni across the United States — one alumni network built for the mentorship, opportunity, and belonging we wish we'd had.
 heroPrimaryLabel: Learn About UPSA
 heroPrimaryHref: /about
 heroSecondaryLabel: Join the Network
@@ -39,8 +39,8 @@ chapters:
   - U of Florida
   - U of Illinois
 aboutTag: 01 / About UPSA
-aboutTitle: One community, thirty-five campuses.
-aboutTitleEmphasis: community
+aboutTitle: A growing network, built by the community.
+aboutTitleEmphasis: by the community
 aboutParagraphs:
   - UPSA unites Pakistani Student Associations across the United States - and the alumni who came through them - into a single, compounding network of opportunity.
   - From Berkeley to Brooklyn, we exist to ensure no Pakistani student has to navigate American academic and professional life alone.
@@ -55,13 +55,13 @@ emergencyCtaHref: /emergency
 meetupsTag: 02 / Upcoming City Meetups
 meetupsTitle: Find your people in the city.
 meetupsTitleEmphasis: people
-pastMeetupsTag: 03 / Past City Meetups
+pastMeetupsTag: 02 / Places We've Gathered
 pastMeetupsTitle: Where we've gathered.
 pastMeetupsTitleEmphasis: gathered
-workshopsTag: 04 / Workshops & Seminars
+workshopsTag: 03 / Workshops & Seminars
 workshopsTitle: Learn what comes next.
 workshopsTitleEmphasis: next
-valuesTag: 05 / Core Values
+valuesTag: 03 / Core Values
 valuesTitle: A network built by the community.
 valuesTitleEmphasis: by the community
 values:
@@ -89,7 +89,7 @@ values:
     title: Emergency Ready
     emphasis: Emergency
     description: Providing immediate support when students face crises - legal, medical, or personal.
-joinTag: 06 / Get Involved
+joinTag: 04 / Get Involved
 joinTitle: Find your place in the UPSA network.
 joinTitleEmphasis: UPSA network
 joinDescription: Whether you're a student, an alumnus, or a chapter looking to connect - there's a home for you here.

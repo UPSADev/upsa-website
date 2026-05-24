@@ -12,8 +12,6 @@ navLinks:
     href: /chapters
   - label: Resources
     href: /resources
-  - label: Emergency
-    href: /emergency
 socialLinks:
   - label: LinkedIn
     href: https://www.linkedin.com/company/united-pakistani-students-alumni-association
@@ -42,8 +40,6 @@ footerColumns:
         href: /meetups
       - label: Resources
         href: /resources
-      - label: Emergency Support
-        href: /emergency
   - title: Connect
     links:
       - label: Email

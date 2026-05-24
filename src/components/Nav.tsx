@@ -83,9 +83,9 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
               About <span className="nav-caret">v</span>
             </button>
             <div className="nav-dropdown">
-              <Link href="/about" onClick={close}>Our Story</Link>
-              <Link href="/about#mission" onClick={close}>Our Mission</Link>
-              <Link href="/about#values" onClick={close}>Our Values</Link>
+              <Link href="/about" onClick={close}>Story</Link>
+              <Link href="/about#mission" onClick={close}>Mission</Link>
+              <Link href="/about#values" onClick={close}>Values</Link>
             </div>
           </div>
 
@@ -130,9 +130,9 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
         <div className={`m-item${openSection === 'about' ? ' open' : ''}`}>
           <button className="m-link" onClick={() => toggleSection('about')}>About <span className="m-caret-icon">+</span></button>
           <div className="m-sub">
-            <Link href="/about" onClick={close}>Our Story</Link>
-            <Link href="/about#mission" onClick={close}>Our Mission</Link>
-            <Link href="/about#values" onClick={close}>Our Values</Link>
+            <Link href="/about" onClick={close}>Story</Link>
+            <Link href="/about#mission" onClick={close}>Mission</Link>
+            <Link href="/about#values" onClick={close}>Values</Link>
           </div>
         </div>
 

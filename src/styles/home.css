@@ -66,6 +66,34 @@ h1.hero-h1 em {
   color: rgba(255,255,255,.85);
   font-variation-settings: "opsz" 144, "SOFT" 100;
 }
+/* Bilingual welcome tag */
+.hero-bilingual {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 22px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.42);
+  transition: color .4s;
+  cursor: default;
+  user-select: none;
+}
+.hero-bilingual:hover { color: rgba(255,255,255,.65); }
+.hero-bilingual-sep { color: rgba(255,255,255,.22); }
+.hero-bilingual-ur {
+  font-family: 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', serif;
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+  direction: rtl;
+  color: rgba(255,255,255,.52);
+  transition: color .4s;
+}
+.hero-bilingual:hover .hero-bilingual-ur { color: rgba(255,255,255,.9); }
+
 .hero-sub {
   margin-top: 28px;
   font-size: 16px;
@@ -588,6 +616,98 @@ h1.hero-h1 em {
   margin-top: 10px;
 }
 
+/* "Places We've Gathered" city cards */
+.gathered-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 48px;
+}
+
+.gathered-card {
+  display: flex;
+  flex-direction: column;
+  border: var(--hairline);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--paper);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
+  text-decoration: none;
+}
+.gathered-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 24px 52px -18px rgba(26,31,24,.16);
+}
+
+.gathered-img {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: var(--moss-deep);
+}
+.gathered-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .55s, filter .55s;
+  filter: saturate(.82) contrast(1.02);
+}
+.gathered-card:hover .gathered-img img {
+  transform: scale(1.05);
+  filter: saturate(1) contrast(1.02);
+}
+
+.gathered-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(14,44,27,.88) 0%, rgba(14,44,27,.08) 52%);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #fff;
+}
+.gathered-city {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: -.012em;
+  font-variation-settings: "opsz" 72, "SOFT" 40;
+}
+.gathered-date {
+  font-family: 'Geist Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.58);
+  margin-top: 4px;
+}
+
+.gathered-info {
+  padding: 16px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.gathered-info h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  line-height: 1.25;
+  font-variation-settings: "opsz" 72, "SOFT" 40;
+}
+.gathered-cta {
+  font-family: 'Geist Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--moss);
+  transition: letter-spacing .25s;
+  display: inline-block;
+}
+.gathered-card:hover .gathered-cta { letter-spacing: .34em; }
+
 /* Values pillars */
 .pillars-grid {
   display: grid;
@@ -674,42 +794,6 @@ h1.hero-h1 em {
   margin-top: 4px;
 }
 
-/* Emergency strip */
-.emergency-strip {
-  background: #7B1111;
-  color: #fff;
-  padding: 36px 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-}
-.emergency-strip .es-text h3 {
-  font-family: 'Fraunces', serif;
-  font-weight: 400;
-  font-size: 26px;
-  letter-spacing: -.012em;
-}
-.emergency-strip .es-text p {
-  margin-top: 6px;
-  font-size: 14px;
-  color: rgba(255,255,255,.75);
-}
-.es-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 26px;
-  background: #fff;
-  color: #7B1111;
-  border-radius: var(--radius-pill);
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  transition: background .25s;
-  flex-shrink: 0;
-}
-.es-btn:hover { background: rgba(255,255,255,.88); }
 
 /* ============================================================
    RESPONSIVE
@@ -719,6 +803,7 @@ h1.hero-h1 em {
   .hero-frame { padding-left: 32px; padding-right: 32px; }
   .hero-stats { padding: 20px 32px 28px; }
   .events-grid { grid-template-columns: repeat(2, 1fr); }
+  .gathered-grid { grid-template-columns: repeat(2, 1fr); }
   .meetup-program-grid,
   .past-meetups-grid { grid-template-columns: repeat(2, 1fr); }
   .learning-grid { grid-template-columns: 1fr; }
@@ -758,24 +843,11 @@ h1.hero-h1 em {
   .about-grid { grid-template-columns: 1fr; }
   .about-visual { aspect-ratio: 16/9; }
   .events-grid { grid-template-columns: 1fr; }
+  .gathered-grid { grid-template-columns: 1fr; }
   .meetup-program-grid,
   .past-meetups-grid { grid-template-columns: 1fr; }
-  .learning-feature { grid-template-columns: 1fr; }
-  .learning-feature .session-poster {
-    width: min(100%, 360px);
-    justify-self: center;
-    border-right: none;
-    border-bottom: var(--hairline);
-  }
-  .past-session-card { grid-template-columns: 1fr; }
-  .past-session-card .session-poster {
-    width: min(100%, 320px);
-    justify-self: center;
-  }
   .pillars-grid { grid-template-columns: 1fr; }
   .pillar { border-right: none; border-bottom: var(--hairline); }
-  .emergency-strip { flex-direction: column; align-items: flex-start; padding: 28px 20px; }
-  .es-btn { width: 100%; justify-content: center; }
   .chapter-strip { padding: 16px 0; }
 }
 @media (max-width: 480px) {

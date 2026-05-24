@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getMeetup, getMeetups, formatDate } from '@/lib/content';
+import GalleryGrid from '@/components/GalleryGrid';
 import '@/styles/meetups.css';
 
 export async function generateStaticParams() {
@@ -21,7 +22,6 @@ export default async function MeetupDetailPage({ params }: { params: Promise<{ s
 
   return (
     <>
-      {/* Cover hero */}
       <div className="meetup-detail-hero" style={m.coverImage ? {backgroundImage:`url(${m.coverImage})`} : undefined}>
         <div className="meetup-detail-overlay" />
         <div className="meetup-detail-inner">
@@ -31,9 +31,9 @@ export default async function MeetupDetailPage({ params }: { params: Promise<{ s
           </div>
           <h1>{m.title}</h1>
           <div className="meetup-detail-info">
-            <span>📅 {formatDate(m.date)}</span>
-            {m.attendees && <span>👥 {m.attendees} attended</span>}
-            <span>{m.photos?.length || 0} photos</span>
+            <span>{formatDate(m.date)}</span>
+            {m.attendees && <span>{m.attendees} attended</span>}
+            {m.photos?.length > 0 && <span>{m.photos.length} photos</span>}
           </div>
         </div>
       </div>
@@ -41,17 +41,13 @@ export default async function MeetupDetailPage({ params }: { params: Promise<{ s
       <div className="meetup-detail-body container">
         <p className="detail-lead">{m.description}</p>
 
-        {/* Photo gallery */}
         {m.photos && m.photos.length > 0 && (
           <div className="photo-gallery">
-            <h2 className="gallery-heading">Photos from the Meetup</h2>
-            <div className="gallery-grid">
-              {m.photos.map((src, i) => (
-                <div key={i} className="gallery-item">
-                  <img src={src} alt={`${m.city} meetup photo ${i + 1}`} loading="lazy" />
-                </div>
-              ))}
+            <div className="gallery-header">
+              <h2 className="gallery-heading">Photos from the Meetup</h2>
+              <span className="gallery-count">{m.photos.length} photos · {m.city}, {m.state}</span>
             </div>
+            <GalleryGrid photos={m.photos} city={m.city} title={m.title} />
           </div>
         )}
 
