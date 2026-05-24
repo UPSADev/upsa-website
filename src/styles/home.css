@@ -2,7 +2,7 @@
    HOME PAGE
    ============================================================ */
 
-/* Hero */
+/* ---- Hero ---- */
 .hero {
   position: relative;
   width: 100%;
@@ -53,81 +53,92 @@
   from { opacity: 0; transform: translateY(28px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ---- Hero welcome switcher (English ↔ Urdu) ---- */
+@keyframes urdu-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+.hero-welcome {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  cursor: default;
+  user-select: none;
+  animation: urdu-float 5s ease-in-out infinite;
+}
+
+.hw-text-wrap {
+  display: grid;
+  place-items: center;
+}
+
+.hw-text {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 1.4s cubic-bezier(.4,0,.2,1), transform 1.4s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+}
+
+.hw-text.hw-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.hw-en {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(36px, 5.5vw, 62px);
+  letter-spacing: -.025em;
+  line-height: 1.1;
+  color: rgba(255,255,255,.88);
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+}
+
+.hw-ur {
+  font-family: 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', serif;
+  font-size: clamp(36px, 5.5vw, 62px);
+  line-height: 1.4;
+  direction: rtl;
+  color: #01411C;
+  text-shadow:
+    0 0 40px rgba(1, 65, 28, .55),
+    0 0 80px rgba(1, 65, 28, .25),
+    0 2px 24px rgba(0, 0, 0, .3);
+}
+
+.hw-rule {
+  width: 40px;
+  height: 1px;
+  background: rgba(255,255,255,.22);
+}
+
+/* ---- Hero heading ---- */
 h1.hero-h1 {
   font-family: 'Fraunces', serif;
   font-weight: 300;
   font-size: clamp(44px, 7.5vw, 108px);
-  line-height: .95;
-  letter-spacing: -.035em;
+  line-height: .82;
+  letter-spacing: -.04em;
   color: #fff;
   font-variation-settings: "opsz" 144, "SOFT" 30;
+  text-shadow:
+    0 1px 8px  rgba(0,0,0,.82),
+    0 3px 20px rgba(0,0,0,.68),
+    0 7px 40px rgba(0,0,0,.52),
+    0 14px 72px rgba(0,0,0,.36);
 }
 h1.hero-h1 em {
   font-style: italic;
   font-weight: 400;
   color: rgba(255,255,255,.85);
   font-variation-settings: "opsz" 144, "SOFT" 100;
-}
-/* Urdu welcome element */
-@keyframes urdu-float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-6px); }
-}
-
-.hero-urdu {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 8px;
-  cursor: default;
-  user-select: none;
-  animation: urdu-float 5s ease-in-out infinite;
-}
-.hero-urdu:hover {
-  animation-play-state: paused;
-}
-.hero-urdu-script {
-  font-family: 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', serif;
-  font-size: clamp(36px, 5.5vw, 62px);
-  line-height: 1.4;
-  direction: rtl;
-  /* Pakistan flag green */
-  color: #01411C;
-  letter-spacing: 0;
-  text-shadow:
-    0 0 40px rgba(1, 65, 28, .55),
-    0 0 80px rgba(1, 65, 28, .25),
-    0 2px 24px rgba(0, 0, 0, .3);
-  transition: color .4s, text-shadow .4s;
-}
-.hero-urdu:hover .hero-urdu-script {
-  color: #016526;
-  text-shadow:
-    0 0 48px rgba(1, 101, 38, .7),
-    0 0 96px rgba(1, 65, 28, .35),
-    0 2px 24px rgba(0, 0, 0, .3);
-}
-.hero-urdu-eng {
-  font-family: 'Geist Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: .38em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.42);
-  transition: color .4s;
-}
-.hero-urdu:hover .hero-urdu-eng { color: rgba(255,255,255,.65); }
-.hero-urdu-line {
-  width: 40px;
-  height: 1px;
-  background: rgba(1, 65, 28, .6);
-  margin-top: 2px;
-  transition: width .4s, background .4s;
-}
-.hero-urdu:hover .hero-urdu-line {
-  width: 56px;
-  background: rgba(1, 101, 38, .8);
 }
 
 .hero-sub {
@@ -170,21 +181,21 @@ h1.hero-h1 em {
 }
 .hero-btn-ghost:hover { border-color: #fff; color: #fff; }
 
-/* Stats bar */
+/* ---- Stats bar ---- */
 .hero-stats {
   position: relative;
   z-index: 2;
-  padding: 20px 56px 28px;
+  padding: 24px 56px 32px;
   border-top: 1px solid rgba(255,255,255,.14);
   display: flex;
-  gap: 48px;
+  gap: 56px;
   flex-wrap: wrap;
 }
-.stat-item { display: flex; flex-direction: column; gap: 4px; }
+.stat-item { display: flex; flex-direction: column; gap: 6px; }
 .stat-num {
   font-family: 'Fraunces', serif;
   font-weight: 300;
-  font-size: 40px;
+  font-size: 52px;
   line-height: 1;
   letter-spacing: -.04em;
   color: #fff;
@@ -193,15 +204,15 @@ h1.hero-h1 em {
 .stat-num em { font-style: italic; color: rgba(255,255,255,.6); }
 .stat-label {
   font-family: 'Geist Mono', monospace;
-  font-size: 9.5px;
-  letter-spacing: .28em;
+  font-size: 11.5px;
+  letter-spacing: .3em;
   text-transform: uppercase;
   color: rgba(255,255,255,.5);
 }
 
-/* Chapter strip */
+/* ---- University names banner ---- */
 .chapter-strip {
-  padding: 24px 0;
+  padding: 28px 0;
   background: var(--paper);
   border-bottom: var(--hairline);
   overflow: hidden;
@@ -212,17 +223,37 @@ h1.hero-h1 em {
 }
 .marquee-track {
   display: flex;
-  gap: 52px;
+  align-items: center;
+  gap: 0;
   width: max-content;
   animation: marquee 44s linear infinite;
 }
-.marquee-track span {
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 36px;
   font-family: 'Fraunces', serif;
   font-weight: 400;
-  font-size: 19px;
+  font-size: 24px;
   letter-spacing: -.01em;
   color: var(--ink-2);
   white-space: nowrap;
+}
+.marquee-dot {
+  font-size: 18px;
+  opacity: .28;
+  margin-right: -4px;
+  flex-shrink: 0;
+}
+.marquee-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 4px;
+  opacity: .78;
+  flex-shrink: 0;
+  filter: grayscale(.1);
 }
 @keyframes marquee {
   from { transform: translateX(0); }
@@ -233,88 +264,109 @@ h1.hero-h1 em {
 .home-section { padding: 100px 56px; }
 .home-section.alt { background: var(--paper-deep); }
 
-.landmark-section {
+/* ---- About UPSAA section (3-panel) ---- */
+.home-about-section {
+  padding: 0;
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  min-height: 520px;
+  overflow: hidden;
+}
+
+.about-inner-col {
+  padding: 100px 56px;
+}
+
+.about-lm {
   position: relative;
   overflow: hidden;
-  isolation: isolate;
+  background: var(--paper);
 }
 
-.landmark-section > *:not(.landmark-photo) {
-  position: relative;
-  z-index: 1;
-}
-
-.landmark-photo {
+.about-lm::before {
+  content: "";
   position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: min(46vw, 620px);
-  pointer-events: none;
-  background-position: center right;
+  inset: -5%;
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  background-size: contain;
-  opacity: .32;
-  mix-blend-mode: multiply;
-  filter: grayscale(1) sepia(.08) contrast(1.05);
-  animation: landmarkPhotoDrift 11s ease-in-out infinite alternate;
+  filter: grayscale(.3) contrast(1.06) brightness(.82) saturate(.78);
 }
 
-.landmark-photo::after {
+.about-lm-left::before {
+  background-image: url('/images/landmarks/minar-e-pakistan.jpg');
+}
+
+.about-lm-right::before {
+  background-image: url('/images/landmarks/statue-of-liberty.jpg');
+  background-position: 55% 18%;
+}
+
+.about-lm-left::after {
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(90deg, var(--paper) 0%, rgba(247,242,232,.6) 20%, rgba(247,242,232,0) 52%),
-    linear-gradient(180deg, var(--paper) 0%, rgba(247,242,232,0) 22%, rgba(247,242,232,0) 74%, var(--paper) 100%);
-}
-
-.mazar-photo {
-  background-image: url('/images/landmarks/mazar-e-quaid.jpg');
-  left: 0;
-  width: 100%;
-  background-position: center 52%;
-  background-size: 92% auto;
-  opacity: .42;
-  filter: grayscale(1) sepia(.08) contrast(1.18) brightness(.68);
-  animation: none;
-  animation-direction: alternate-reverse;
-}
-
-.mazar-photo::after {
-  background:
-    linear-gradient(90deg, var(--paper-deep) 0%, rgba(239,231,213,.72) 12%, rgba(239,231,213,.08) 32%, rgba(239,231,213,.08) 68%, rgba(239,231,213,.72) 88%, var(--paper-deep) 100%),
-    linear-gradient(180deg, var(--paper-deep) 0%, rgba(239,231,213,.08) 26%, rgba(239,231,213,.08) 74%, var(--paper-deep) 100%);
-}
-
-.mazar-section .pillars-grid {
-  position: relative;
-  z-index: 1;
-  background: rgba(239,231,213,.58);
-  backdrop-filter: blur(.5px);
-}
-
-.mazar-section .pillar:hover {
-  background: rgba(247,242,232,.78);
-}
-
-.liberty-section::after,
-.mazar-section::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
   pointer-events: none;
+  background:
+    linear-gradient(to right, transparent 16%, var(--paper) 90%),
+    linear-gradient(180deg, var(--paper) 0%, transparent 20%, transparent 80%, var(--paper) 100%);
 }
 
-.mazar-section::after {
-  background: rgba(239,231,213,.12);
+.about-lm-right::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to left, transparent 16%, var(--paper) 90%),
+    linear-gradient(180deg, var(--paper) 0%, transparent 20%, transparent 80%, var(--paper) 100%);
 }
 
-@keyframes landmarkPhotoDrift {
-  from { transform: translate3d(14px, -8px, 0) scale(1.02); }
-  to { transform: translate3d(-8px, 10px, 0) scale(1.055); }
+.about-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.about-copy {
+  text-align: center;
+}
+
+.about-copy .sec-tag {
+  justify-content: center;
+}
+
+.about-copy .about-para {
+  margin-top: 20px;
+  font-size: 16px;
+  line-height: 1.78;
+  color: var(--ink-2);
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.about-copy .about-cta {
+  margin-top: 36px;
+  padding: 10px 20px;
+  font-size: 13px;
+}
+
+.about-quote {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.about-quote-tag {
+  margin-bottom: 20px;
+}
+
+.about-quote .founder-note {
+  margin-top: 0;
+  padding-top: 0;
+  width: 100%;
 }
 
 .founder-note {
@@ -343,25 +395,25 @@ h1.hero-h1 em {
   color: var(--ink-3);
   font-style: normal;
 }
-/* "Places We've Gathered" city showcase */
+
+/* ---- Where We Have Gathered ---- */
 .gathered-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: 320px;
-  gap: 16px;
+  grid-auto-rows: 200px;
+  gap: 12px;
   margin-top: 48px;
 }
 
-/* First card spans 2 columns and 2 rows — hero card */
 .gathered-card:first-child {
   grid-column: span 2;
   grid-row: span 2;
 }
 .gathered-card:first-child .gathered-img { aspect-ratio: unset; height: 100%; }
-.gathered-card:first-child .gathered-overlay { padding: 28px; }
-.gathered-card:first-child .gathered-city { font-size: 32px; }
-.gathered-card:first-child .gathered-state { font-size: 12px; }
-.gathered-card:first-child .gathered-event-type { font-size: 10px; padding: 5px 12px; }
+.gathered-card:first-child .gathered-overlay { padding: 22px; }
+.gathered-card:first-child .gathered-city { font-size: 26px; }
+.gathered-card:first-child .gathered-state { font-size: 11px; }
+.gathered-card:first-child .gathered-event-type { font-size: 9px; padding: 4px 10px; }
 
 .gathered-card {
   display: flex;
@@ -462,7 +514,113 @@ h1.hero-h1 em {
 }
 .gathered-card:hover .gathered-cta { color: rgba(255,255,255,.9); letter-spacing: .36em; }
 
-/* Values pillars */
+/* ---- Homepage Events Calendar ---- */
+.home-cal-section {
+  background: var(--paper);
+}
+
+.home-cal-wrap {
+  margin-top: 48px;
+}
+
+.home-cal-wrap .cal-cell {
+  min-height: 88px;
+}
+
+.home-cal-wrap .cal-event-pill {
+  font-size: 11.5px;
+  padding: 3px 8px;
+}
+
+.home-cal-wrap .cal-nav-title {
+  font-size: 34px;
+}
+
+/* ---- Values pillars (used on other pages) ---- */
+.landmark-section {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.landmark-section > *:not(.landmark-photo) {
+  position: relative;
+  z-index: 1;
+}
+
+.landmark-photo {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(46vw, 620px);
+  pointer-events: none;
+  background-position: center right;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: .32;
+  mix-blend-mode: multiply;
+  filter: grayscale(1) sepia(.08) contrast(1.05);
+  animation: landmarkPhotoDrift 11s ease-in-out infinite alternate;
+}
+
+.landmark-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--paper) 0%, rgba(247,242,232,.6) 20%, rgba(247,242,232,0) 52%),
+    linear-gradient(180deg, var(--paper) 0%, rgba(247,242,232,0) 22%, rgba(247,242,232,0) 74%, var(--paper) 100%);
+}
+
+.mazar-photo {
+  background-image: url('/images/landmarks/mazar-e-quaid.jpg');
+  left: 0;
+  width: 100%;
+  background-position: center 52%;
+  background-size: 92% auto;
+  opacity: .42;
+  filter: grayscale(1) sepia(.08) contrast(1.18) brightness(.68);
+  animation: none;
+  animation-direction: alternate-reverse;
+}
+
+.mazar-photo::after {
+  background:
+    linear-gradient(90deg, var(--paper-deep) 0%, rgba(239,231,213,.72) 12%, rgba(239,231,213,.08) 32%, rgba(239,231,213,.08) 68%, rgba(239,231,213,.72) 88%, var(--paper-deep) 100%),
+    linear-gradient(180deg, var(--paper-deep) 0%, rgba(239,231,213,.08) 26%, rgba(239,231,213,.08) 74%, var(--paper-deep) 100%);
+}
+
+.mazar-section .pillars-grid {
+  position: relative;
+  z-index: 1;
+  background: rgba(239,231,213,.58);
+  backdrop-filter: blur(.5px);
+}
+
+.mazar-section .pillar:hover {
+  background: rgba(247,242,232,.78);
+}
+
+.liberty-section::after,
+.mazar-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mazar-section::after {
+  background: rgba(239,231,213,.12);
+}
+
+@keyframes landmarkPhotoDrift {
+  from { transform: translate3d(14px, -8px, 0) scale(1.02); }
+  to { transform: translate3d(-8px, 10px, 0) scale(1.055); }
+}
+
 .pillars-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -497,7 +655,6 @@ h1.hero-h1 em {
 .pillar p { font-size: 15px; line-height: 1.72; color: var(--ink-2); }
 
 
-
 /* ============================================================
    RESPONSIVE
    ============================================================ */
@@ -505,11 +662,15 @@ h1.hero-h1 em {
   .home-section { padding: 80px 32px; }
   .hero-frame { padding-left: 32px; padding-right: 32px; }
   .hero-stats { padding: 20px 32px 28px; }
-  .events-grid { grid-template-columns: repeat(2, 1fr); }
-  .gathered-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 260px; }
+  .gathered-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; }
+  .home-about-section { grid-template-columns: 1fr; min-height: unset; }
+  .about-lm { display: none; }
+  .about-inner-col { padding: 80px 32px; }
+  .about-inner { grid-template-columns: 1fr; gap: 48px; }
 }
 @media (max-width: 768px) {
   .home-section { padding: 64px 20px; }
+  .about-inner-col { padding: 64px 20px; }
   .hero {
     min-height: 100svh;
     max-height: none;
@@ -533,23 +694,27 @@ h1.hero-h1 em {
     padding: 16px 20px 24px;
     gap: 18px 24px;
   }
-  .stat-num { font-size: 30px; }
-  h1.hero-h1 { font-size: clamp(34px, 10vw, 52px); line-height: 1.03; }
+  .stat-num { font-size: 38px; }
+  .stat-label { font-size: 10px; }
+  h1.hero-h1 { font-size: clamp(34px, 10vw, 52px); line-height: .9; }
   .hero-sub { font-size: 14px; margin-top: 16px; }
   .hero-actions { margin-top: 24px; align-items: stretch; }
   .gathered-grid {
     grid-template-columns: 1fr;
-    grid-auto-rows: 280px;
+    grid-auto-rows: 220px;
   }
   .gathered-card:first-child { grid-column: span 1; grid-row: span 1; }
   .gathered-card:first-child .gathered-img { height: 100%; }
-  .gathered-card:first-child .gathered-city { font-size: 24px; }
+  .gathered-card:first-child .gathered-city { font-size: 22px; }
   .pillars-grid { grid-template-columns: 1fr; }
   .pillar { border-right: none; border-bottom: var(--hairline); }
   .chapter-strip { padding: 16px 0; }
+  .marquee-item { font-size: 18px; padding: 0 24px; gap: 8px; }
+  .marquee-logo { width: 22px; height: 22px; }
 }
 @media (max-width: 480px) {
   .home-section { padding: 48px 16px; }
+  .about-inner-col { padding: 48px 16px; }
   .landmark-photo { display: none; }
   h1.hero-h1 { font-size: clamp(30px, 12vw, 44px); }
   .hero-frame { padding-left: 16px; padding-right: 16px; }
@@ -559,13 +724,19 @@ h1.hero-h1 em {
     width: 100%;
     justify-content: center;
   }
+  .marquee-item { font-size: 16px; padding: 0 18px; }
+  .marquee-logo { width: 20px; height: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-photo,
   .hero-content,
   .marquee-track,
-  .landmark-photo {
+  .landmark-photo,
+  .hero-welcome {
     animation: none !important;
+  }
+  .hw-text {
+    transition: opacity .01ms !important;
   }
 }

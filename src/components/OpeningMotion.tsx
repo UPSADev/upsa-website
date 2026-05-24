@@ -3,14 +3,14 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-const INTRO_KEY = 'upsa-opening-motion-seen';
-
 export default function OpeningMotion({ logo }: { logo: string }) {
   const [visible, setVisible] = useState(true);
   const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const versionToken = logo.split('?v=')[1]?.slice(0, 10) ?? '0';
+    const INTRO_KEY = `upsa-intro-seen-${versionToken}`;
 
     if (window.sessionStorage.getItem(INTRO_KEY) === 'true') {
       const skipTimer = window.setTimeout(() => {
@@ -25,19 +25,19 @@ export default function OpeningMotion({ logo }: { logo: string }) {
 
     const leaveTimer = window.setTimeout(() => {
       setLeaving(true);
-    }, reduceMotion ? 120 : 1850);
+    }, reduceMotion ? 120 : 3800);
 
     const removeTimer = window.setTimeout(() => {
       setVisible(false);
       document.body.classList.remove('intro-lock');
-    }, reduceMotion ? 260 : 2400);
+    }, reduceMotion ? 260 : 4450);
 
     return () => {
       window.clearTimeout(leaveTimer);
       window.clearTimeout(removeTimer);
       document.body.classList.remove('intro-lock');
     };
-  }, []);
+  }, [logo]);
 
   if (!visible) return null;
 

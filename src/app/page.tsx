@@ -1,15 +1,66 @@
 import Link from 'next/link';
 import HeroCounter from '@/components/HeroCounter';
-import { formatDate, getHomeContent, getMeetups } from '@/lib/content';
+import HeroWelcome from '@/components/HeroWelcome';
+import EventCalendar, { type CalEvent } from '@/components/EventCalendar';
+import { formatDate, getHomeContent, getMeetups, getEvents, getWorkshops } from '@/lib/content';
 import '@/styles/home.css';
+import '@/styles/events-cal.css';
+
+const CHAPTER_LOGOS: Record<string, string> = {
+  'Drexel':          '/images/logos/drexel.png',
+  'Cornell':         '/images/logos/cornell.png',
+  'Texas A&M':       '/images/logos/texas_am.png',
+  'Columbia':        '/images/logos/columbia_university.png',
+  'Penn State':      '/images/logos/penn_state.png',
+  'Illinois Tech':   '/images/logos/illinois_inst_of_tech.png',
+  'UMass':           '/images/logos/UMass.png',
+  'UC Berkeley':     '/images/logos/university_of_california.jpeg',
+  'USF':             '/images/logos/usf.png',
+  'UT Dallas':       '/images/logos/utd.png',
+  'Kent State':      '/images/logos/kent_state.png',
+  'Oregon State':    '/images/logos/oregon_state.png',
+  'Oklahoma':        '/images/logos/ou.png',
+  'UCF':             '/images/logos/ucf.png',
+  'Wichita State':   '/images/logos/wichita_state_uni.jpg',
+  'Cleveland State': '/images/logos/Cleveland_State_University.png',
+  'U of Florida':    '/images/logos/university_of_florida.png',
+  'U of Illinois':   '/images/logos/u_of_illinois.png',
+};
 
 export default function HomePage() {
   const home = getHomeContent();
   const chapters = home.chapters || [];
 
   const pastMeetups = getMeetups()
-    .filter(meetup => meetup.displayOnHomepage && meetup.status === 'past')
+    .filter(m => m.displayOnHomepage && m.status === 'past')
     .sort((a, b) => (a.homepageOrder ?? 99) - (b.homepageOrder ?? 99));
+
+  const calEvents: CalEvent[] = [
+    ...getEvents()
+      .filter(e => e.status === 'upcoming')
+      .map(e => ({
+        slug:        `e-${e.slug}`,
+        title:       e.title,
+        date:        e.date,
+        location:    e.location,
+        category:    e.category,
+        description: e.description,
+        registerUrl: e.registerUrl,
+        status:      'upcoming' as const,
+      })),
+    ...getWorkshops()
+      .filter(w => w.status === 'upcoming')
+      .map(w => ({
+        slug:        `w-${w.slug}`,
+        title:       w.title,
+        date:        w.date,
+        location:    w.location,
+        category:    w.type,
+        description: w.description,
+        registerUrl: w.registerUrl,
+        status:      'upcoming' as const,
+      })),
+  ];
 
   function emphasizedText(text = '', emphasis = '') {
     if (!emphasis || !text.includes(emphasis)) return text;
@@ -19,15 +70,12 @@ export default function HomePage() {
 
   return (
     <>
+      {/* ---- Hero ---- */}
       <section className="hero">
         <div className="hero-photo" />
         <div className="hero-veil" />
         <div className="hero-frame">
-          <div className="hero-urdu" aria-label="Welcome — Khush Aamadeed">
-            <div className="hero-urdu-script" lang="ur">خوش آمدید</div>
-            <div className="hero-urdu-line" aria-hidden="true" />
-            <div className="hero-urdu-eng">Welcome</div>
-          </div>
+          <HeroWelcome />
           <div className="hero-content">
             <h1 className="hero-h1">
               {home.heroTitleLine1}<br />
@@ -51,16 +99,65 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ---- University Names Banner ---- */}
       <div className="chapter-strip">
         <div className="marquee-wrap">
           <div className="marquee-track">
-            {[...chapters, ...chapters].map((c, i) => <span key={`${c}-${i}`}>{i % chapters.length === 0 ? c : `· ${c}`}</span>)}
+            {[...chapters, ...chapters].map((c, i) => (
+              <span key={`${c}-${i}`} className="marquee-item">
+                {i % chapters.length !== 0 && (
+                  <span className="marquee-dot" aria-hidden="true">·</span>
+                )}
+                {CHAPTER_LOGOS[c] && (
+                  <img
+                    src={CHAPTER_LOGOS[c]}
+                    alt=""
+                    aria-hidden="true"
+                    className="marquee-logo"
+                    loading="lazy"
+                  />
+                )}
+                {c}
+              </span>
+            ))}
           </div>
         </div>
       </div>
 
+      {/* ---- About UPSAA + President's Quote ---- */}
+      <section className="home-section home-about-section">
+        <div className="about-lm about-lm-left" aria-hidden="true" />
+        <div className="about-inner-col">
+          <div className="about-inner">
+            <div className="about-copy">
+              <span className="sec-tag">{home.aboutTag || 'About UPSAA'}</span>
+              <h2 className="sec-h2">
+                {emphasizedText(home.aboutTitle || 'A network built for you.', home.aboutTitleEmphasis || 'for you.')}
+              </h2>
+              {(home.aboutParagraphs || []).map((p, i) => (
+                <p className="about-para" key={i}>{p}</p>
+              ))}
+              <Link href={home.aboutCtaHref || '/about'} className="btn-outline about-cta">
+                {home.aboutCtaLabel || 'Learn Our Story'} &rarr;
+              </Link>
+            </div>
+            {home.founderQuote && (
+              <aside className="about-quote">
+                <span className="sec-tag about-quote-tag">From the Founder</span>
+                <div className="founder-note">
+                  <blockquote>&ldquo;{home.founderQuote}&rdquo;</blockquote>
+                  <cite>{home.founderCredit}</cite>
+                </div>
+              </aside>
+            )}
+          </div>
+        </div>
+        <div className="about-lm about-lm-right" aria-hidden="true" />
+      </section>
+
+      {/* ---- Where We Have Gathered ---- */}
       {pastMeetups.length > 0 && (
-        <section className="home-section gathered-section">
+        <section className="home-section alt gathered-section">
           <span className="sec-tag">{home.pastMeetupsTag}</span>
           <h2 className="sec-h2">{emphasizedText(home.pastMeetupsTitle, home.pastMeetupsTitleEmphasis)}</h2>
           <div className="gathered-grid">
@@ -89,22 +186,17 @@ export default function HomePage() {
         </section>
       )}
 
-      <section className="home-section alt landmark-section mazar-section">
-        <div className="landmark-photo mazar-photo" aria-hidden="true" />
-        <span className="sec-tag">{home.valuesTag}</span>
-        <h2 className="sec-h2">{emphasizedText(home.valuesTitle, home.valuesTitleEmphasis)}</h2>
-        <div className="pillars-grid">
-          {home.values?.map(value => (
-            <div className="pillar" key={value.number}>
-              <span className="pillar-num">{value.number}</span>
-              <h3>{emphasizedText(value.title, value.emphasis || '')}</h3>
-              <p>{value.description}</p>
-            </div>
-          ))}
+      {/* ---- Events Calendar ---- */}
+      <section className="home-section home-cal-section">
+        <span className="sec-tag">What&rsquo;s Coming</span>
+        <h2 className="sec-h2">Upcoming <em>events</em></h2>
+        <div className="home-cal-wrap">
+          <EventCalendar events={calEvents} />
         </div>
       </section>
 
-      <section className="home-section" style={{textAlign:'center'}}>
+      {/* ---- Join CTA ---- */}
+      <section className="home-section alt" style={{textAlign:'center'}}>
         <span className="sec-tag" style={{justifyContent:'center', display:'flex'}}>{home.joinTag}</span>
         <h2 className="sec-h2" style={{maxWidth:680, margin:'0 auto'}}>
           {emphasizedText(home.joinTitle, home.joinTitleEmphasis)}

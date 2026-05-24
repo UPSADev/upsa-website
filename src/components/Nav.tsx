@@ -86,7 +86,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
               aria-expanded={desktopDropdown === 'about'}
               onClick={() => toggleDesktopDropdown('about')}
             >
-              About <span className="nav-caret">v</span>
+              About
             </button>
             <div className="nav-dropdown">
               <Link href="/about" onClick={close}>Story</Link>
@@ -95,21 +95,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
             </div>
           </div>
 
-          <div className={`nav-drop-group${desktopDropdown === 'community' ? ' open' : ''}`}>
-            <button
-              type="button"
-              className="nav-drop-trigger"
-              aria-haspopup="true"
-              aria-expanded={desktopDropdown === 'community'}
-              onClick={() => toggleDesktopDropdown('community')}
-            >
-              Community <span className="nav-caret">v</span>
-            </button>
-            <div className="nav-dropdown">
-              <Link href="/events" onClick={close}>Events Calendar</Link>
-              <Link href="/meetups" onClick={close}>City Meetups</Link>
-            </div>
-          </div>
+          <Link href="/meetups" onClick={close}>Gallery</Link>
 
           {settings.navLinks.map(link => (
             <Link href={link.href} key={link.href} onClick={close}>{link.label}</Link>
@@ -145,12 +131,8 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
           </div>
         </div>
 
-        <div className={`m-item${openSection === 'community' ? ' open' : ''}`}>
-          <button className="m-link" onClick={() => toggleSection('community')}>Community <span className="m-caret-icon">+</span></button>
-          <div className="m-sub">
-            <Link href="/events" onClick={close}>Events Calendar</Link>
-            <Link href="/meetups" onClick={close}>City Meetups</Link>
-          </div>
+        <div className="m-item">
+          <Link href="/meetups" className="m-link" onClick={close}>Gallery</Link>
         </div>
 
         {settings.navLinks.map(link => (
