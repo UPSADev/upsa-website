@@ -126,33 +126,27 @@ export default function HomePage() {
 
       {/* ---- About UPSAA + President's Quote ---- */}
       <section className="home-section home-about-section">
-        <div className="about-lm about-lm-left" aria-hidden="true" />
-        <div className="about-inner-col">
-          <div className="about-inner">
-            <div className="about-copy">
-              <span className="sec-tag">{home.aboutTag || 'About UPSAA'}</span>
-              <h2 className="sec-h2">
-                {emphasizedText(home.aboutTitle || 'A network built for you.', home.aboutTitleEmphasis || 'for you.')}
-              </h2>
-              {(home.aboutParagraphs || []).map((p, i) => (
-                <p className="about-para" key={i}>{p}</p>
-              ))}
-              <Link href={home.aboutCtaHref || '/about'} className="btn-outline about-cta">
-                {home.aboutCtaLabel || 'Learn Our Story'} &rarr;
-              </Link>
-            </div>
-            {home.founderQuote && (
-              <aside className="about-quote">
-                <span className="sec-tag about-quote-tag">From the Founder</span>
-                <div className="founder-note">
-                  <blockquote>&ldquo;{home.founderQuote}&rdquo;</blockquote>
-                  <cite>{home.founderCredit}</cite>
-                </div>
-              </aside>
-            )}
+        <div className="about-content-col">
+          <div className="about-copy">
+            <span className="sec-tag">{home.aboutTag || 'About UPSA'}</span>
+            <h2 className="sec-h2">
+              {emphasizedText(home.aboutTitle || 'A network built for you.', home.aboutTitleEmphasis || 'for you.')}
+            </h2>
+            {(home.aboutParagraphs || []).map((p, i) => (
+              <p className="about-para" key={i}>{p}</p>
+            ))}
+            <Link href={home.aboutCtaHref || '/about'} className="btn-outline about-cta">
+              {home.aboutCtaLabel || 'Learn Our Story'} &rarr;
+            </Link>
           </div>
+          {home.founderQuote && (
+            <div className="founder-note about-founder-note">
+              <blockquote>&ldquo;{home.founderQuote}&rdquo;</blockquote>
+              <cite>{home.founderCredit}</cite>
+            </div>
+          )}
         </div>
-        <div className="about-lm about-lm-right" aria-hidden="true" />
+        <div className="about-photo-col" aria-hidden="true" />
       </section>
 
       {/* ---- Where We Have Gathered ---- */}

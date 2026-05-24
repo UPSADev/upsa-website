@@ -264,87 +264,28 @@ h1.hero-h1 em {
 .home-section { padding: 100px 56px; }
 .home-section.alt { background: var(--paper-deep); }
 
-/* ---- About UPSAA section (3-panel) ---- */
+/* ---- About UPSAA section (split layout) ---- */
 .home-about-section {
   padding: 0;
   display: grid;
-  grid-template-columns: 280px 1fr 280px;
-  min-height: 520px;
-  overflow: hidden;
-}
-
-.about-inner-col {
-  padding: 100px 56px;
-}
-
-.about-lm {
-  position: relative;
-  overflow: hidden;
-  background: var(--paper);
-}
-
-.about-lm::before {
-  content: "";
-  position: absolute;
-  inset: -5%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  filter: grayscale(.3) contrast(1.06) brightness(.82) saturate(.78);
-}
-
-.about-lm-left::before {
-  background-image: url('/images/landmarks/minar-e-pakistan.jpg');
-}
-
-.about-lm-right::before {
-  background-image: url('/images/landmarks/statue-of-liberty.jpg');
-  background-position: 55% 18%;
-}
-
-.about-lm-left::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(to right, transparent 16%, var(--paper) 90%),
-    linear-gradient(180deg, var(--paper) 0%, transparent 20%, transparent 80%, var(--paper) 100%);
-}
-
-.about-lm-right::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(to left, transparent 16%, var(--paper) 90%),
-    linear-gradient(180deg, var(--paper) 0%, transparent 20%, transparent 80%, var(--paper) 100%);
-}
-
-.about-inner {
-  display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
+  min-height: 0;
 }
 
-.about-copy {
-  text-align: center;
-}
-
-.about-copy .sec-tag {
+.about-content-col {
+  padding: 20px 64px;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
+  gap: 16px;
 }
 
 .about-copy .about-para {
-  margin-top: 20px;
-  font-size: 16px;
-  line-height: 1.78;
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.68;
   color: var(--ink-2);
-  max-width: 520px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 480px;
 }
 
 .about-copy .about-cta {
@@ -353,20 +294,32 @@ h1.hero-h1 em {
   font-size: 13px;
 }
 
-.about-quote {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.about-quote-tag {
-  margin-bottom: 20px;
-}
-
-.about-quote .founder-note {
+.about-founder-note {
   margin-top: 0;
-  padding-top: 0;
-  width: 100%;
+}
+
+.about-photo-col {
+  position: relative;
+  overflow: hidden;
+  background: url('/images/landmarks/nyc-skyline-day.jpg') center 50% / cover no-repeat;
+}
+
+.about-photo-col::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, var(--paper) 0%, transparent 32%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.about-photo-col::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--paper) 0%, transparent 14%, transparent 86%, var(--paper) 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .founder-note {
@@ -663,14 +616,14 @@ h1.hero-h1 em {
   .hero-frame { padding-left: 32px; padding-right: 32px; }
   .hero-stats { padding: 20px 32px 28px; }
   .gathered-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; }
-  .home-about-section { grid-template-columns: 1fr; min-height: unset; }
-  .about-lm { display: none; }
-  .about-inner-col { padding: 80px 32px; }
+  .home-about-section { grid-template-columns: 1fr; }
+  .about-photo-col { display: none; }
+  .about-content-col { padding: 80px 32px; }
   .about-inner { grid-template-columns: 1fr; gap: 48px; }
 }
 @media (max-width: 768px) {
   .home-section { padding: 64px 20px; }
-  .about-inner-col { padding: 64px 20px; }
+  .about-content-col { padding: 64px 20px; }
   .hero {
     min-height: 100svh;
     max-height: none;
@@ -714,7 +667,7 @@ h1.hero-h1 em {
 }
 @media (max-width: 480px) {
   .home-section { padding: 48px 16px; }
-  .about-inner-col { padding: 48px 16px; }
+  .about-content-col { padding: 48px 16px; }
   .landmark-photo { display: none; }
   h1.hero-h1 { font-size: clamp(30px, 12vw, 44px); }
   .hero-frame { padding-left: 16px; padding-right: 16px; }
