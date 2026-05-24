@@ -38,7 +38,7 @@ nav.top.scrolled {
 
 .nav-links a,
 .nav-drop-trigger {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   color: rgba(255,255,255,.85);
   letter-spacing: .02em;
@@ -121,7 +121,7 @@ nav.top.scrolled .nav-drop-trigger:hover { color: var(--moss); }
 .nav-dropdown a {
   display: block;
   padding: 10px 18px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-2);
   transition: color .2s, background .2s;
   white-space: nowrap;
@@ -138,7 +138,7 @@ nav.top.scrolled .nav-drop-trigger:hover { color: var(--moss); }
   background: var(--moss);
   color: #fff;
   border-radius: var(--radius-pill);
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 500;
   white-space: nowrap;
   transition: background .25s, transform .25s;

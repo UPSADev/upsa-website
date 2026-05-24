@@ -24,10 +24,10 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 7px 14px;
+  padding: 8px 16px;
   border-radius: var(--radius-pill);
   border: var(--hairline);
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 500;
   color: var(--ink-2);
   white-space: nowrap;
@@ -72,8 +72,8 @@
 }
 .res-section:nth-child(even) .res-card { background: var(--paper); }
 .res-card:hover { box-shadow: 0 8px 28px -8px rgba(26,31,24,.1); }
-.res-card h3 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
-.res-card p  { font-size: 13.5px; line-height: 1.72; color: var(--ink-2); }
+.res-card h3 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.res-card p  { font-size: 15px; line-height: 1.72; color: var(--ink-2); }
 
 /* Safety & Hotlines section */
 .res-safety-section {
@@ -118,18 +118,18 @@
 .rhc-number {
   font-family: 'Fraunces', serif;
   font-weight: 400;
-  font-size: 22px;
+  font-size: 26px;
   letter-spacing: -.02em;
   color: var(--moss);
   font-variation-settings: "opsz" 72, "SOFT" 50;
 }
 .rhc-name {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--ink);
 }
 .rhc-desc {
-  font-size: 13px;
+  font-size: 14.5px;
   line-height: 1.62;
   color: var(--ink-3);
   margin-top: 4px;

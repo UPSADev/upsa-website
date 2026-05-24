@@ -105,10 +105,10 @@ h1.hero-h1 em {
 
 .hero-sub {
   margin-top: 28px;
-  font-size: 16px;
-  line-height: 1.7;
-  color: rgba(255,255,255,.7);
-  max-width: 500px;
+  font-size: 17.5px;
+  line-height: 1.72;
+  color: rgba(255,255,255,.72);
+  max-width: 540px;
 }
 .hero-actions {
   display: flex;
@@ -309,8 +309,8 @@ h1.hero-h1 em {
 }
 .about-body p {
   margin-top: 20px;
-  font-size: 15px;
-  line-height: 1.74;
+  font-size: 16px;
+  line-height: 1.76;
   color: var(--ink-2);
 }
 .founder-note {
@@ -323,8 +323,8 @@ h1.hero-h1 em {
 .founder-note blockquote {
   font-family: 'Fraunces', serif;
   font-weight: 300;
-  font-size: 17px;
-  line-height: 1.6;
+  font-size: 18.5px;
+  line-height: 1.62;
   font-style: italic;
   color: var(--ink);
   font-variation-settings: "opsz" 72, "SOFT" 60;
@@ -771,12 +771,12 @@ h1.hero-h1 em {
 .pillar h3 {
   font-family: 'Fraunces', serif;
   font-weight: 400;
-  font-size: 26px;
+  font-size: 28px;
   letter-spacing: -.015em;
   font-variation-settings: "opsz" 144, "SOFT" 50;
 }
 .pillar h3 em { font-style: italic; color: var(--moss); }
-.pillar p { font-size: 13.5px; line-height: 1.68; color: var(--ink-2); }
+.pillar p { font-size: 15px; line-height: 1.72; color: var(--ink-2); }
 
 /* Meetups teaser */
 .meetups-scroll {

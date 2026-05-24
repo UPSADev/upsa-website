@@ -13,7 +13,7 @@
 }
 
 .story-text p {
-  font-size: 15px;
+  font-size: 16.5px;
   line-height: 1.75;
   color: var(--ink-2);
 }
@@ -48,7 +48,7 @@
   margin-bottom: 20px;
 }
 .story-note blockquote {
-  font-size: 14.5px;
+  font-size: 16px;
   line-height: 1.7;
   color: rgba(255,255,255,.85);
   font-style: italic;
@@ -86,7 +86,7 @@
 }
 .mv-box p {
   margin-top: 16px;
-  font-size: 15px;
+  font-size: 16.5px;
   line-height: 1.75;
   color: var(--ink-2);
 }
@@ -117,8 +117,8 @@
 }
 .culture-card:hover { box-shadow: 0 8px 24px -8px rgba(26,31,24,.1); }
 .culture-icon { font-size: 28px; display: block; margin-bottom: 14px; }
-.culture-card h3 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
-.culture-card p  { font-size: 13px; line-height: 1.65; color: var(--ink-2); }
+.culture-card h3 { font-size: 15.5px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.culture-card p  { font-size: 14.5px; line-height: 1.65; color: var(--ink-2); }
 
 /* Values */
 .about-values {
@@ -145,8 +145,8 @@
   display: block;
   margin-bottom: 12px;
 }
-.value-item h3 { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
-.value-item p  { font-size: 13.5px; line-height: 1.65; color: var(--ink-2); }
+.value-item h3 { font-size: 16.5px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.value-item p  { font-size: 15px; line-height: 1.65; color: var(--ink-2); }
 
 /* Stats bar */
 .about-stats {
