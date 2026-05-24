@@ -23,12 +23,12 @@ export default function HomePage() {
         <div className="hero-photo" />
         <div className="hero-veil" />
         <div className="hero-frame">
+          <div className="hero-urdu" aria-label="Welcome — Khush Aamadeed">
+            <div className="hero-urdu-script" lang="ur">خوش آمدید</div>
+            <div className="hero-urdu-line" aria-hidden="true" />
+            <div className="hero-urdu-eng">Welcome</div>
+          </div>
           <div className="hero-content">
-            <div className="hero-urdu" aria-label="Welcome — Khush Aamadeed">
-              <div className="hero-urdu-script" lang="ur">خوش آمدید</div>
-              <div className="hero-urdu-line" aria-hidden="true" />
-              <div className="hero-urdu-eng">Welcome</div>
-            </div>
             <h1 className="hero-h1">
               {home.heroTitleLine1}<br />
               {home.heroTitleLine2} <span style={{fontStyle:'italic',color:'rgba(255,255,255,.4)'}}>&#38;</span><br />
@@ -91,7 +91,11 @@ export default function HomePage() {
           <h2 className="sec-h2">{emphasizedText(home.pastMeetupsTitle, home.pastMeetupsTitleEmphasis)}</h2>
           <div className="gathered-grid">
             {pastMeetups.map(meetup => (
-              <Link href={`/meetups/${meetup.slug}`} className="gathered-card" key={meetup.slug}>
+              <Link
+                href={`/meetups#${(meetup.state || '').replace(/\s+/g, '-').toLowerCase()}`}
+                className="gathered-card"
+                key={meetup.slug}
+              >
                 <div className="gathered-img">
                   <img src={meetup.homepageImage || meetup.coverImage} alt={`${meetup.city} meetup`} loading="lazy" />
                 </div>
@@ -101,7 +105,7 @@ export default function HomePage() {
                   <div className="gathered-state">{meetup.state}</div>
                   <div className="gathered-date">{formatDate(meetup.date)}</div>
                 </div>
-                <span className="gathered-cta">View Photos →</span>
+                <span className="gathered-cta">See City Gallery →</span>
               </Link>
             ))}
           </div>
