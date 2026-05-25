@@ -45,13 +45,13 @@ nav.top.page-nav .nav-burger span { background: var(--ink); }
   content: "";
   position: absolute;
   top: 50%;
-  left: 46px;
+  left: 82px;
   transform: translate(-50%, -50%);
-  width: 160px;
-  height: 160px;
-  background: radial-gradient(circle, rgba(212,175,55,.26) 0%, rgba(212,175,55,.1) 38%, transparent 68%);
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(212,175,55,.28) 0%, rgba(212,175,55,.1) 40%, transparent 70%);
   pointer-events: none;
-  filter: blur(16px);
+  filter: blur(18px);
   z-index: 0;
 }
 
