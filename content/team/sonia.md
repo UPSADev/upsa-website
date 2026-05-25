@@ -1,6 +1,8 @@
 ---
 name: Sonia
-role: Team Member
-order: 24
+role: Head of Operations
+order: 5
+bio: Oversee operations across UPSA and help build systems that enable the organization to scale more efficiently
 photo: /images/team/sonia.jpg
+linkedin: https://www.linkedin.com/in/sonia-parveen-327738297/
 ---

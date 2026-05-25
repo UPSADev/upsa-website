@@ -1,6 +1,8 @@
 ---
 name: Hamza
-role: Team Member
-order: 16
+role: Director of Alumni Engagement
+order: 11
+bio: Building connections with alumni and expanding the network
 photo: /images/team/hamza.jpg
+linkedin: https://www.linkedin.com/in/mhamza3401/
 ---

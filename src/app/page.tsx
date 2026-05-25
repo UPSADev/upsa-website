@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import HeroCounter from '@/components/HeroCounter';
-import { formatDate, formatDateWithWeekday, getHomeContent, getMeetups, getWorkshops } from '@/lib/content';
+import { formatDate, getHomeContent, getMeetups, getTeam, getWorkshops } from '@/lib/content';
 import '@/styles/home.css';
 
 export default function HomePage() {
@@ -12,7 +12,6 @@ export default function HomePage() {
     .sort((a, b) => (a.homepageOrder ?? 99) - (b.homepageOrder ?? 99));
 
   const upcomingMeetups = homepageMeetups.filter(meetup => meetup.status === 'upcoming');
-  const pastMeetups = homepageMeetups.filter(meetup => meetup.status === 'past');
 
   const homepageWorkshops = getWorkshops()
     .filter(workshop => workshop.displayOnHomepage)
@@ -20,6 +19,8 @@ export default function HomePage() {
 
   const upcomingSessions = homepageWorkshops.filter(workshop => workshop.status === 'upcoming');
   const pastSessions = homepageWorkshops.filter(workshop => workshop.status === 'past');
+
+  const team = getTeam();
 
   function emphasizedText(text = '', emphasis = '') {
     if (!emphasis || !text.includes(emphasis)) return text;
@@ -126,23 +127,32 @@ export default function HomePage() {
       </section>
 
       <section className="home-section">
-        <span className="sec-tag">-- {home.pastMeetupsTag}</span>
-        <h2 className="sec-h2">{emphasizedText(home.pastMeetupsTitle, home.pastMeetupsTitleEmphasis)}</h2>
-        <div className="past-meetups-grid">
-          {pastMeetups.map(meetup => (
-            <article className="past-meetup-card" key={meetup.slug}>
-              <div className="past-meetup-img">
-                <img src={meetup.homepageImage || meetup.coverImage} alt={`${meetup.city} meetup`} loading="lazy" />
-                <div className="meetup-thumb-overlay">
-                  <div className="meetup-thumb-city">{meetup.city}</div>
-                  <div className="meetup-thumb-date">{formatDateWithWeekday(meetup.date)}</div>
+        <span className="sec-tag">-- The Team</span>
+        <h2 className="sec-h2">The people <em>behind UPSA.</em></h2>
+        <div className="home-team-grid">
+          {team.map(member => (
+            <div className="home-team-card" key={member.slug}>
+              <div className="home-team-portrait">
+                {member.photo
+                  ? <img src={member.photo} alt={member.name} loading="lazy" />
+                  : <div className="home-team-fallback">{member.name[0]}</div>
+                }
+                <div className="home-team-overlay">
+                  <span className="home-team-name">{member.name}</span>
+                  <span className="home-team-role">{member.role}</span>
+                  {(member.bio || member.linkedin) && (
+                    <div className="home-team-reveal">
+                      {member.bio && <p className="home-team-bio">{member.bio}</p>}
+                      {member.linkedin && (
+                        <a href={member.linkedin} className="home-team-li" target="_blank" rel="noopener noreferrer">
+                          LinkedIn &rarr;
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
-              <div className="past-meetup-copy">
-                <h3>{meetup.state} Meetup</h3>
-                <p>{meetup.description}</p>
-              </div>
-            </article>
+            </div>
           ))}
         </div>
       </section>
