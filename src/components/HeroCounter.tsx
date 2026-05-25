@@ -28,7 +28,7 @@ export default function HeroCounter({ value, suffix }: { value: string; suffix?:
     let frame = 0;
     let startTime = 0;
     let mutationObserver: MutationObserver | null = null;
-    const duration = 1500;
+    const duration = 2500;
 
     function runWhenIntroIsDone() {
       if (hasRunRef.current) return;
