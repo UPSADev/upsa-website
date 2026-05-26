@@ -177,7 +177,7 @@ export default function HomePage() {
             ))}
           </div>
           <div style={{marginTop:40, textAlign:'center'}}>
-            <Link href="/meetups" className="btn-outline">All Meetups &amp; Photos →</Link>
+            <Link href="/meetups" className="btn-outline">View All Gallery Photos →</Link>
           </div>
         </section>
       )}

@@ -9,15 +9,17 @@ export default function MeetupsPage() {
     .filter(m => m.status === 'past')
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  const cards: MeetupCard[] = meetups.map(m => ({
-    slug:        m.slug,
-    city:        m.city,
-    state:       m.state,
-    date:        formatDate(m.date),
-    description: m.description ?? '',
-    coverImage:  m.coverImage || m.photos?.[0] || '',
-    photoCount:  m.photos?.length ?? 0,
-  }));
+  const cards: MeetupCard[] = meetups.map(m => {
+    const photos = m.photos?.length > 0 ? m.photos : m.coverImage ? [m.coverImage] : [];
+    return {
+      slug:        m.slug,
+      city:        m.city,
+      state:       m.state,
+      date:        formatDate(m.date),
+      description: m.description ?? '',
+      photos,
+    };
+  });
 
   const states = [...new Set(meetups.map(m => m.state))].sort();
 

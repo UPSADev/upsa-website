@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState, useRef } from 'react';
 
 export interface MeetupCard {
   slug: string;
@@ -9,8 +8,69 @@ export interface MeetupCard {
   state: string;
   date: string;
   description: string;
-  coverImage: string;
-  photoCount: number;
+  photos: string[];
+}
+
+function MeetupCardItem({ card }: { card: MeetupCard }) {
+  const [idx, setIdx] = useState(0);
+  const touchX = useRef<number | null>(null);
+  const { photos, city, state, date, description } = card;
+  const count = photos.length;
+
+  const prev = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIdx(i => (i - 1 + count) % count);
+  };
+  const next = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIdx(i => (i + 1) % count);
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchX.current === null) return;
+    const delta = touchX.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 40) delta > 0
+      ? setIdx(i => (i + 1) % count)
+      : setIdx(i => (i - 1 + count) % count);
+    touchX.current = null;
+  };
+
+  return (
+    <div className="gcard">
+      <div
+        className="gcard-img"
+        onTouchStart={count > 1 ? onTouchStart : undefined}
+        onTouchEnd={count > 1 ? onTouchEnd : undefined}
+      >
+        {count > 0
+          ? <img src={photos[idx]} alt={`${city} meetup`} loading="lazy" />
+          : <div className="gcard-placeholder">{city[0]}</div>
+        }
+        {count > 1 && (
+          <>
+            <button className="gcard-arrow gcard-prev" onClick={prev} aria-label="Previous photo">&#8249;</button>
+            <button className="gcard-arrow gcard-next" onClick={next} aria-label="Next photo">&#8250;</button>
+            <span className="gcard-slide-pos">{idx + 1} / {count}</span>
+          </>
+        )}
+      </div>
+
+      <div className="gcard-body">
+        <div className="gcard-top">
+          <span className="gcard-city">{city}</span>
+          <span className="gcard-state-tag">{state}</span>
+        </div>
+        <span className="gcard-date">{date}</span>
+        {description && <p className="gcard-desc">{description}</p>}
+        {count > 0 && (
+          <span className="gcard-count">{count} {count === 1 ? 'Photo' : 'Photos'}</span>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default function GalleryClient({ cards, states }: { cards: MeetupCard[]; states: string[] }) {
@@ -45,25 +105,7 @@ export default function GalleryClient({ cards, states }: { cards: MeetupCard[]; 
 
       <div className="gcards">
         {visible.map(c => (
-          <Link key={c.slug} href={`/meetups/${c.slug}`} className="gcard">
-            <div className="gcard-img">
-              {c.coverImage
-                ? <img src={c.coverImage} alt={c.city} loading="lazy" />
-                : <div className="gcard-placeholder">{c.city[0]}</div>
-              }
-            </div>
-            <div className="gcard-body">
-              <div className="gcard-top">
-                <span className="gcard-city">{c.city}</span>
-                <span className="gcard-state-tag">{c.state}</span>
-              </div>
-              <span className="gcard-date">{c.date}</span>
-              {c.description && <p className="gcard-desc">{c.description}</p>}
-              {c.photoCount > 0 && (
-                <span className="gcard-count">{c.photoCount} photos →</span>
-              )}
-            </div>
-          </Link>
+          <MeetupCardItem key={c.slug} card={c} />
         ))}
       </div>
     </>

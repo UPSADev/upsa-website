@@ -6,8 +6,6 @@ websiteUrl: https://unitedpsa.org
 ctaLabel: Join the Network
 ctaHref: /join
 navLinks:
-  - label: Chapters
-    href: /chapters
   - label: Resources
     href: /resources
 socialLinks:
@@ -24,8 +22,6 @@ footerColumns:
         href: /about
       - label: Leadership Team
         href: /team
-      - label: University Chapters
-        href: /chapters
       - label: Join the Network
         href: /join
   - title: Community
