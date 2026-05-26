@@ -21,7 +21,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
 
   return (
     <>
-      {/* Hero banner */}
       <div className="detail-hero detail-hero--event">
         <div className="detail-hero-overlay" />
         <div className="detail-hero-inner">
@@ -41,7 +40,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
       </div>
 
       <div className="detail-layout">
-        {/* Main content */}
         <div className="detail-main">
           <p className="detail-lead">{event.description}</p>
           {event.body && (
@@ -52,7 +50,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
           )}
         </div>
 
-        {/* Sidebar */}
         <aside className="detail-sidebar">
           <div className="detail-info-card">
             <h3>Event Details</h3>

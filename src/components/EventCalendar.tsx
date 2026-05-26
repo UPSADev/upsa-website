@@ -114,14 +114,12 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
 
   return (
     <div className="cal-root">
-      {/* ---- top navigation ---- */}
       <div className="cal-nav">
         <button className="cal-nav-btn" onClick={prevMonth} aria-label="Previous month" type="button">←</button>
         <h2 className="cal-nav-title">{MONTHS[month]} {year}</h2>
         <button className="cal-nav-btn" onClick={nextMonth} aria-label="Next month" type="button">→</button>
       </div>
 
-      {/* ---- desktop calendar grid ---- */}
       <div className="cal-grid-outer">
         <div className="cal-days-header">
           {DAYS_SHORT.map(d => <div key={d} className="cal-day-label">{d}</div>)}
@@ -159,7 +157,6 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
         </div>
       </div>
 
-      {/* ---- mobile / tablet list ---- */}
       <div className="cal-list">
         {monthEvents.length > 0 ? (
           monthEvents.map(ev => {
@@ -198,7 +195,6 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
         )}
       </div>
 
-      {/* ---- event detail modal ---- */}
       {selected && (
         <div className="cal-modal-bg" onClick={closeModal} role="dialog" aria-modal="true">
           <div className="cal-modal" onClick={e => e.stopPropagation()}>

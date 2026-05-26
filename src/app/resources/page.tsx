@@ -97,7 +97,6 @@ export default function ResourcesPage() {
           </section>
         ))}
 
-        {/* Safety & Hotlines section */}
         <section id="safety" className="res-section res-safety-section">
           <div className="container">
             <div className="res-section-head">
