@@ -33,7 +33,8 @@ export default function HomePage() {
 
   const pastMeetups = getMeetups()
     .filter(m => m.displayOnHomepage && m.status === 'past')
-    .sort((a, b) => (a.homepageOrder ?? 99) - (b.homepageOrder ?? 99));
+    .sort((a, b) => (a.homepageOrder ?? 99) - (b.homepageOrder ?? 99))
+    .slice(0, 6);
 
   const calEvents: CalEvent[] = [
     ...getEvents()
@@ -158,7 +159,7 @@ export default function HomePage() {
           <div className="gathered-grid">
             {pastMeetups.map(meetup => (
               <Link
-                href={`/meetups#${(meetup.state || '').replace(/\s+/g, '-').toLowerCase()}`}
+                href={`/meetups#${meetup.slug}`}
                 className="gathered-card"
                 key={meetup.slug}
               >
