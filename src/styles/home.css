@@ -17,10 +17,15 @@
   display: flex;
   flex-direction: column;
 }
-.hero-world-map {
+.hero-photo {
   position: absolute; inset: 0; z-index: 0;
-  width: 100%; height: 100%;
-  display: block;
+  background: url('/images/banner/k2.png') center 38% / cover;
+  filter: saturate(.72) contrast(1.06) brightness(.88);
+  animation: slowZoom 32s ease-in-out infinite alternate;
+}
+@keyframes slowZoom {
+  from { transform: scale(1.04); }
+  to   { transform: scale(1.1) translateX(-1%); }
 }
 .hero-veil {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
@@ -274,7 +279,7 @@ h1.hero-h1 em {
 }
 
 .about-photo-left {
-  background: url('/images/landmarks/minar-e-pakistan-2.jpg') center / cover no-repeat;
+  background: url('/images/landmarks/minar-e-pakistan-3.jpg') center / cover no-repeat;
 }
 
 .about-photo-right {
@@ -707,7 +712,7 @@ h1.hero-h1 em {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-world-map,
+  .hero-photo,
   .hero-content,
   .marquee-track,
   .landmark-photo,

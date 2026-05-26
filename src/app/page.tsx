@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import HeroCounter from '@/components/HeroCounter';
 import HeroWelcome from '@/components/HeroWelcome';
-import HeroWorldMap from '@/components/HeroWorldMap';
 import EventCalendar, { type CalEvent } from '@/components/EventCalendar';
 import { formatDate, getHomeContent, getMeetups, getEvents, getWorkshops } from '@/lib/content';
 import '@/styles/home.css';
@@ -73,7 +72,7 @@ export default function HomePage() {
     <>
       {/* ---- Hero ---- */}
       <section className="hero">
-        <HeroWorldMap />
+        <div className="hero-photo" />
         <div className="hero-veil" />
         <div className="hero-frame">
           <HeroWelcome />
