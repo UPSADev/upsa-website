@@ -734,6 +734,19 @@ h1.hero-h1 em {
   .learning-feature {
     grid-template-columns: minmax(220px, 280px) 1fr;
   }
+  .gathered-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; }
+  .home-about-section { grid-template-columns: 1fr; position: relative; overflow: hidden; }
+  .about-photo-left, .about-photo-right { display: none; }
+  .home-about-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url('/images/landmarks/golden-gate.jpg') center / cover no-repeat;
+    filter: grayscale(30%) saturate(0.8);
+    opacity: .18;
+    pointer-events: none;
+    z-index: 0;
+  }
   .about-content-col { padding: 80px 32px; position: relative; z-index: 1; }
   .about-inner { grid-template-columns: 1fr; gap: 48px; }
 }
@@ -794,6 +807,10 @@ h1.hero-h1 em {
     width: min(100%, 320px);
     justify-self: center;
   }
+  .gathered-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 220px;
+  }
   .gathered-card:first-child { grid-column: span 1; grid-row: span 1; }
   .gathered-card:first-child .gathered-img { height: 100%; }
   .gathered-card:first-child .gathered-city { font-size: 22px; }
@@ -826,6 +843,8 @@ h1.hero-h1 em {
   }
   .meetup-thumb { flex: 0 0 80vw; }
   .home-team-card { flex: 0 0 76vw; }
+  .marquee-item { font-size: 16px; padding: 0 18px; }
+  .marquee-logo { width: 20px; height: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

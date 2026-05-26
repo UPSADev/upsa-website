@@ -60,7 +60,6 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
   const [selected, setSelected]   = useState<CalEvent | null>(null);
   const [userNavigated, setUserNavigated] = useState(false);
 
-  // Auto-advance to the real current month if the user hasn't manually navigated away
   useEffect(() => {
     if (userNavigated) return;
     const tick = setInterval(() => {
@@ -82,7 +81,6 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
     else setMonth(m => m + 1);
   }
 
-  /* ---- keyboard close ---- */
   const closeModal = useCallback(() => setSelected(null), []);
   useEffect(() => {
     if (!selected) return;
@@ -92,19 +90,16 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
     return () => { document.removeEventListener('keydown', h); document.body.style.overflow = ''; };
   }, [selected, closeModal]);
 
-  /* ---- helpers ---- */
   const eventsOnDay = (d: number) =>
     events.filter(e => { const p = parseDay(e.date); return p && p.y === year && p.m === month && p.d === d; });
 
   const isToday = (d: number) =>
     today.getFullYear() === year && today.getMonth() === month && today.getDate() === d;
 
-  /* events visible in this month view (for mobile list) */
   const monthEvents = events
     .filter(e => { const p = parseDay(e.date); return p && p.y === year && p.m === month; })
     .sort((a, b) => (parseDay(a.date)?.d ?? 0) - (parseDay(b.date)?.d ?? 0));
 
-  /* next upcoming event across all months (for jump link) */
   const nextEvent = events
     .filter(e => e.status === 'upcoming')
     .sort((a, b) => a.date.localeCompare(b.date))[0];
