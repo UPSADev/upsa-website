@@ -303,6 +303,7 @@ nav.top.scrolled .nav-burger span { background: var(--ink); }
   .nav-logo { height: 62px; }
   .nav-brand-name { display: none; }
   .mobile-menu { padding-bottom: max(36px, env(safe-area-inset-bottom)); }
+  .nav-brand::before { left: 55px; width: 140px; height: 140px; }
 }
 @media (max-width: 480px) {
   nav.top { padding: 0 16px; }
