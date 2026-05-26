@@ -85,16 +85,16 @@ nav.top.page-nav .nav-brand-name { color: var(--ink-2); }
 
 .nav-brand-abbr {
   display: none;
-  font-family: 'Fraunces', serif;
-  font-weight: 300;
-  font-size: 19px;
-  letter-spacing: .06em;
-  color: rgba(255,255,255,.92);
-  font-variation-settings: "opsz" 72, "SOFT" 30;
+  font-family: 'Geist Mono', monospace;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.85);
   line-height: 1;
 }
 nav.top.scrolled .nav-brand-abbr,
-nav.top.page-nav .nav-brand-abbr { color: var(--ink); }
+nav.top.page-nav .nav-brand-abbr { color: var(--ink-2); }
 
 .nav-cta { justify-self: end; }
 
@@ -315,7 +315,7 @@ nav.top.scrolled .nav-burger span { background: var(--ink); }
 @media (max-width: 768px) {
   nav.top { padding: 0 20px; }
   .nav-logo { height: 76px; width: auto; margin-right: 0; }
-  .nav-brand { gap: 10px; }
+  .nav-brand { gap: 2px; }
   .nav-brand-name { display: none; }
   .nav-brand-abbr { display: block; }
   .mobile-menu { padding-bottom: max(36px, env(safe-area-inset-bottom)); }
