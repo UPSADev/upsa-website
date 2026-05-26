@@ -124,8 +124,9 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ---- About UPSAA + President's Quote ---- */}
+      {/* ---- About UPSA + President's Quote ---- */}
       <section className="home-section home-about-section">
+        <div className="about-photo-left" aria-hidden="true" />
         <div className="about-content-col">
           <div className="about-copy">
             <span className="sec-tag">{home.aboutTag || 'About UPSA'}</span>
@@ -146,7 +147,7 @@ export default function HomePage() {
             </div>
           )}
         </div>
-        <div className="about-photo-col" aria-hidden="true" />
+        <div className="about-photo-right" aria-hidden="true" />
       </section>
 
       {/* ---- Where We Have Gathered ---- */}
