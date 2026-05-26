@@ -30,7 +30,7 @@
   --radius-pill: 999px;
 
   /* Nav height — used for scroll offsets */
-  --nav-h: 72px;
+  --nav-h: 112px;
 }
 
 /* ---- Reset ---- */
@@ -68,12 +68,12 @@ p, h1, h2, h3, h4, h5, h6, a, span, li, dd, dt {
 /* Section label (mono uppercase tag) */
 .sec-tag {
   font-family: 'Geist Mono', monospace;
-  font-size: 11px;
-  letter-spacing: .32em;
+  font-size: 12px;
+  letter-spacing: .28em;
   text-transform: uppercase;
   color: var(--moss);
   display: block;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   line-height: 1.55;
 }
 
@@ -103,11 +103,11 @@ p, h1, h2, h3, h4, h5, h6, a, span, li, dd, dt {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 26px;
+  padding: 15px 28px;
   background: var(--moss);
   color: #fff;
   border-radius: var(--radius-pill);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   transition: background .25s, transform .25s, box-shadow .25s;
 }
@@ -121,12 +121,12 @@ p, h1, h2, h3, h4, h5, h6, a, span, li, dd, dt {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 13px 24px;
+  padding: 14px 26px;
   background: transparent;
   color: var(--moss);
   border: 1.5px solid var(--moss);
   border-radius: var(--radius-pill);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   transition: background .25s, color .25s;
 }
@@ -150,11 +150,11 @@ p, h1, h2, h3, h4, h5, h6, a, span, li, dd, dt {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
+  padding: 5px 11px;
   border-radius: var(--radius-pill);
   font-family: 'Geist Mono', monospace;
-  font-size: 9.5px;
-  letter-spacing: .2em;
+  font-size: 10.5px;
+  letter-spacing: .18em;
   text-transform: uppercase;
   font-weight: 500;
 }
@@ -206,11 +206,11 @@ p, h1, h2, h3, h4, h5, h6, a, span, li, dd, dt {
 .page-hero .inner { position: relative; max-width: 720px; }
 .page-hero .ph-tag {
   font-family: 'Geist Mono', monospace;
-  font-size: 10px;
-  letter-spacing: .36em;
+  font-size: 11.5px;
+  letter-spacing: .3em;
   text-transform: uppercase;
   color: rgba(255,255,255,.5);
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   display: block;
 }
 .page-hero h1 {
@@ -224,10 +224,10 @@ p, h1, h2, h3, h4, h5, h6, a, span, li, dd, dt {
 .page-hero h1 em { font-style: italic; font-weight: 400; color: rgba(255,255,255,.75); }
 .page-hero p {
   margin-top: 20px;
-  font-size: 16px;
-  line-height: 1.68;
+  font-size: 17px;
+  line-height: 1.72;
   color: rgba(255,255,255,.65);
-  max-width: 560px;
+  max-width: 580px;
 }
 
 /* Empty state */

@@ -1,11 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/content';
 
 export default function Nav({ settings }: { settings: SiteSettings }) {
+  const pathname = usePathname();
+  const isHome = pathname === '/';
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
@@ -66,12 +69,15 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
 
   return (
     <>
-      <nav className={`top${scrolled ? ' scrolled' : ''}`}>
+      <nav className={`top${scrolled ? ' scrolled' : ''}${!isHome ? ' page-nav' : ''}`}>
         <Link href="/" className="nav-brand" onClick={close}>
-          <Image src={settings.logo} alt="UPSA" width={52} height={52} className="nav-logo" priority unoptimized />
+          <Image src={settings.logo} alt="UPSA" width={164} height={92} className="nav-logo" priority unoptimized />
+          <span className="nav-brand-name">United Pakistani Students &amp; Alumni Association</span>
         </Link>
 
         <div className="nav-links">
+          <Link href="/" onClick={close}>Home</Link>
+
           <div className={`nav-drop-group${desktopDropdown === 'about' ? ' open' : ''}`}>
             <button
               type="button"
@@ -80,31 +86,16 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
               aria-expanded={desktopDropdown === 'about'}
               onClick={() => toggleDesktopDropdown('about')}
             >
-              About <span className="nav-caret">v</span>
+              About
             </button>
             <div className="nav-dropdown">
-              <Link href="/about" onClick={close}>Our Story</Link>
-              <Link href="/about#mission" onClick={close}>Our Mission</Link>
-              <Link href="/about#values" onClick={close}>Our Values</Link>
+              <Link href="/about" onClick={close}>Story</Link>
+              <Link href="/about#mission" onClick={close}>Mission</Link>
+              <Link href="/about#values" onClick={close}>Values</Link>
             </div>
           </div>
 
-          <div className={`nav-drop-group${desktopDropdown === 'community' ? ' open' : ''}`}>
-            <button
-              type="button"
-              className="nav-drop-trigger"
-              aria-haspopup="true"
-              aria-expanded={desktopDropdown === 'community'}
-              onClick={() => toggleDesktopDropdown('community')}
-            >
-              Community <span className="nav-caret">v</span>
-            </button>
-            <div className="nav-dropdown">
-              <Link href="/events" onClick={close}>Events</Link>
-              <Link href="/workshops" onClick={close}>Workshops & Seminars</Link>
-              <Link href="/meetups" onClick={close}>City Meetups</Link>
-            </div>
-          </div>
+          <Link href="/meetups" onClick={close}>Gallery</Link>
 
           {settings.navLinks.map(link => (
             <Link href={link.href} key={link.href} onClick={close}>{link.label}</Link>
@@ -127,22 +118,21 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
       </nav>
 
       <div className={`mobile-menu${menuOpen ? ' open' : ''}`}>
+        <div className="m-item">
+          <Link href="/" className="m-link" onClick={close}>Home</Link>
+        </div>
+
         <div className={`m-item${openSection === 'about' ? ' open' : ''}`}>
           <button className="m-link" onClick={() => toggleSection('about')}>About <span className="m-caret-icon">+</span></button>
           <div className="m-sub">
-            <Link href="/about" onClick={close}>Our Story</Link>
-            <Link href="/about#mission" onClick={close}>Our Mission</Link>
-            <Link href="/about#values" onClick={close}>Our Values</Link>
+            <Link href="/about" onClick={close}>Story</Link>
+            <Link href="/about#mission" onClick={close}>Mission</Link>
+            <Link href="/about#values" onClick={close}>Values</Link>
           </div>
         </div>
 
-        <div className={`m-item${openSection === 'community' ? ' open' : ''}`}>
-          <button className="m-link" onClick={() => toggleSection('community')}>Community <span className="m-caret-icon">+</span></button>
-          <div className="m-sub">
-            <Link href="/events" onClick={close}>Events</Link>
-            <Link href="/workshops" onClick={close}>Workshops & Seminars</Link>
-            <Link href="/meetups" onClick={close}>City Meetups</Link>
-          </div>
+        <div className="m-item">
+          <Link href="/meetups" className="m-link" onClick={close}>Gallery</Link>
         </div>
 
         {settings.navLinks.map(link => (

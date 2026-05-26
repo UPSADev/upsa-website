@@ -1,8 +1,4 @@
-/*
-  Content loader — reads markdown files from /content/* and parses
-  frontmatter with gray-matter. Every CMS collection has its own
-  typed getter so pages stay clean and type-safe.
-*/
+// Reads markdown files from /content/* and parses frontmatter with gray-matter.
 
 import fs from 'fs';
 import path from 'path';
@@ -162,7 +158,7 @@ export interface AboutPageContent {
   valuesTag: string;
   valuesTitle: string;
   valuesTitleEmphasis: string;
-  values: Array<{ n: string; title: string; body: string }>;
+  values: Array<{ number: string; title: string; description: string }>;
   stats: Array<{ n: string; l: string }>;
   ctaTitle: string;
   ctaTitleEmphasis: string;

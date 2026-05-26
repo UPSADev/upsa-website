@@ -13,7 +13,7 @@
 }
 
 .story-text p {
-  font-size: 15px;
+  font-size: 16.5px;
   line-height: 1.75;
   color: var(--ink-2);
 }
@@ -26,17 +26,6 @@
   padding: 36px 32px;
   position: relative;
 }
-.story-note::before {
-  content: '\201C';
-  position: absolute;
-  top: 16px; left: 28px;
-  font-family: 'Fraunces', serif;
-  font-size: 72px;
-  line-height: 1;
-  color: rgba(255,255,255,.15);
-  pointer-events: none;
-  font-variation-settings: "opsz" 144;
-}
 
 .story-note-tag {
   font-family: 'Geist Mono', monospace;
@@ -48,7 +37,7 @@
   margin-bottom: 20px;
 }
 .story-note blockquote {
-  font-size: 14.5px;
+  font-size: 16px;
   line-height: 1.7;
   color: rgba(255,255,255,.85);
   font-style: italic;
@@ -86,7 +75,7 @@
 }
 .mv-box p {
   margin-top: 16px;
-  font-size: 15px;
+  font-size: 16.5px;
   line-height: 1.75;
   color: var(--ink-2);
 }
@@ -116,15 +105,58 @@
   transition: box-shadow .25s;
 }
 .culture-card:hover { box-shadow: 0 8px 24px -8px rgba(26,31,24,.1); }
-.culture-icon { font-size: 28px; display: block; margin-bottom: 14px; }
-.culture-card h3 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
-.culture-card p  { font-size: 13px; line-height: 1.65; color: var(--ink-2); }
+.culture-card h3 { font-size: 15.5px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.culture-card p  { font-size: 14.5px; line-height: 1.65; color: var(--ink-2); }
 
 /* Values */
 .about-values {
   padding: 80px 0;
   background: var(--paper-deep);
   border-bottom: var(--hairline);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.about-values::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url('/images/landmarks/mazar-e-quaid.jpg') center 48% / cover no-repeat;
+  opacity: .18;
+  filter: grayscale(1) sepia(.1) contrast(1.15) brightness(.68);
+  pointer-events: none;
+}
+
+.about-values::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      var(--paper-deep) 0%,
+      rgba(239,231,213,.08) 16%,
+      rgba(239,231,213,.08) 84%,
+      var(--paper-deep) 100%
+    ),
+    linear-gradient(
+      90deg,
+      var(--paper-deep) 0%,
+      rgba(239,231,213,.55) 7%,
+      transparent 20%,
+      transparent 80%,
+      rgba(239,231,213,.55) 93%,
+      var(--paper-deep) 100%
+    );
+  pointer-events: none;
+}
+
+.about-values .container {
+  position: relative;
+  z-index: 2;
 }
 
 .values-grid {
@@ -134,8 +166,15 @@
   margin-top: 44px;
 }
 .value-item {
-  padding: 28px 0;
+  padding: 28px 24px;
   border-top: 2px solid var(--moss);
+  background: rgba(239,231,213,.52);
+  backdrop-filter: blur(2px);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  transition: background .3s;
+}
+.value-item:hover {
+  background: rgba(247,242,232,.78);
 }
 .value-num {
   font-family: 'Geist Mono', monospace;
@@ -145,8 +184,8 @@
   display: block;
   margin-bottom: 12px;
 }
-.value-item h3 { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
-.value-item p  { font-size: 13.5px; line-height: 1.65; color: var(--ink-2); }
+.value-item h3 { font-size: 16.5px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.value-item p  { font-size: 15px; line-height: 1.65; color: var(--ink-2); }
 
 /* Stats bar */
 .about-stats {

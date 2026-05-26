@@ -24,10 +24,10 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 7px 14px;
+  padding: 8px 16px;
   border-radius: var(--radius-pill);
   border: var(--hairline);
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 500;
   color: var(--ink-2);
   white-space: nowrap;
@@ -72,35 +72,75 @@
 }
 .res-section:nth-child(even) .res-card { background: var(--paper); }
 .res-card:hover { box-shadow: 0 8px 28px -8px rgba(26,31,24,.1); }
-.res-card h3 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
-.res-card p  { font-size: 13.5px; line-height: 1.72; color: var(--ink-2); }
+.res-card h3 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.res-card p  { font-size: 15px; line-height: 1.72; color: var(--ink-2); }
 
-/* Emergency callout at the bottom */
-.res-emergency {
-  background: var(--moss-deep);
-  padding: 32px 0;
+/* Safety & Hotlines section */
+.res-safety-section {
+  background: var(--paper);
 }
-.res-emergency .container {
+
+.res-safety-disclaimer {
+  padding: 18px 22px;
+  background: rgba(123, 17, 17, .06);
+  border-left: 3px solid #7B1111;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin-bottom: 36px;
+  max-width: 760px;
+}
+.res-safety-disclaimer strong { color: #7B1111; }
+
+.res-hotlines-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.res-hotline-card {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px 24px;
+  background: var(--paper);
+  border: var(--hairline);
+  border-radius: var(--radius-sm);
+  transition: box-shadow .25s, border-color .25s;
+  text-decoration: none;
 }
-.res-emergency span {
+.res-hotline-card:hover {
+  box-shadow: 0 8px 28px -8px rgba(26,31,24,.12);
+  border-color: var(--moss-soft);
+}
+
+.rhc-number {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: -.02em;
+  color: var(--moss);
+  font-variation-settings: "opsz" 72, "SOFT" 50;
+}
+.rhc-name {
   font-size: 15px;
-  font-weight: 500;
-  color: rgba(255,255,255,.9);
+  font-weight: 600;
+  color: var(--ink);
+}
+.rhc-desc {
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--ink-3);
+  margin-top: 4px;
 }
 
 @media (max-width: 1024px) {
   .res-section { padding: 56px 0; }
+  .res-hotlines-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
   .res-grid { grid-template-columns: 1fr; }
   .res-section { padding: 48px 0; }
-  .res-emergency .container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  .res-hotlines-grid { grid-template-columns: 1fr; }
 }
