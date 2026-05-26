@@ -71,6 +71,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
     <>
       <nav className={`top${scrolled ? ' scrolled' : ''}${!isHome ? ' page-nav' : ''}`}>
         <Link href="/" className="nav-brand" onClick={close}>
+          <span className="nav-brand-abbr">UPSA</span>
           <Image src={settings.logo} alt="UPSA" width={164} height={92} className="nav-logo" priority unoptimized />
           <span className="nav-brand-name">United Pakistani Students &amp; Alumni Association</span>
         </Link>

@@ -83,6 +83,19 @@ nav.top.page-nav .nav-brand::before {
 nav.top.scrolled .nav-brand-name,
 nav.top.page-nav .nav-brand-name { color: var(--ink-2); }
 
+.nav-brand-abbr {
+  display: none;
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 19px;
+  letter-spacing: .06em;
+  color: rgba(255,255,255,.92);
+  font-variation-settings: "opsz" 72, "SOFT" 30;
+  line-height: 1;
+}
+nav.top.scrolled .nav-brand-abbr,
+nav.top.page-nav .nav-brand-abbr { color: var(--ink); }
+
 .nav-cta { justify-self: end; }
 
 .nav-links {
@@ -300,11 +313,13 @@ nav.top.scrolled .nav-burger span { background: var(--ink); }
   .nav-burger { display: flex; }
 }
 @media (max-width: 768px) {
-  nav.top { padding: 0 20px; }
+  nav.top { padding: 0 20px; flex-direction: row-reverse; }
   .nav-logo { height: 76px; width: auto; margin-right: 0; }
+  .nav-brand { gap: 10px; }
   .nav-brand-name { display: none; }
+  .nav-brand-abbr { display: block; }
   .mobile-menu { padding-bottom: max(36px, env(safe-area-inset-bottom)); }
-  .nav-brand::before { left: 68px; width: 106px; height: 106px; }
+  .nav-brand::before { left: 135px; width: 106px; height: 106px; }
 }
 @media (max-width: 480px) {
   nav.top { padding: 0 16px; }
