@@ -279,7 +279,7 @@ h1.hero-h1 em {
 }
 
 .about-photo-left {
-  background: url('/images/landmarks/minar-e-pakistan-3.jpg') center / cover no-repeat;
+  background: url('/images/landmarks/minar-e-pakistan-3.jpg') center 35% / 150% auto no-repeat;
 }
 
 .about-photo-right {
@@ -643,8 +643,8 @@ h1.hero-h1 em {
     position: absolute;
     inset: 0;
     background: url('/images/landmarks/golden-gate.jpg') center / cover no-repeat;
-    filter: grayscale(100%);
-    opacity: .13;
+    filter: grayscale(30%) saturate(0.8);
+    opacity: .18;
     pointer-events: none;
     z-index: 0;
   }
