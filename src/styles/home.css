@@ -17,15 +17,10 @@
   display: flex;
   flex-direction: column;
 }
-.hero-photo {
+.hero-world-map {
   position: absolute; inset: 0; z-index: 0;
-  background: url('/images/banner/k2.png') center 38% / cover;
-  filter: saturate(.72) contrast(1.06) brightness(.88);
-  animation: slowZoom 32s ease-in-out infinite alternate;
-}
-@keyframes slowZoom {
-  from { transform: scale(1.04); }
-  to   { transform: scale(1.1) translateX(-1%); }
+  width: 100%; height: 100%;
+  display: block;
 }
 .hero-veil {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
@@ -279,11 +274,11 @@ h1.hero-h1 em {
 }
 
 .about-photo-left {
-  background: url('/images/landmarks/minar-e-pakistan.jpg') center / cover no-repeat;
+  background: url('/images/landmarks/minar-e-pakistan-2.jpg') center / cover no-repeat;
 }
 
 .about-photo-right {
-  background: url('/images/landmarks/statue-of-liberty.jpg') center / cover no-repeat;
+  background: url('/images/landmarks/statue-of-liberty-color.jpg') center / cover no-repeat;
 }
 
 .about-photo-left::before,
@@ -712,7 +707,7 @@ h1.hero-h1 em {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-photo,
+  .hero-world-map,
   .hero-content,
   .marquee-track,
   .landmark-photo,
