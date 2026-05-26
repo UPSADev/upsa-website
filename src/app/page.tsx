@@ -179,9 +179,17 @@ export default function HomePage() {
         </section>
       )}
 
+      <section className="home-section home-cal-section">
+        <span className="sec-tag">What&rsquo;s Coming</span>
+        <h2 className="sec-h2">Upcoming <em>events</em></h2>
+        <div className="home-cal-wrap">
+          <EventCalendar events={calEvents} />
+        </div>
+      </section>
+
       {team.length > 0 && (
         <section className="home-section">
-          <span className="sec-tag">{home.joinTag ? 'The Team' : 'The Team'}</span>
+          <span className="sec-tag">The Team</span>
           <h2 className="sec-h2">The people <em>behind UPSA.</em></h2>
           <div className="home-team-grid">
             {team.map(member => (
@@ -211,14 +219,6 @@ export default function HomePage() {
           </div>
         </section>
       )}
-
-      <section className="home-section home-cal-section">
-        <span className="sec-tag">What&rsquo;s Coming</span>
-        <h2 className="sec-h2">Upcoming <em>events</em></h2>
-        <div className="home-cal-wrap">
-          <EventCalendar events={calEvents} />
-        </div>
-      </section>
 
       <section className="home-section alt" style={{textAlign:'center'}}>
         <span className="sec-tag" style={{justifyContent:'center', display:'flex'}}>{home.joinTag}</span>
