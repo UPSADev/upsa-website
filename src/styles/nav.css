@@ -63,6 +63,7 @@ nav.top.page-nav .nav-brand::before {
 .nav-logo {
   height: 92px;
   width: auto;
+  aspect-ratio: 2560 / 1440;
   display: block;
   border-radius: 7px;
   flex-shrink: 0;
@@ -300,10 +301,10 @@ nav.top.scrolled .nav-burger span { background: var(--ink); }
 }
 @media (max-width: 768px) {
   nav.top { padding: 0 20px; }
-  .nav-logo { height: 62px; }
+  .nav-logo { height: 76px; width: auto; margin-right: 0; }
   .nav-brand-name { display: none; }
   .mobile-menu { padding-bottom: max(36px, env(safe-area-inset-bottom)); }
-  .nav-brand::before { left: 55px; width: 140px; height: 140px; }
+  .nav-brand::before { left: 68px; width: 106px; height: 106px; }
 }
 @media (max-width: 480px) {
   nav.top { padding: 0 16px; }
