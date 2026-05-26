@@ -87,10 +87,10 @@ nav.top.page-nav .nav-brand-name { color: var(--ink-2); }
   display: none;
   font-family: 'Geist Mono', monospace;
   font-weight: 500;
-  font-size: 13px;
-  letter-spacing: .18em;
+  font-size: 14px;
+  letter-spacing: .16em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.85);
+  color: rgba(255,255,255,.88);
   line-height: 1;
 }
 nav.top.scrolled .nav-brand-abbr,
@@ -313,9 +313,9 @@ nav.top.scrolled .nav-burger span { background: var(--ink); }
   .nav-burger { display: flex; }
 }
 @media (max-width: 768px) {
-  nav.top { padding: 0 20px; }
+  nav.top { padding: 0 16px 0 0; }
   .nav-logo { height: 76px; width: auto; margin-right: 0; }
-  .nav-brand { gap: 2px; }
+  .nav-brand { gap: 0; }
   .nav-brand-name { display: none; }
   .nav-brand-abbr { display: block; }
   .mobile-menu { padding-bottom: max(36px, env(safe-area-inset-bottom)); }
