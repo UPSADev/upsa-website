@@ -64,8 +64,6 @@ export default function HeroWorldMap() {
     const rawCtx = raw.getContext('2d');
     if (!rawCtx) return;
 
-    // Typed aliases — TypeScript narrows in the outer scope but not in closures,
-    // so we capture these as explicitly non-null typed consts.
     const el: HTMLCanvasElement = raw;
     const ctx: CanvasRenderingContext2D = rawCtx;
 

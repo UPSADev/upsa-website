@@ -71,7 +71,6 @@ export default function HomePage() {
 
   return (
     <>
-      {/* ---- Hero ---- */}
       <section className="hero">
         <div className="hero-photo" />
         <div className="hero-veil" />
@@ -100,7 +99,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---- University Names Banner ---- */}
       <div className="chapter-strip">
         <div className="marquee-wrap">
           <div className="marquee-track">
@@ -125,7 +123,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ---- About UPSA + President's Quote ---- */}
       <section className="home-section home-about-section">
         <div className="about-photo-left" aria-hidden="true" />
         <div className="about-content-col">
@@ -151,7 +148,6 @@ export default function HomePage() {
         <div className="about-photo-right" aria-hidden="true" />
       </section>
 
-      {/* ---- Where We Have Gathered ---- */}
       {pastMeetups.length > 0 && (
         <section className="home-section alt gathered-section">
           <span className="sec-tag">{home.pastMeetupsTag}</span>
@@ -182,7 +178,6 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* ---- Events Calendar ---- */}
       <section className="home-section home-cal-section">
         <span className="sec-tag">What&rsquo;s Coming</span>
         <h2 className="sec-h2">Upcoming <em>events</em></h2>
@@ -191,7 +186,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---- Join CTA ---- */}
       <section className="home-section alt" style={{textAlign:'center'}}>
         <span className="sec-tag" style={{justifyContent:'center', display:'flex'}}>{home.joinTag}</span>
         <h2 className="sec-h2" style={{maxWidth:680, margin:'0 auto'}}>

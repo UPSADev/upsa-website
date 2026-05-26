@@ -6,7 +6,6 @@ export const metadata = { title: 'University Chapters' };
 export default function ChaptersPage() {
   const chapters = getChapters();
 
-  // Group chapters by state
   const byState = chapters.reduce<Record<string, typeof chapters>>((acc, c) => {
     if (!acc[c.state]) acc[c.state] = [];
     acc[c.state].push(c);
@@ -66,7 +65,6 @@ export default function ChaptersPage() {
             </section>
           ))
         ) : (
-          // No chapters in CMS yet — show the static list
           <div className="ch-static">
             <div className="container">
               <p className="ch-static-note">

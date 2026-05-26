@@ -1,5 +1,3 @@
-// Reads markdown files from /content/* and parses frontmatter with gray-matter.
-
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -254,11 +252,11 @@ export function getContactPageContent(): ContactPageContent {
 export interface Event {
   slug: string;
   title: string;
-  date: string;          // ISO string e.g. "2026-06-15"
+  date: string;
   endDate?: string;
   location: string;
   state?: string;
-  category: string;      // e.g. "Social" | "Professional" | "Cultural"
+  category: string;
   description: string;
   image?: string;
   registerUrl?: string;
@@ -286,8 +284,8 @@ export interface Workshop {
   title: string;
   date: string;
   location: string;
-  host: string;          // e.g. "UPSA Chicago Chapter"
-  type: string;          // "Workshop" | "Seminar" | "Webinar"
+  host: string;
+  type: string;
   description: string;
   image?: string;
   registerUrl?: string;
@@ -315,10 +313,10 @@ export function getWorkshop(slug: string): Workshop | null {
 
 export interface Meetup {
   slug: string;
-  title: string;         // e.g. "Chicago Meetup — Spring 2026"
+  title: string;
   city: string;
-  state: string;         // e.g. "Illinois"
-  stateCode: string;     // e.g. "IL"
+  state: string;
+  stateCode: string;
   date: string;
   status?: 'upcoming' | 'past';
   coverImage: string;
@@ -326,7 +324,7 @@ export interface Meetup {
   registerUrl?: string;
   displayOnHomepage?: boolean;
   homepageOrder?: number;
-  photos: string[];      // array of image paths
+  photos: string[];
   description: string;
   attendees?: number;
   body: string;
@@ -344,7 +342,6 @@ export function getMeetup(slug: string): Meetup | null {
   return f ? (f as unknown as Meetup) : null;
 }
 
-// Returns meetups grouped by state for the meetups index page
 export function getMeetupsByState(): Record<string, Meetup[]> {
   const all = getMeetups();
   return all.reduce<Record<string, Meetup[]>>((acc, m) => {
@@ -365,7 +362,7 @@ export interface TeamMember {
   photo?: string;
   linkedin?: string;
   email?: string;
-  order?: number;        // controls display order (lower = first)
+  order?: number;
   body: string;
 }
 
@@ -399,9 +396,6 @@ export function getChapters(): Chapter[] {
     .sort((a, b) => a.university.localeCompare(b.university));
 }
 
-// ---- Helpers ----
-
-// Formats "2026-06-15" → "June 15, 2026"
 function parseContentDate(value: unknown): Date | null {
   if (value instanceof Date && !Number.isNaN(value.getTime())) return value;
   if (typeof value !== 'string') return null;
@@ -430,7 +424,6 @@ export function formatDateWithWeekday(iso: string): string {
   return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-// Returns true if the date is in the future
 export function isUpcoming(iso: string): boolean {
   const d = parseContentDate(iso);
   return d ? d > new Date() : false;
