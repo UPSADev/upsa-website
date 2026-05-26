@@ -1,6 +1,6 @@
 ---
 name: Safdar
-role: Team Member
+role: Senior Vice President
 order: 2
 bio: >
  Taking UPSA's mission forward by expanding its reach and impact through strategic partnerships and initiatives
