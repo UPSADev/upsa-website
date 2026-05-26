@@ -20,8 +20,6 @@ footerColumns:
     links:
       - label: About UPSA
         href: /about
-      - label: Leadership Team
-        href: /team
       - label: Join the Network
         href: /join
   - title: Community
