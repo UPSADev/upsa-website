@@ -71,8 +71,6 @@ stats:
     l: States
   - n: "18"
     l: Events per Semester
-  - n: 100%
-    l: Student-Run
 
 ctaTitle: Ready to join the movement?
 ctaTitleEmphasis: join the movement

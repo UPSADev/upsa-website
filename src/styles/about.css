@@ -237,15 +237,32 @@
 
   .mv-grid { grid-template-columns: 1fr; }
   .mv-box { padding: 32px 28px; }
-  .values-grid { grid-template-columns: repeat(2, 1fr); }
   .about-stats .container { justify-content: center; }
+
+  /* Values: horizontal swipe carousel */
+  .about-values { overflow: visible; }
+  .values-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 16px;
+    padding-bottom: 16px;
+    margin-top: 36px;
+  }
+  .values-grid::-webkit-scrollbar { display: none; }
+  .value-item {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+  }
 }
 @media (max-width: 480px) {
   .story-note { padding: 30px 22px; }
   .mv-box { padding: 28px 20px; }
   .culture-card { padding: 24px 20px; }
   .culture-grid { grid-template-columns: 1fr; }
-  .values-grid { grid-template-columns: 1fr; }
+  .value-item { flex-basis: 84%; }
   .about-stats .container {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

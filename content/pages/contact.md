@@ -7,19 +7,11 @@ infoTag: Reach Out
 infoTitle: We'd love to hear from you.
 infoTitleEmphasis: hear from you
 contacts:
-  - icon: email
+  - icon: "✉️"
     label: General
-    href: mailto:info@unitedpsa.org
-    text: info@unitedpsa.org
-  - icon: help
-    label: Emergency
-    href: mailto:emergency@unitedpsa.org
-    text: emergency@unitedpsa.org
-  - icon: partner
-    label: Partnerships
-    href: mailto:partnerships@unitedpsa.org
-    text: partnerships@unitedpsa.org
-  - icon: web
+    href: mailto:upsa.network@gmail.com
+    text: upsa.network@gmail.com
+  - icon: "🌐"
     label: Website
     href: https://unitedpsa.org
     text: unitedpsa.org

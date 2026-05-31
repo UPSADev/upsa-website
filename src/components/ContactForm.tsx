@@ -37,10 +37,12 @@ export default function ContactForm({
     <form
       name="contact"
       method="POST"
+      data-netlify="true"
       onSubmit={handleSubmit}
       className="contact-form"
     >
       <input type="hidden" name="form-name" value="contact" />
+      <input type="hidden" name="bot-field" />
       <div className="cf-row">
         <div className="cf-group">
           <label htmlFor="cf-name">Full Name</label>
@@ -55,12 +57,8 @@ export default function ContactForm({
         <label htmlFor="cf-subject">Subject</label>
         <select id="cf-subject" name="subject" required defaultValue="">
           <option value="" disabled>Select a topic</option>
-          <option>General Inquiry</option>
-          <option>Chapter Affiliation</option>
-          <option>Partnership / Sponsorship</option>
-          <option>Media / Press</option>
-          <option>Emergency Support</option>
-          <option>Other</option>
+          <option>General</option>
+          <option>Website</option>
         </select>
       </div>
       <div className="cf-group">

@@ -4,11 +4,15 @@
     <title>Forms</title>
   </head>
   <body>
-    <form name="contact" data-netlify="true" hidden>
+    <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
       <input type="hidden" name="form-name" value="contact" />
+      <input name="bot-field" />
       <input name="name" type="text" />
       <input name="email" type="email" />
-      <input name="subject" type="text" />
+      <select name="subject">
+        <option value="General">General</option>
+        <option value="Website">Website</option>
+      </select>
       <textarea name="message"></textarea>
     </form>
   </body>
