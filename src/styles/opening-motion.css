@@ -112,37 +112,19 @@
 .opening-center {
   position: relative;
   z-index: 2;
-  display: grid;
-  justify-items: center;
-  gap: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 24px;
   transform: translateY(10px);
   opacity: 0;
   animation: openingCenter .72s .72s cubic-bezier(.2,.8,.2,1) forwards;
 }
 
-
 .opening-motion.is-leaving .opening-center,
 .opening-motion.is-leaving .opening-map,
 .opening-motion.is-leaving .opening-sweep {
   animation: openingElementsExit .42s cubic-bezier(.7,0,.2,1) forwards;
-}
-
-.opening-logo-wrap {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 132px;
-  height: 132px;
-}
-
-.opening-logo {
-  position: relative;
-  z-index: 1;
-  width: 112px;
-  height: 112px;
-  object-fit: contain;
-  border-radius: 8px;
 }
 
 .opening-wordmark {
@@ -225,8 +207,6 @@
 /* ── Responsive ── */
 
 @media (max-width: 640px) {
-  .opening-logo-wrap { width: 112px; height: 112px; }
-  .opening-logo      { width: 94px;  height: 94px;  }
   .opening-wordmark small { font-size: 9px; letter-spacing: .18em; }
 }
 
