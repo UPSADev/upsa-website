@@ -154,23 +154,24 @@
 
 .opening-wordmark span {
   font-family: 'Fraunces', serif;
-  font-size: clamp(44px, 8vw, 86px);
-  font-weight: 300;
+  font-size: clamp(72px, 14vw, 140px);
+  font-weight: 700;
   line-height: .9;
-  letter-spacing: 0;
+  letter-spacing: .12em;
   font-variation-settings: "opsz" 144, "SOFT" 20;
   clip-path: inset(0 100% 0 0);
   animation: openingReveal .78s .86s cubic-bezier(.2,.8,.2,1) forwards;
-  text-shadow: 0 2px 24px rgba(0,0,0,.5);
+  color: #fff;
+  text-shadow: 0 0 40px rgba(255,255,255,.25), 0 2px 32px rgba(0,0,0,.6);
 }
 
 .opening-wordmark small {
   display: block;
   max-width: min(520px, calc(100vw - 40px));
   font-family: 'Geist Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.7;
-  letter-spacing: .26em;
+  letter-spacing: .22em;
   text-transform: uppercase;
   color: rgba(255,255,255,.95);
   opacity: 0;
