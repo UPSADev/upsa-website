@@ -9,9 +9,7 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 44%, rgba(232,239,229,.18), transparent 30%),
-    linear-gradient(135deg, var(--moss-deep) 0%, #163820 54%, #08170f 100%);
+  background: linear-gradient(135deg, var(--moss-deep) 0%, #163820 54%, #08170f 100%);
   color: #fff;
   isolation: isolate;
 }
@@ -20,11 +18,12 @@
   animation: openingExit .55s cubic-bezier(.7,0,.2,1) forwards;
 }
 
+/* ── Map layer (grid + lines + dots) ── */
+
 .opening-map {
   position: absolute;
   inset: 0;
-  opacity: .72;
-  transform: scale(1.03);
+  opacity: .8;
 }
 
 .opening-map::before {
@@ -32,71 +31,83 @@
   position: absolute;
   inset: -20%;
   background-image:
-    linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
   background-size: 68px 68px;
   mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 68%);
   animation: openingGrid 1.5s cubic-bezier(.2,.8,.2,1) both;
 }
 
+/* ── Lines ── */
+
 .opening-line {
   position: absolute;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.62), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
   transform-origin: left center;
   opacity: 0;
-  animation: openingTrace 1.15s cubic-bezier(.2,.8,.2,1) forwards;
+  animation: openingTrace 1.1s cubic-bezier(.2,.8,.2,1) forwards;
 }
 
-.line-a {
-  left: 5%;
-  top: 26%;
-  width: 40vw;
-  transform: rotate(9deg) scaleX(0);
+/* original four */
+.line-a { left:  5%; top: 26%; width: 38vw; transform: rotate(9deg)   scaleX(0); animation-delay: 0.00s; --trace-rotate:   9deg; }
+.line-b { left: 44%; top: 20%; width: 46vw; transform: rotate(158deg) scaleX(0); animation-delay: 0.10s; --trace-rotate: 158deg; }
+.line-c { left: 16%; top: 72%; width: 54vw; transform: rotate(-9deg)  scaleX(0); animation-delay: 0.18s; --trace-rotate:  -9deg; }
+.line-d { left: 66%; top: 50%; width: 28vw; transform: rotate(74deg)  scaleX(0); animation-delay: 0.28s; --trace-rotate:  74deg; }
+
+/* additional lines — spread across the scene */
+.line-e { left: 28%; top: 42%; width: 32vw; transform: rotate(-22deg) scaleX(0); animation-delay: 0.06s; --trace-rotate: -22deg; }
+.line-f { left: 52%; top: 58%; width: 40vw; transform: rotate(148deg) scaleX(0); animation-delay: 0.14s; --trace-rotate: 148deg; }
+.line-g { left:  8%; top: 58%; width: 26vw; transform: rotate(-48deg) scaleX(0); animation-delay: 0.22s; --trace-rotate: -48deg; }
+.line-h { left: 58%; top: 28%; width: 30vw; transform: rotate(32deg)  scaleX(0); animation-delay: 0.12s; --trace-rotate:  32deg; }
+.line-i { left: 18%; top: 32%; width: 44vw; transform: rotate(172deg) scaleX(0); animation-delay: 0.20s; --trace-rotate: 172deg; }
+.line-j { left: 44%; top: 76%; width: 34vw; transform: rotate(-14deg) scaleX(0); animation-delay: 0.24s; --trace-rotate: -14deg; }
+.line-k { left: 70%; top: 64%; width: 22vw; transform: rotate(108deg) scaleX(0); animation-delay: 0.32s; --trace-rotate: 108deg; }
+.line-l { left:  6%; top: 82%; width: 48vw; transform: rotate(14deg)  scaleX(0); animation-delay: 0.26s; --trace-rotate:  14deg; }
+
+@keyframes openingTrace {
+  to { opacity: 1; transform: rotate(var(--trace-rotate, 0deg)) scaleX(1); }
 }
 
-.line-b {
-  left: 44%;
-  top: 20%;
-  width: 46vw;
-  transform: rotate(158deg) scaleX(0);
-  animation-delay: .12s;
-}
-
-.line-c {
-  left: 16%;
-  top: 72%;
-  width: 56vw;
-  transform: rotate(-9deg) scaleX(0);
-  animation-delay: .2s;
-}
-
-.line-d {
-  left: 66%;
-  top: 50%;
-  width: 30vw;
-  transform: rotate(74deg) scaleX(0);
-  animation-delay: .32s;
-}
+/* ── Dots ── */
 
 .opening-dot {
   position: absolute;
-  width: 9px;
-  height: 9px;
-  border: 1px solid rgba(255,255,255,.78);
+  width: 8px;
+  height: 8px;
+  border: 1px solid rgba(255,255,255,.72);
   border-radius: 50%;
-  background: rgba(232,239,229,.28);
-  box-shadow: 0 0 28px rgba(232,239,229,.5);
+  background: rgba(232,239,229,.18);
   opacity: 0;
-  transform: scale(.45);
-  animation: openingDot .65s cubic-bezier(.2,.8,.2,1) forwards;
+  transform: scale(.4);
+  animation: openingDot .6s cubic-bezier(.2,.8,.2,1) forwards;
 }
 
-.dot-a { left: 8%;  top: 24%; animation-delay: .24s; }
-.dot-b { left: 42%; top: 38%; animation-delay: .34s; }
-.dot-c { left: 71%; top: 20%; animation-delay: .44s; }
-.dot-d { left: 20%; top: 70%; animation-delay: .54s; }
-.dot-e { left: 82%; top: 62%; animation-delay: .64s; }
+/* original five */
+.dot-a { left:  8%; top: 24%; animation-delay: 0.24s; }
+.dot-b { left: 42%; top: 38%; animation-delay: 0.30s; }
+.dot-c { left: 71%; top: 20%; animation-delay: 0.38s; }
+.dot-d { left: 20%; top: 70%; animation-delay: 0.46s; }
+.dot-e { left: 82%; top: 62%; animation-delay: 0.55s; }
+
+/* additional dots */
+.dot-f { left: 33%; top: 22%; animation-delay: 0.20s; }
+.dot-g { left: 62%; top: 44%; animation-delay: 0.28s; }
+.dot-h { left: 14%; top: 46%; animation-delay: 0.34s; }
+.dot-i { left: 78%; top: 34%; animation-delay: 0.32s; }
+.dot-j { left: 54%; top: 74%; animation-delay: 0.42s; }
+.dot-k { left: 26%; top: 84%; animation-delay: 0.50s; }
+.dot-l { left: 88%; top: 48%; animation-delay: 0.44s; }
+.dot-m { left:  4%; top: 62%; animation-delay: 0.52s; }
+.dot-n { left: 66%; top: 82%; animation-delay: 0.48s; }
+.dot-o { left: 46%; top: 10%; animation-delay: 0.16s; }
+.dot-p { left: 90%; top: 22%; animation-delay: 0.36s; }
+
+@keyframes openingDot {
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ── Center (logo + wordmark) ── */
 
 .opening-center {
   position: relative;
@@ -109,6 +120,7 @@
   opacity: 0;
   animation: openingCenter .72s .72s cubic-bezier(.2,.8,.2,1) forwards;
 }
+
 
 .opening-motion.is-leaving .opening-center,
 .opening-motion.is-leaving .opening-map,
@@ -124,23 +136,6 @@
   height: 132px;
 }
 
-.opening-logo-wrap::before,
-.opening-logo-wrap::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border: 1px solid rgba(255,255,255,.3);
-  border-radius: 50%;
-  transform: scale(.7);
-  opacity: 0;
-  animation: openingRing 1.4s .58s cubic-bezier(.2,.8,.2,1) forwards;
-}
-
-.opening-logo-wrap::after {
-  inset: 10px;
-  animation-delay: .72s;
-}
-
 .opening-logo {
   position: relative;
   z-index: 1;
@@ -148,7 +143,6 @@
   height: 112px;
   object-fit: contain;
   border-radius: 8px;
-  box-shadow: 0 24px 70px rgba(0,0,0,.28);
 }
 
 .opening-wordmark {
@@ -167,21 +161,24 @@
   font-variation-settings: "opsz" 144, "SOFT" 20;
   clip-path: inset(0 100% 0 0);
   animation: openingReveal .78s .86s cubic-bezier(.2,.8,.2,1) forwards;
+  text-shadow: 0 2px 24px rgba(0,0,0,.5);
 }
 
 .opening-wordmark small {
   display: block;
   max-width: min(520px, calc(100vw - 40px));
   font-family: 'Geist Mono', monospace;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.7;
   letter-spacing: .26em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.62);
+  color: rgba(255,255,255,.95);
   opacity: 0;
   transform: translateY(8px);
   animation: openingCaption .62s 1.08s ease-out forwards;
 }
+
+/* ── Shimmer sweep ── */
 
 .opening-sweep {
   position: absolute;
@@ -193,12 +190,10 @@
   pointer-events: none;
 }
 
+/* ── Keyframes ── */
+
 @keyframes openingExit {
-  to {
-    opacity: 0;
-    transform: scale(1.035);
-    visibility: hidden;
-  }
+  to { opacity: 0; transform: scale(1.035); visibility: hidden; }
 }
 
 @keyframes openingElementsExit {
@@ -207,29 +202,11 @@
 
 @keyframes openingGrid {
   from { opacity: 0; transform: scale(1.08); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes openingTrace {
-  to { opacity: 1; transform: rotate(var(--trace-rotate, 0deg)) scaleX(1); }
-}
-
-.line-a { --trace-rotate: 9deg; }
-.line-b { --trace-rotate: 158deg; }
-.line-c { --trace-rotate: -9deg; }
-.line-d { --trace-rotate: 74deg; }
-
-@keyframes openingDot {
-  to { opacity: 1; transform: scale(1); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 @keyframes openingCenter {
   to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes openingRing {
-  45% { opacity: 1; }
-  to { opacity: 0; transform: scale(1.24); }
 }
 
 @keyframes openingReveal {
@@ -244,21 +221,12 @@
   to { transform: translateX(120%); }
 }
 
+/* ── Responsive ── */
+
 @media (max-width: 640px) {
-  .opening-logo-wrap {
-    width: 112px;
-    height: 112px;
-  }
-
-  .opening-logo {
-    width: 94px;
-    height: 94px;
-  }
-
-  .opening-wordmark small {
-    font-size: 9px;
-    letter-spacing: .18em;
-  }
+  .opening-logo-wrap { width: 112px; height: 112px; }
+  .opening-logo      { width: 94px;  height: 94px;  }
+  .opening-wordmark small { font-size: 9px; letter-spacing: .18em; }
 }
 
 @media (prefers-reduced-motion: reduce) {

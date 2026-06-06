@@ -48,11 +48,31 @@ export default function OpeningMotion({ logo }: { logo: string }) {
         <span className="opening-line line-b" />
         <span className="opening-line line-c" />
         <span className="opening-line line-d" />
+        <span className="opening-line line-e" />
+        <span className="opening-line line-f" />
+        <span className="opening-line line-g" />
+        <span className="opening-line line-h" />
+        <span className="opening-line line-i" />
+        <span className="opening-line line-j" />
+        <span className="opening-line line-k" />
+        <span className="opening-line line-l" />
+
         <span className="opening-dot dot-a" />
         <span className="opening-dot dot-b" />
         <span className="opening-dot dot-c" />
         <span className="opening-dot dot-d" />
         <span className="opening-dot dot-e" />
+        <span className="opening-dot dot-f" />
+        <span className="opening-dot dot-g" />
+        <span className="opening-dot dot-h" />
+        <span className="opening-dot dot-i" />
+        <span className="opening-dot dot-j" />
+        <span className="opening-dot dot-k" />
+        <span className="opening-dot dot-l" />
+        <span className="opening-dot dot-m" />
+        <span className="opening-dot dot-n" />
+        <span className="opening-dot dot-o" />
+        <span className="opening-dot dot-p" />
       </div>
 
       <div className="opening-center">
@@ -69,7 +89,7 @@ export default function OpeningMotion({ logo }: { logo: string }) {
         </div>
         <div className="opening-wordmark">
           <span>UPSA</span>
-          <small>United Pakistani Students & Alumni Association</small>
+          <small>United Pakistani Students &amp; Alumni Association</small>
         </div>
       </div>
 

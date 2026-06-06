@@ -41,24 +41,6 @@ nav.top.page-nav .nav-burger span { background: var(--ink); }
   position: relative;
 }
 
-.nav-brand::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 82px;
-  transform: translate(-50%, -50%);
-  width: 180px;
-  height: 180px;
-  background: radial-gradient(circle, rgba(212,175,55,.28) 0%, rgba(212,175,55,.1) 40%, transparent 70%);
-  pointer-events: none;
-  filter: blur(18px);
-  z-index: 0;
-}
-
-nav.top.scrolled .nav-brand::before,
-nav.top.page-nav .nav-brand::before {
-  background: radial-gradient(circle, rgba(212,175,55,.12) 0%, rgba(212,175,55,.04) 38%, transparent 68%);
-}
 
 .nav-logo {
   height: 92px;
