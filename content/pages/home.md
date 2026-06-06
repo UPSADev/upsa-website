@@ -39,11 +39,11 @@ chapters:
   - U of Florida
   - U of Illinois
 aboutTag: About UPSA
-aboutTitle: A network built for you in America.
+aboutTitle: A network built for you across United States.
 aboutTitleEmphasis: "in America."
 aboutParagraphs:
-  - UPSA spans 35+ campuses across 12 states, connecting over 1,500 Pakistani students and alumni through a shared identity and a common mission. From Berkeley to Brooklyn, every member inherits a network it took years to build.
-founderQuote: I wanted to build something I never had — a network where every Pakistani student in America could find mentorship and community from day one. That vision is becoming real.
+  - From Berkeley to Brooklyn, UPSA spans 35+ campuses across 12 states, uniting over 1,500 Pakistani students and alumni through shared identity, collective ambition, and one common mission - "Building a community where Pakistani students in America always have someone in their corner.(someone needs to make it green)"
+founderQuote: I founded UPSA to give every Pakistani student in America what I never had in 16 years — a network where mentorship, community, and belonging are there from day one. That vision is now ALIVE.
 founderCredit: Shahrukh Khan — Founder & President
 aboutCtaLabel: Learn Our Story
 aboutCtaHref: /about
