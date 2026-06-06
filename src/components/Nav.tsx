@@ -98,6 +98,8 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
 
           <Link href="/meetups" onClick={close}>Gallery</Link>
 
+          <Link href="/contact" onClick={close}>Contact</Link>
+
           {settings.navLinks.map(link => (
             <Link href={link.href} key={link.href} onClick={close}>{link.label}</Link>
           ))}
@@ -134,6 +136,10 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
 
         <div className="m-item">
           <Link href="/meetups" className="m-link" onClick={close}>Gallery</Link>
+        </div>
+
+        <div className="m-item">
+          <Link href="/contact" className="m-link" onClick={close}>Contact</Link>
         </div>
 
         {settings.navLinks.map(link => (
