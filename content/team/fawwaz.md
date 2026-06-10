@@ -1,7 +1,7 @@
 ---
 name: Fawwaz
 role: Director of Design
-order: 10
+order: 5
 bio: Managing UPSA's brand and visual communications strategy
 photo: /images/team/fawwaz.jpg
 linkedin: https://www.linkedin.com/in/fawwazuddin-mohammed/
