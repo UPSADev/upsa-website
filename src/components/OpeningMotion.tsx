@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 
 export default function OpeningMotion({ logo }: { logo: string }) {
   const [visible, setVisible] = useState(true);
@@ -76,17 +75,6 @@ export default function OpeningMotion({ logo }: { logo: string }) {
       </div>
 
       <div className="opening-center">
-        <div className="opening-logo-wrap">
-          <Image
-            src={logo}
-            alt=""
-            width={112}
-            height={112}
-            priority
-            unoptimized
-            className="opening-logo"
-          />
-        </div>
         <div className="opening-wordmark">
           <span>UPSA</span>
           <small>United Pakistani Students &amp; Alumni Association</small>
