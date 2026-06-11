@@ -9,7 +9,7 @@ export interface CalEvent {
   endDate?: string;   // YYYY-MM-DD — only set for multi-day events
   time?: string;      // e.g. "6:00 PM – 8:00 PM CT"
   location: string;
-  category: string;
+  category?: string;  // only set via [category: X] tag in the description
   description: string;
   registerUrl?: string;
   status: 'upcoming' | 'past';
@@ -42,14 +42,28 @@ function extractRegisterLink(text: string): string | undefined {
   return undefined;
 }
 
-function extractCategory(text: string): string {
+function extractCategory(text: string): string | undefined {
   const m = text.match(/\[(?:category|type):\s*([^\]]+)\]/i);
-  if (m) {
-    const raw   = m[1].trim();
-    const found = [...VALID_CATEGORIES].find(c => c.toLowerCase() === raw.toLowerCase());
-    return found ?? raw;
-  }
-  return 'Social';
+  if (!m) return undefined;
+  const raw   = m[1].trim();
+  const found = [...VALID_CATEGORIES].find(c => c.toLowerCase() === raw.toLowerCase());
+  return found ?? raw;
+}
+
+// Google Calendar descriptions come back as HTML — convert to plain text.
+function stripHtml(html: string): string {
+  return html
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(?:p|div|li)>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 }
 
 function toChicagoDate(iso: string): string {
@@ -114,7 +128,7 @@ export async function getGoogleCalendarEvents(): Promise<CalEvent[]> {
     // TODO: remove dummy fallback once real Google Form links are added to calendar events
     const registerUrl = extractRegisterLink(rawDesc) ?? DUMMY_REGISTER_URL;
     const category    = extractCategory(rawDesc);
-    const cleanDesc   = rawDesc
+    const cleanDesc   = stripHtml(rawDesc)
       .replace(/\[(?:category|type|register):[^\]]+\]/gi, '')
       .replace(/https?:\/\/(?:forms\.gle|docs\.google\.com\/forms)\/[^\s<>"'\]]+/gi, '')
       .trim();

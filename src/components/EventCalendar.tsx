@@ -9,7 +9,7 @@ export interface CalEvent {
   endDate?: string;
   time?: string;
   location: string;
-  category: string;
+  category?: string;
   description: string;
   registerUrl?: string;
   status: 'upcoming' | 'past';
@@ -35,6 +35,10 @@ const CATEGORY_COLORS: Record<string, string> = {
   Webinar:      '#6b3a9f',
   Gala:         '#b86b1b',
 };
+
+function catColor(category?: string): string {
+  return (category && CATEGORY_COLORS[category]) || 'var(--moss)';
+}
 
 // ── Add-to-Calendar helpers ───────────────────────────────────
 
@@ -225,7 +229,7 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
                     <button
                       key={ev.slug}
                       className="cal-event-pill"
-                      style={{ '--ec': CATEGORY_COLORS[ev.category] ?? 'var(--moss)' } as React.CSSProperties}
+                      style={{ '--ec': catColor(ev.category) } as React.CSSProperties}
                       onClick={() => setSelected(ev)}
                       type="button"
                     >
@@ -244,7 +248,7 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
         {monthEvents.length > 0 ? (
           monthEvents.map(ev => {
             const p     = parseDay(ev.date);
-            const color = CATEGORY_COLORS[ev.category] ?? 'var(--moss)';
+            const color = catColor(ev.category);
             return (
               <button
                 key={ev.slug}
@@ -258,7 +262,7 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
                 </div>
                 <div className="cli-dot" style={{ background: color }} />
                 <div className="cli-body">
-                  <span className="cli-cat" style={{ color }}>{ev.category}</span>
+                  {ev.category && <span className="cli-cat" style={{ color }}>{ev.category}</span>}
                   <span className="cli-title">{ev.title}</span>
                   <span className="cli-loc">{ev.location}</span>
                 </div>
@@ -284,12 +288,14 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
           <div className="cal-modal" onClick={e => e.stopPropagation()}>
             <button className="cal-modal-close" onClick={closeModal} aria-label="Close" type="button">✕</button>
 
-            <div
-              className="cal-modal-cat"
-              style={{ '--ec': CATEGORY_COLORS[selected.category] ?? 'var(--moss)' } as React.CSSProperties}
-            >
-              {selected.category}
-            </div>
+            {selected.category && (
+              <div
+                className="cal-modal-cat"
+                style={{ '--ec': catColor(selected.category) } as React.CSSProperties}
+              >
+                {selected.category}
+              </div>
+            )}
 
             <h3 className="cal-modal-title">{selected.title}</h3>
 

@@ -329,6 +329,8 @@
   line-height: 1.74;
   color: var(--ink-2);
   margin-bottom: 28px;
+  white-space: pre-line;
+  overflow-wrap: break-word;
 }
 .cal-modal-foot {
   display: flex;
