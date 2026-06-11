@@ -263,8 +263,6 @@ h1.hero-h1 em {
 /* ---- Sections shared spacing ---- */
 .home-section { padding: 100px 56px; }
 .home-section.alt { background: var(--paper-deep); }
-/* Anchor targets land below the fixed navbar */
-.home-section[id] { scroll-margin-top: 92px; }
 
 /* ---- About section (Minar-e-Pakistan | content | Statue of Liberty) ---- */
 .home-about-section {

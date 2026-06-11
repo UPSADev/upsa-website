@@ -16,6 +16,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
+    onScroll(); // initialize in case the page loads already scrolled (anchor links, refresh)
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
