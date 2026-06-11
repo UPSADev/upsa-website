@@ -6,12 +6,17 @@ export interface CalEvent {
   slug: string;
   title: string;
   date: string;
+  endDate?: string;
   time?: string;
   location: string;
   category: string;
   description: string;
   registerUrl?: string;
   status: 'upcoming' | 'past';
+  // Google Calendar extras
+  startIso?: string;
+  endIso?: string;
+  allDay?: boolean;
 }
 
 const MONTHS = [
@@ -31,6 +36,80 @@ const CATEGORY_COLORS: Record<string, string> = {
   Gala:         '#b86b1b',
 };
 
+// ── Add-to-Calendar helpers ───────────────────────────────────
+
+function toUtcStamp(iso: string, allDay?: boolean): string {
+  if (allDay) return iso.replace(/-/g, '');
+  return new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+}
+
+function calDesc(ev: CalEvent): string {
+  return [ev.description, ev.registerUrl ? `Register: ${ev.registerUrl}` : '']
+    .filter(Boolean).join('\n\n');
+}
+
+function buildGoogleCalUrl(ev: CalEvent): string {
+  const start = toUtcStamp(ev.startIso ?? ev.date, ev.allDay);
+  const end   = toUtcStamp(ev.endIso   ?? ev.date, ev.allDay);
+  const p = new URLSearchParams({
+    action:   'TEMPLATE',
+    text:     ev.title,
+    dates:    `${start}/${end}`,
+    details:  calDesc(ev),
+    location: ev.location,
+  });
+  return `https://calendar.google.com/calendar/render?${p}`;
+}
+
+function buildOutlookUrl(ev: CalEvent): string {
+  const p = new URLSearchParams({
+    path:     '/calendar/action/compose',
+    rru:      'addevent',
+    subject:  ev.title,
+    startdt:  ev.startIso ?? ev.date,
+    enddt:    ev.endIso   ?? ev.date,
+    body:     calDesc(ev),
+    location: ev.location,
+  });
+  return `https://outlook.live.com/calendar/0/action/compose?${p}`;
+}
+
+function buildICS(ev: CalEvent): string {
+  const start = toUtcStamp(ev.startIso ?? ev.date, ev.allDay);
+  const end   = toUtcStamp(ev.endIso   ?? ev.date, ev.allDay);
+  const desc  = calDesc(ev).replace(/\n/g, '\\n');
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//UPSA//UPSA Website//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    `UID:${ev.slug}@upsa.org`,
+    `DTSTART${ev.allDay ? ';VALUE=DATE' : ''}:${start}`,
+    `DTEND${ev.allDay ? ';VALUE=DATE' : ''}:${end}`,
+    `SUMMARY:${ev.title}`,
+    `DESCRIPTION:${desc}`,
+    `LOCATION:${ev.location}`,
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n');
+}
+
+function downloadICS(ev: CalEvent) {
+  const blob = new Blob([buildICS(ev)], { type: 'text/calendar;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `${ev.title.replace(/[^a-z0-9]/gi, '-')}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// ── Calendar helpers ──────────────────────────────────────────
+
 function parseDay(iso: string): { y: number; m: number; d: number } | null {
   const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (!m) return null;
@@ -46,18 +125,20 @@ function fmtDate(iso: string): string {
 
 function buildCells(year: number, month: number): (number | null)[] {
   const firstDay = new Date(year, month, 1).getDay();
-  const total = new Date(year, month + 1, 0).getDate();
+  const total    = new Date(year, month + 1, 0).getDate();
   const cells: (number | null)[] = [];
   for (let i = 0; i < firstDay; i++) cells.push(null);
   for (let d = 1; d <= total; d++) cells.push(d);
   return cells;
 }
 
+// ── Component ─────────────────────────────────────────────────
+
 export default function EventCalendar({ events }: { events: CalEvent[] }) {
   const today = new Date();
-  const [year, setYear]           = useState(today.getFullYear());
-  const [month, setMonth]         = useState(today.getMonth());
-  const [selected, setSelected]   = useState<CalEvent | null>(null);
+  const [year, setYear]                   = useState(today.getFullYear());
+  const [month, setMonth]                 = useState(today.getMonth());
+  const [selected, setSelected]           = useState<CalEvent | null>(null);
   const [userNavigated, setUserNavigated] = useState(false);
 
   useEffect(() => {
@@ -120,6 +201,7 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
         <button className="cal-nav-btn" onClick={nextMonth} aria-label="Next month" type="button">→</button>
       </div>
 
+      {/* ── Desktop grid ── */}
       <div className="cal-grid-outer">
         <div className="cal-days-header">
           {DAYS_SHORT.map(d => <div key={d} className="cal-day-label">{d}</div>)}
@@ -157,10 +239,11 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
         </div>
       </div>
 
+      {/* ── Mobile list ── */}
       <div className="cal-list">
         {monthEvents.length > 0 ? (
           monthEvents.map(ev => {
-            const p = parseDay(ev.date);
+            const p     = parseDay(ev.date);
             const color = CATEGORY_COLORS[ev.category] ?? 'var(--moss)';
             return (
               <button
@@ -195,39 +278,81 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
         )}
       </div>
 
+      {/* ── Event modal ── */}
       {selected && (
         <div className="cal-modal-bg" onClick={closeModal} role="dialog" aria-modal="true">
           <div className="cal-modal" onClick={e => e.stopPropagation()}>
             <button className="cal-modal-close" onClick={closeModal} aria-label="Close" type="button">✕</button>
+
             <div
               className="cal-modal-cat"
               style={{ '--ec': CATEGORY_COLORS[selected.category] ?? 'var(--moss)' } as React.CSSProperties}
             >
               {selected.category}
             </div>
+
             <h3 className="cal-modal-title">{selected.title}</h3>
+
             <div className="cal-modal-meta">
               <span className="cal-modal-meta-item">
                 <span className="cal-modal-meta-icon">📅</span>
                 {fmtDate(selected.date)}{selected.time ? ` · ${selected.time}` : ''}
               </span>
-              <span className="cal-modal-meta-item">
-                <span className="cal-modal-meta-icon">📍</span>
-                {selected.location}
-              </span>
+              {selected.location && (
+                <span className="cal-modal-meta-item">
+                  <span className="cal-modal-meta-icon">📍</span>
+                  {selected.location}
+                </span>
+              )}
             </div>
+
             <p className="cal-modal-desc">{selected.description}</p>
+
+            {/* Register (Google Form) */}
             <div className="cal-modal-foot">
-              {selected.registerUrl ? (
-                <a href={selected.registerUrl} className="cal-modal-register" target="_blank" rel="noopener">
-                  Register Now →
+              {selected.registerUrl && (
+                <a
+                  href={selected.registerUrl}
+                  className="cal-modal-register"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Register for this event →
                 </a>
-              ) : (
-                <span className="cal-modal-noreg">Registration details coming soon.</span>
               )}
               {selected.status === 'past' && (
                 <span className="badge badge-past" style={{ marginLeft: 12 }}>Past Event</span>
               )}
+            </div>
+
+            {/* Add to Calendar */}
+            <div className="cal-modal-atc">
+              <p className="cal-atc-label">Add to your calendar</p>
+              <div className="cal-atc-row">
+                <a
+                  href={buildGoogleCalUrl(selected)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cal-atc-btn"
+                >
+                  Google
+                </a>
+                <a
+                  href={buildOutlookUrl(selected)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cal-atc-btn"
+                >
+                  Outlook
+                </a>
+                <button
+                  className="cal-atc-btn"
+                  type="button"
+                  onClick={() => downloadICS(selected)}
+                >
+                  Apple
+                </button>
+              </div>
             </div>
           </div>
         </div>

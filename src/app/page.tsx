@@ -1,10 +1,13 @@
 import Link from 'next/link';
 import HeroCounter from '@/components/HeroCounter';
 import HeroWelcome from '@/components/HeroWelcome';
-import EventCalendar, { type CalEvent } from '@/components/EventCalendar';
-import { formatDate, getHomeContent, getMeetups, getEvents, getWorkshops, getTeam } from '@/lib/content';
+import EventCalendar from '@/components/EventCalendar';
+import { formatDate, getHomeContent, getMeetups, getTeam } from '@/lib/content';
+import { getGoogleCalendarEvents } from '@/lib/google-calendar';
 import '@/styles/home.css';
 import '@/styles/events-cal.css';
+
+export const revalidate = 300;
 
 const CHAPTER_LOGOS: Record<string, string> = {
   'Drexel':          '/images/logos/drexel.png',
@@ -27,7 +30,7 @@ const CHAPTER_LOGOS: Record<string, string> = {
   'U of Illinois':   '/images/logos/u_of_illinois.png',
 };
 
-export default function HomePage() {
+export default async function HomePage() {
   const home = getHomeContent();
   const chapters = home.chapters || [];
   const team = getTeam();
@@ -37,32 +40,7 @@ export default function HomePage() {
     .sort((a, b) => (a.homepageOrder ?? 99) - (b.homepageOrder ?? 99))
     .slice(0, 6);
 
-  const calEvents: CalEvent[] = [
-    ...getEvents()
-      .filter(e => e.status === 'upcoming')
-      .map(e => ({
-        slug:        `e-${e.slug}`,
-        title:       e.title,
-        date:        e.date,
-        location:    e.location,
-        category:    e.category,
-        description: e.description,
-        registerUrl: e.registerUrl,
-        status:      'upcoming' as const,
-      })),
-    ...getWorkshops()
-      .filter(w => w.status === 'upcoming')
-      .map(w => ({
-        slug:        `w-${w.slug}`,
-        title:       w.title,
-        date:        w.date,
-        location:    w.location,
-        category:    w.type,
-        description: w.description,
-        registerUrl: w.registerUrl,
-        status:      'upcoming' as const,
-      })),
-  ];
+  const calEvents = await getGoogleCalendarEvents();
 
   function emphasizedText(text = '', emphasis = '') {
     if (!emphasis || !text.includes(emphasis)) return text;
