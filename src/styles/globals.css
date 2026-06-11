@@ -35,7 +35,12 @@
 
 /* ---- Reset ---- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; overflow-x: hidden; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  /* Anchor targets land below the fixed navbar */
+  scroll-padding-top: calc(var(--nav-h) + 12px);
+}
 body {
   background: var(--paper);
   color: var(--ink);

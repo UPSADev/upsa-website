@@ -1,10 +1,13 @@
 import Link from 'next/link';
 import HeroCounter from '@/components/HeroCounter';
 import HeroWelcome from '@/components/HeroWelcome';
-import EventCalendar, { type CalEvent } from '@/components/EventCalendar';
-import { formatDate, getHomeContent, getMeetups, getEvents, getWorkshops, getTeam } from '@/lib/content';
+import EventCalendar from '@/components/EventCalendar';
+import { formatDate, getHomeContent, getMeetups, getTeam } from '@/lib/content';
+import { getGoogleCalendarEvents } from '@/lib/google-calendar';
 import '@/styles/home.css';
 import '@/styles/events-cal.css';
+
+export const revalidate = 300;
 
 const CHAPTER_LOGOS: Record<string, string> = {
   'Drexel':          '/images/logos/drexel.png',
@@ -27,7 +30,7 @@ const CHAPTER_LOGOS: Record<string, string> = {
   'U of Illinois':   '/images/logos/u_of_illinois.png',
 };
 
-export default function HomePage() {
+export default async function HomePage() {
   const home = getHomeContent();
   const chapters = home.chapters || [];
   const team = getTeam();
@@ -37,32 +40,7 @@ export default function HomePage() {
     .sort((a, b) => (a.homepageOrder ?? 99) - (b.homepageOrder ?? 99))
     .slice(0, 6);
 
-  const calEvents: CalEvent[] = [
-    ...getEvents()
-      .filter(e => e.status === 'upcoming')
-      .map(e => ({
-        slug:        `e-${e.slug}`,
-        title:       e.title,
-        date:        e.date,
-        location:    e.location,
-        category:    e.category,
-        description: e.description,
-        registerUrl: e.registerUrl,
-        status:      'upcoming' as const,
-      })),
-    ...getWorkshops()
-      .filter(w => w.status === 'upcoming')
-      .map(w => ({
-        slug:        `w-${w.slug}`,
-        title:       w.title,
-        date:        w.date,
-        location:    w.location,
-        category:    w.type,
-        description: w.description,
-        registerUrl: w.registerUrl,
-        status:      'upcoming' as const,
-      })),
-  ];
+  const calEvents = await getGoogleCalendarEvents();
 
   function emphasizedText(text = '', emphasis = '') {
     if (!emphasis || !text.includes(emphasis)) return text;
@@ -124,7 +102,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <section className="home-section home-about-section">
+      <section id="about" className="home-section home-about-section">
         <div className="about-photo-left" aria-hidden="true" />
         <div className="about-content-col">
           <div className="about-copy">
@@ -150,7 +128,7 @@ export default function HomePage() {
       </section>
 
       {pastMeetups.length > 0 && (
-        <section className="home-section alt gathered-section">
+        <section id="gallery" className="home-section alt gathered-section">
           <span className="sec-tag">{home.pastMeetupsTag}</span>
           <h2 className="sec-h2">{emphasizedText(home.pastMeetupsTitle, home.pastMeetupsTitleEmphasis)}</h2>
           <div className="gathered-grid">
@@ -179,7 +157,7 @@ export default function HomePage() {
         </section>
       )}
 
-      <section className="home-section home-cal-section">
+      <section id="events" className="home-section home-cal-section">
         <span className="sec-tag">What&rsquo;s Coming</span>
         <h2 className="sec-h2">Upcoming <em>events</em></h2>
         <div className="home-cal-wrap">
@@ -188,7 +166,7 @@ export default function HomePage() {
       </section>
 
       {team.length > 0 && (
-        <section className="home-section">
+        <section id="team" className="home-section">
           <span className="sec-tag">The Team</span>
           <h2 className="sec-h2">The people <em>behind UPSA.</em></h2>
           <div className="home-team-grid">
@@ -220,7 +198,7 @@ export default function HomePage() {
         </section>
       )}
 
-      <section className="home-section alt" style={{textAlign:'center'}}>
+      <section id="join" className="home-section alt" style={{textAlign:'center'}}>
         <span className="sec-tag" style={{justifyContent:'center', display:'flex'}}>{home.joinTag}</span>
         <h2 className="sec-h2" style={{maxWidth:680, margin:'0 auto'}}>
           {emphasizedText(home.joinTitle, home.joinTitleEmphasis)}

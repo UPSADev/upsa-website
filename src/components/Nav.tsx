@@ -16,6 +16,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
+    onScroll(); // initialize in case the page loads already scrolled (anchor links, refresh)
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -77,9 +78,28 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
         </Link>
 
         <div className="nav-links">
-          <Link href="/" onClick={close}>Home</Link>
+          <div
+            className={`nav-drop-group${desktopDropdown === 'home' ? ' open' : ''}`}
+            onMouseEnter={() => setDesktopDropdown('home')}
+            onMouseLeave={() => setDesktopDropdown(d => (d === 'home' ? null : d))}
+          >
+            <Link href="/" onClick={close} aria-haspopup="true" aria-expanded={desktopDropdown === 'home'}>
+              Home
+            </Link>
+            <div className="nav-dropdown">
+              <Link href="/#about" onClick={close}>About UPSA</Link>
+              <Link href="/#gallery" onClick={close}>Gallery</Link>
+              <Link href="/#events" onClick={close}>Upcoming Events</Link>
+              <Link href="/#team" onClick={close}>The Team</Link>
+              <Link href="/#join" onClick={close}>Join Us</Link>
+            </div>
+          </div>
 
-          <div className={`nav-drop-group${desktopDropdown === 'about' ? ' open' : ''}`}>
+          <div
+            className={`nav-drop-group${desktopDropdown === 'about' ? ' open' : ''}`}
+            onMouseEnter={() => setDesktopDropdown('about')}
+            onMouseLeave={() => setDesktopDropdown(d => (d === 'about' ? null : d))}
+          >
             <button
               type="button"
               className="nav-drop-trigger"
@@ -121,8 +141,16 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
       </nav>
 
       <div className={`mobile-menu${menuOpen ? ' open' : ''}`}>
-        <div className="m-item">
-          <Link href="/" className="m-link" onClick={close}>Home</Link>
+        <div className={`m-item${openSection === 'home' ? ' open' : ''}`}>
+          <button className="m-link" onClick={() => toggleSection('home')}>Home <span className="m-caret-icon">+</span></button>
+          <div className="m-sub">
+            <Link href="/" onClick={close}>Top</Link>
+            <Link href="/#about" onClick={close}>About UPSA</Link>
+            <Link href="/#gallery" onClick={close}>Gallery</Link>
+            <Link href="/#events" onClick={close}>Upcoming Events</Link>
+            <Link href="/#team" onClick={close}>The Team</Link>
+            <Link href="/#join" onClick={close}>Join Us</Link>
+          </div>
         </div>
 
         <div className={`m-item${openSection === 'about' ? ' open' : ''}`}>
