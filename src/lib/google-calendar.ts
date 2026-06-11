@@ -134,7 +134,7 @@ export async function getGoogleCalendarEvents(): Promise<CalEvent[]> {
       .trim();
 
     // Strip any URL from the visible location string
-    const cleanLoc  = rawLoc.replace(/https?:\/\/\S+/g, '').trim() || 'Online';
+    const cleanLoc  = rawLoc.replace(/https?:\/\/\S+/g, '').trim();
 
     let time: string | undefined;
     if (!allDay && startIso && endIso) {

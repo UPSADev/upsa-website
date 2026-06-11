@@ -102,7 +102,7 @@ export default async function HomePage() {
         </div>
       </div>
 
-      <section className="home-section home-about-section">
+      <section id="about" className="home-section home-about-section">
         <div className="about-photo-left" aria-hidden="true" />
         <div className="about-content-col">
           <div className="about-copy">
@@ -128,7 +128,7 @@ export default async function HomePage() {
       </section>
 
       {pastMeetups.length > 0 && (
-        <section className="home-section alt gathered-section">
+        <section id="gallery" className="home-section alt gathered-section">
           <span className="sec-tag">{home.pastMeetupsTag}</span>
           <h2 className="sec-h2">{emphasizedText(home.pastMeetupsTitle, home.pastMeetupsTitleEmphasis)}</h2>
           <div className="gathered-grid">
@@ -157,7 +157,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="home-section home-cal-section">
+      <section id="events" className="home-section home-cal-section">
         <span className="sec-tag">What&rsquo;s Coming</span>
         <h2 className="sec-h2">Upcoming <em>events</em></h2>
         <div className="home-cal-wrap">
@@ -166,7 +166,7 @@ export default async function HomePage() {
       </section>
 
       {team.length > 0 && (
-        <section className="home-section">
+        <section id="team" className="home-section">
           <span className="sec-tag">The Team</span>
           <h2 className="sec-h2">The people <em>behind UPSA.</em></h2>
           <div className="home-team-grid">
@@ -198,7 +198,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="home-section alt" style={{textAlign:'center'}}>
+      <section id="join" className="home-section alt" style={{textAlign:'center'}}>
         <span className="sec-tag" style={{justifyContent:'center', display:'flex'}}>{home.joinTag}</span>
         <h2 className="sec-h2" style={{maxWidth:680, margin:'0 auto'}}>
           {emphasizedText(home.joinTitle, home.joinTitleEmphasis)}

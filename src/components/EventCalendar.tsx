@@ -264,7 +264,7 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
                 <div className="cli-body">
                   {ev.category && <span className="cli-cat" style={{ color }}>{ev.category}</span>}
                   <span className="cli-title">{ev.title}</span>
-                  <span className="cli-loc">{ev.location}</span>
+                  {ev.location && <span className="cli-loc">{ev.location}</span>}
                 </div>
                 <span className="cli-arrow">→</span>
               </button>
