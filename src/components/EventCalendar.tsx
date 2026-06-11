@@ -312,7 +312,9 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
               )}
             </div>
 
-            <p className="cal-modal-desc">{selected.description}</p>
+            {selected.description && (
+              <p className="cal-modal-desc">{selected.description}</p>
+            )}
 
             {/* Register (Google Form) */}
             <div className="cal-modal-foot">

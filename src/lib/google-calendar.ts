@@ -149,7 +149,7 @@ export async function getGoogleCalendarEvents(): Promise<CalEvent[]> {
       time,
       location:    cleanLoc,
       category,
-      description: cleanDesc || 'More details coming soon.',
+      description: cleanDesc,
       registerUrl,
       status:      'upcoming' as const,
       startIso,
