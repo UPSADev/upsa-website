@@ -14,9 +14,9 @@ storyParagraphs:
     lessons — and takes on the responsibility of building it further for those who come next.
 
 founderTag: From the Founder
-founderQuote: UPSA was never meant to be another student club. It was meant to be the answer 
-  to a question every Pakistani student wonders in silence — How will I get through this alone? 
-  You don't have to and we won't let you. And with every chapter we build, that answer only grows stronger.
+founderQuote: UPSA was founded on a belief that no one should have to navigate their journey alone. By bringing students, alumni, & professionals together under one community, we created a place where experience meets ambition, guidance becomes accessible, & meaningful connections are formed.
+
+  What started as an idea has evolved into a nationwide network dedicated to helping people succeed.
 founderCredit: Shahrukh Khan, Founder & President
 
 missionTitle: Our Mission
