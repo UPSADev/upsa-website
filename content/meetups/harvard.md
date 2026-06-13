@@ -7,12 +7,11 @@ date: "2026-05-03"
 status: past
 displayOnHomepage: true
 homepageOrder: 11
-coverImage: /images/events/event-1.jpg
-homepageImage: /images/events/event-1.jpg
+coverImage: /images/events/Harvard.jpg
+homepageImage: /images/events/Harvard.jpg
 photos:
-  - /images/events/Consulate.jpg
-  - /images/events/Consulate-2.jpg
-  - /images/events/Consulate-1 .JPG
+  - /images/events/Harvard.jpg
+  - /images/events/Harvard-1.jpg
 attendees: 80
 description: >
   A relaxed mixer for meeting like-minded students and alumni, exchanging
