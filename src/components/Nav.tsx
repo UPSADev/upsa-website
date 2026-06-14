@@ -143,11 +143,9 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
         <div className={`m-item${openSection === 'home' ? ' open' : ''}`}>
           <button className="m-link" onClick={() => toggleSection('home')}>Home <span className="m-caret-icon">+</span></button>
           <div className="m-sub">
-            <Link href="/" onClick={close}>Top</Link>
-            <Link href="/#about" onClick={close}>About UPSA</Link>
-            <Link href="/#gallery" onClick={close}>Gallery</Link>
-            <Link href="/#events" onClick={close}>Upcoming Events</Link>
-            <Link href="/#team" onClick={close}>The Team</Link>
+            <Link href="/#gallery" onClick={close}>Meetups</Link>
+            <Link href="/#events" onClick={close}>Calendar</Link>
+            <Link href="/#team" onClick={close}>Team</Link>
             <Link href="/#join" onClick={close}>Join Us</Link>
           </div>
         </div>
