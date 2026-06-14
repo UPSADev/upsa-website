@@ -25,19 +25,19 @@ const MONTHS = [
 ];
 const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-const CATEGORY_COLORS: Record<string, string> = {
-  Social:       'var(--moss)',
-  Cultural:     '#b86b1b',
-  Professional: '#1b5090',
-  Workshop:     '#6b3a9f',
-  Seminar:      '#1b5090',
-  Meetup:       'var(--moss)',
-  Webinar:      '#6b3a9f',
-  Gala:         '#b86b1b',
-};
+const EVENT_PALETTE = [
+  '#2a7d4f',  // green
+  '#b87d0e',  // yellow
+  '#c95f1a',  // orange
+  '#b84c8a',  // pink
+  '#6b7268',  // gray
+  '#1a6dbf',  // light blue
+  '#7244b8',  // light purple
+];
 
-function catColor(category?: string): string {
-  return (category && CATEGORY_COLORS[category]) || 'var(--moss)';
+function eventColor(slug: string): string {
+  const n = slug.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+  return EVENT_PALETTE[n % EVENT_PALETTE.length];
 }
 
 // ── Add-to-Calendar helpers ───────────────────────────────────
@@ -229,7 +229,7 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
                     <button
                       key={ev.slug}
                       className="cal-event-pill"
-                      style={{ '--ec': catColor(ev.category) } as React.CSSProperties}
+                      style={{ '--ec': eventColor(ev.slug) } as React.CSSProperties}
                       onClick={() => setSelected(ev)}
                       type="button"
                     >
@@ -248,7 +248,7 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
         {monthEvents.length > 0 ? (
           monthEvents.map(ev => {
             const p     = parseDay(ev.date);
-            const color = catColor(ev.category);
+            const color = eventColor(ev.slug);
             return (
               <button
                 key={ev.slug}
@@ -291,7 +291,7 @@ export default function EventCalendar({ events }: { events: CalEvent[] }) {
             {selected.category && (
               <div
                 className="cal-modal-cat"
-                style={{ '--ec': catColor(selected.category) } as React.CSSProperties}
+                style={{ '--ec': eventColor(selected.slug) } as React.CSSProperties}
               >
                 {selected.category}
               </div>
