@@ -87,10 +87,9 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
               Home
             </Link>
             <div className="nav-dropdown">
-              <Link href="/#about" onClick={close}>About UPSA</Link>
-              <Link href="/#gallery" onClick={close}>Gallery</Link>
-              <Link href="/#events" onClick={close}>Upcoming Events</Link>
-              <Link href="/#team" onClick={close}>The Team</Link>
+              <Link href="/#gallery" onClick={close}>Meetups</Link>
+              <Link href="/#events" onClick={close}>Calendar</Link>
+              <Link href="/#team" onClick={close}>Team</Link>
               <Link href="/#join" onClick={close}>Join Us</Link>
             </div>
           </div>

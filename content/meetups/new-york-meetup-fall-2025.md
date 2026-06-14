@@ -7,10 +7,10 @@ date: "2026-05-03"
 status: past
 displayOnHomepage: true
 homepageOrder: 11
-coverImage: /images/events/event-1.jpg
-homepageImage: /images/events/event-1.jpg
+coverImage: /images/events/nycmeetup1.jpg
+homepageImage: /images/events/nycmeetup1.jpg
 photos:
-  - /images/events/event-1.jpg
+  - /images/events/nycmeetup1.jpg
 attendees: 80
 description: >
   A relaxed mixer for meeting like-minded students and alumni, exchanging
