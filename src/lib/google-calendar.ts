@@ -99,7 +99,7 @@ export async function getGoogleCalendarEvents(): Promise<CalEvent[]> {
 
   let data: { items?: unknown[] };
   try {
-    const res = await fetch(url.toString(), { next: { revalidate: 300 } });
+    const res = await fetch(url.toString(), { next: { revalidate: 0 } });
     if (!res.ok) {
       const body = await res.text();
       console.error('[google-calendar] API error', res.status, body);

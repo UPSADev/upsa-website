@@ -48,6 +48,7 @@ body {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  cursor: default;
 }
 body, button, input, textarea, select {
   text-size-adjust: 100%;
