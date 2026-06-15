@@ -42,7 +42,7 @@ aboutTag: About UPSA
 aboutTitle: A network built for you across United States.
 aboutTitleEmphasis: "in America."
 aboutParagraphs:
-  - From Berkeley to Brooklyn, UPSA spans 35+ campuses across 12 states, uniting over 1,500 Pakistani students and alumni through shared identity, collective ambition, and one common mission - "Building a community where Pakistani students in America always have someone in their corner.(someone needs to make it green)"
+  - From Berkeley to Brooklyn, UPSA spans 35+ campuses across 12 states, uniting over 1,500 Pakistani students and alumni through shared identity, collective ambition, and one common mission - "Building a community where Pakistani students in America always have someone in their corner."
 founderQuote: UPSA was founded on a belief that no one should have to navigate their journey alone. By bringing students, alumni, & professionals together under one community, we created a place where experience meets ambition, guidance becomes accessible, & meaningful connections are formed.
 
  What started as an idea has evolved into a nationwide network dedicated to helping people succeed.
