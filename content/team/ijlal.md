@@ -1,6 +1,6 @@
 ---
 name: Raja Ijlal Sultan
-role: Senior Vice President
+role: Vice President
 order: 3
 bio: Leading strategic initiatives, partnerships, and organizational development to advance UPSA's mission
 photo: /images/team/ijlal.jpg
