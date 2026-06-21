@@ -6,7 +6,7 @@ export default function HeroWelcome() {
   const [phase, setPhase] = useState<'en' | 'ur'>('en');
 
   useEffect(() => {
-    const id = setInterval(() => setPhase(p => (p === 'en' ? 'ur' : 'en')), 10_000);
+    const id = setInterval(() => setPhase(p => (p === 'en' ? 'ur' : 'en')), 3_000);
     return () => clearInterval(id);
   }, []);
 
