@@ -1,6 +1,6 @@
 ---
 name: Rahmatullah Safdar
-role: Senior Vice President
+role: Vice President
 order: 2
 bio: >
  Driving UPSA's growth through member engagement, chapter expansion, and community-building initiatives
