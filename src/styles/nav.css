@@ -80,6 +80,43 @@ nav.top.page-nav .nav-brand-abbr { color: var(--ink-2); }
 
 .nav-cta { justify-self: end; }
 
+.nav-auth {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-self: end;
+  margin-left: auto;
+}
+
+.nav-signin {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .25s, transform .25s;
+}
+
+.nav-signin:hover {
+  background: rgba(255,255,255,.16);
+  transform: translateY(-1px);
+}
+
+.nav-userbutton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 48px;
+}
+
+.nav-userbutton > * {
+  min-width: 48px;
+  min-height: 48px;
+}
+
 .nav-links {
   display: flex;
   align-items: center;

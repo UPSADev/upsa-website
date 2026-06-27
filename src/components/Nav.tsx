@@ -126,15 +126,19 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
           ))}
         </div>
 
-        <div className="nav-auth" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div className="nav-auth">
           {!isLoaded ? null : !isSignedIn ? (
-            <SignInButton mode="modal">
-              <button type="button" className="nav-cta" style={{ padding: '0.7rem 1rem' }}>Sign In</button>
-            </SignInButton>
+            <>
+              <Link href={settings.ctaHref} className="nav-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
+              <SignInButton mode="modal">
+                <button type="button" className="nav-signin">Sign In</button>
+              </SignInButton>
+            </>
           ) : (
-            <UserButton />
+            <div className="nav-userbutton">
+              <UserButton />
+            </div>
           )}
-          <Link href={settings.ctaHref} className="nav-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
         </div>
 
         <button
