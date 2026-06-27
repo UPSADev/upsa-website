@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { SignInButton, UserButton, useAuth } from '@clerk/nextjs';
 import type { SiteSettings } from '@/lib/content';
 
 export default function Nav({ settings }: { settings: SiteSettings }) {
   const pathname = usePathname();
+  const { isLoaded, isSignedIn } = useAuth();
   const isHome = pathname === '/';
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -124,7 +126,16 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
           ))}
         </div>
 
-        <Link href={settings.ctaHref} className="nav-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
+        <div className="nav-auth" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {!isLoaded ? null : !isSignedIn ? (
+            <SignInButton mode="modal">
+              <button type="button" className="nav-cta" style={{ padding: '0.7rem 1rem' }}>Sign In</button>
+            </SignInButton>
+          ) : (
+            <UserButton />
+          )}
+          <Link href={settings.ctaHref} className="nav-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
+        </div>
 
         <button
           className={`nav-burger${menuOpen ? ' open' : ''}`}
@@ -173,7 +184,16 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
           </div>
         ))}
 
-        <Link href={settings.ctaHref} className="m-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
+        <div className="mobile-auth" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
+          {!isLoaded ? null : !isSignedIn ? (
+            <SignInButton mode="modal">
+              <button type="button" className="m-cta">Sign In</button>
+            </SignInButton>
+          ) : (
+            <UserButton />
+          )}
+          <Link href={settings.ctaHref} className="m-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
+        </div>
       </div>
     </>
   );
