@@ -40,4 +40,10 @@ footerColumns:
         href: https://www.linkedin.com/company/united-pakistani-students-alumni-association
       - label: Contact Us
         href: /contact
+  - title: Legal
+    links:
+      - label: Terms of Service
+        href: /terms
+      - label: Privacy Policy
+        href: /privacy
 ---
