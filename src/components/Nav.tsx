@@ -101,17 +101,10 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
             onMouseEnter={() => setDesktopDropdown('about')}
             onMouseLeave={() => setDesktopDropdown(d => (d === 'about' ? null : d))}
           >
-            <button
-              type="button"
-              className="nav-drop-trigger"
-              aria-haspopup="true"
-              aria-expanded={desktopDropdown === 'about'}
-              onClick={() => toggleDesktopDropdown('about')}
-            >
+            <Link href="/about" onClick={close} aria-haspopup="true" aria-expanded={desktopDropdown === 'about'}>
               About
-            </button>
+            </Link>
             <div className="nav-dropdown">
-              <Link href="/about" onClick={close}>Story</Link>
               <Link href="/about#mission" onClick={close}>Mission</Link>
               <Link href="/about#values" onClick={close}>Values</Link>
             </div>
@@ -166,9 +159,9 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
         </div>
 
         <div className={`m-item${openSection === 'about' ? ' open' : ''}`}>
-          <button className="m-link" onClick={() => toggleSection('about')}>About <span className="m-caret-icon">+</span></button>
+          <Link href="/about" className="m-link" onClick={() => { close(); }}>About</Link>
+          <button className="m-toggle" onClick={() => toggleSection('about')}><span className="m-caret-icon">+</span></button>
           <div className="m-sub">
-            <Link href="/about" onClick={close}>Story</Link>
             <Link href="/about#mission" onClick={close}>Mission</Link>
             <Link href="/about#values" onClick={close}>Values</Link>
           </div>
