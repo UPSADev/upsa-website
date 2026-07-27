@@ -12,6 +12,15 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
           <Image src={settings.logo} alt="UPSA" width={88} height={88} className="f-logo" unoptimized />
           <span className="f-brand-name">United Pakistani Students &amp; Alumni Association</span>
           <p>{settings.footerDescription}</p>
+          <div className="f-legal">
+            <h4>Nonprofit Transparency</h4>
+            <p>United Pakistani Students &amp; Alumni Association Inc.</p>
+            <p>Registered U.S. 501(c)(3) Nonprofit Organization</p>
+            <p>EIN: 39-3197690</p>
+            <p>Official website: <a href="https://www.unitedpsa.org" target="_blank" rel="noopener">www.unitedpsa.org</a></p>
+            <p>Official contact email: <a href="mailto:upsa.network@gmail.com">upsa.network@gmail.com</a></p>
+            <p>Mailing address: 971 US Highway 202 N Ste A, Branchburg, NJ 08876</p>
+          </div>
         </div>
 
         {settings.footerColumns.map(column => (

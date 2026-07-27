@@ -46,6 +46,36 @@ footer.site-footer .f-brand p {
   margin-top: 0;
 }
 
+.f-legal {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,.12);
+  max-width: 320px;
+}
+
+.f-legal h4 {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0 0 10px;
+}
+
+.f-legal p {
+  margin: 0 0 6px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: rgba(255,255,255,.7);
+}
+
+.f-legal a {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: rgba(255,255,255,.35);
+}
+
 .f-col h4 {
   font-family: 'Geist Mono', monospace;
   font-size: 10px;
