@@ -2,13 +2,15 @@
 heroTag: About UPSA
 heroTitle: A network built for you.
 heroTitleEmphasis: for you
-heroDescription: UPSA unites Pakistani students and alumni across America into one compounding network of opportunity, mentorship, and belonging.
+heroDescription: UPSA is a registered U.S. 501(c)(3) nonprofit organization (EIN 39-3197690) that unites Pakistani students and alumni across America into one compounding network of opportunity, mentorship, and belonging. We operate with transparency, accountability, and a commitment to public service.
 
 storyTag: Our Story
 storyTitle: We built what none of us once had.
 storyTitleEmphasis: none of us once had
 storyParagraphs:
   - - UPSA is the phoenix that rose from the silence every Pakistani student knows too well — no hand lent, no hand held, no trail left behind. Surrounded by new faces who couldn't grasp the quiet weight of carrying our family's hopes across an ocean, realizing there's no way to go but up. There was no map, no guide, no guarantee. So we became all three — together.
+
+  - As a registered U.S. 501(c)(3) nonprofit, UPSA exists to serve students and alumni with transparency, accountability, and a mission rooted in community support rather than private gain.
 
   - Every member who joins inherits a network forged over years of hard work and harder
     lessons — and takes on the responsibility of building it further for those who come next.
@@ -20,7 +22,7 @@ founderQuote: UPSA was founded on a belief that no one should have to navigate t
 founderCredit: Shahrukh Khan, Founder & President
 
 missionTitle: Our Mission
-missionDescription: To unite Pakistani student associations and alumni networks across America into one living, growing community — where opportunity is shared, guidance is passed forward, and no student faces life's defining challenges alone.
+missionDescription: To unite Pakistani student associations and alumni networks across America into one living, growing community — where opportunity is shared, guidance is passed forward, and no student faces life's defining challenges alone. As a registered U.S. 501(c)(3) nonprofit, UPSA also works to provide reliable support, transparent leadership, and public service to the communities we represent.
 
 visionTitle: Our Vision
 visionDescription: A future where every Pakistani student arriving in the United States finds more than a university waiting for them.
