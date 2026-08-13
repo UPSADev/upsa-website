@@ -14,7 +14,7 @@ paths:
       - Community updates
       - Open to students, alumni & professionals
     url: https://docs.google.com/forms/d/1jujOzdYDjdtrEd1EqfE3p8dRdq-FPAwDi5tt2tLZcDE/viewform?edit_requested=true
-    cta: Join UPSA →
+    cta: Join UPSA
     accent: var(--moss)
   - tag: PSA CHAPTER
     title: Partner Your PSA
@@ -26,7 +26,7 @@ paths:
       - Funding & partnership opportunities
       - Nationwide PSA network
     url: https://docs.google.com/forms/d/e/1FAIpQLSdGrEJAGWlThbtPHN9rWtxnBqcK_x1kzBDu-epTz7FHEUfkMA/viewform?usp=header
-    cta: Partner Your PSA →
+    cta: Partner Your PSA
     accent: var(--moss-mid)
   - tag: ALUMNI
     title: Join the Alumni Network
@@ -38,8 +38,20 @@ paths:
       - Industry networking
       - Give back to the community
     url: https://docs.google.com/forms/d/e/1FAIpQLSePPA5Ma8O_mUoJof4G4lHh3mYcl7LQ1Hm4NJIxqJ5NswbzHA/viewform
-    cta: Join the Alumni Network →
+    cta: Join the Alumni Network
     accent: var(--moss-deep)
+  - tag: NATIONAL EXECUTIVE BOARD
+    title: Join the National Executive Board
+    desc: Help shape UPSA's national direction by leading strategic initiatives, supporting chapters, and strengthening the student and alumni experience across the country.
+    perks:
+      - Leadership & strategy
+      - National program development
+      - Chapter support & growth
+      - Community impact
+      - Professional development
+    url: https://forms.gle/amyU2NvoQMecyXsc6
+    cta: Apply to the Board
+    accent: var(--ink)
 processTag: How It Works
 processTitle: Three steps to getting started.
 processTitleEmphasis: getting started

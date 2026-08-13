@@ -34,7 +34,7 @@ export default function JoinPage() {
                 <ul>
                   {path.perks.map((perk) => <li key={perk}>{perk}</li>)}
                 </ul>
-                <a href={path.url} target="_blank" rel="noopener" className="join-card-btn">{path.cta} &rarr;</a>
+                <a href={path.url} target="_blank" rel="noopener" className="join-card-btn">{path.cta}</a>
               </div>
             ))}
           </div>
@@ -61,7 +61,7 @@ export default function JoinPage() {
         <div className="container">
           <span>{content.questionsText}</span>
           <Link href={content.questionsCtaHref} className="btn-outline" style={{ borderColor: 'rgba(255,255,255,.4)', color: '#fff' }}>
-            {content.questionsCtaLabel} &rarr;
+            {content.questionsCtaLabel}
           </Link>
         </div>
       </div>
