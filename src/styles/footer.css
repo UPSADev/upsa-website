@@ -68,6 +68,11 @@ footer.site-footer .f-brand p {
   font-size: 12.5px;
   line-height: 1.65;
   color: rgba(255,255,255,.7);
+  white-space: normal;
+}
+
+footer.site-footer .f-legal p:first-of-type {
+  white-space: nowrap;
 }
 
 .f-legal a {
