@@ -4,41 +4,41 @@ heroTitle: Find your place in the UPSA network.
 heroTitleEmphasis: UPSA network
 heroDescription: Whether you're a student, an alumnus, or a chapter looking to connect - there's a home for you here. Three ways to get started.
 paths:
-  - tag: PSA Chapter
-    title: Affiliate Your Chapter
-    desc: Connect your Pakistani Student Association with 35+ chapters across the country. Access resources, leadership support, and a nationwide community.
+  - tag: MEMBERSHIP
+    title: Join the UPSA Network
+    desc: Whether you're a student, alumnus, or young professional, become part of America's fastest-growing student & alumni community. Join events, build friendships, and stay connected nationwide.
     perks:
-      - Nationwide resource sharing
-      - Leadership development
-      - Funding opportunities
-      - National events & conferences
-      - UPSA chapter toolkit
-    url: https://docs.google.com/forms/d/e/1FAIpQLSdGrEJAGWlThbtPHN9rWtxnBqcK_x1kzBDu-epTz7FHEUfkMA/viewform?usp=header
-    cta: Apply to Affiliate
-    accent: var(--moss)
-  - tag: Individual
-    title: Join as a Student
-    desc: Connect with Pakistani students across the USA. Access events, mentorship, and a community that has your back throughout your university journey.
-    perks:
-      - Nationwide student community
-      - Event invitations
-      - Mentorship matching
-      - Cultural programs
-      - Emergency support network
+      - Nationwide community
+      - Local & national events
+      - Networking opportunities
+      - Community updates
+      - Open to students, alumni & professionals
     url: https://docs.google.com/forms/d/1jujOzdYDjdtrEd1EqfE3p8dRdq-FPAwDi5tt2tLZcDE/viewform?edit_requested=true
-    cta: Join as Student
-    accent: var(--moss-mid)
-  - tag: Alumni
-    title: Join the Alumni Network
-    desc: Stay connected with UPSA events and opportunities. Join our database to mentor the next generation and expand your professional network.
+    cta: Join UPSA →
+    accent: var(--moss)
+  - tag: PSA CHAPTER
+    title: Partner Your PSA
+    desc: Connect your Pakistani Student Association with UPSA and become part of a nationwide network of student organizations. Access collaborations, national events, leadership resources, and partnership opportunities.
     perks:
-      - Alumni directory access
-      - Mentor students directly
-      - Career panel invitations
-      - Exclusive alumni events
-      - Give back to your community
+      - National collaboration opportunities
+      - Leadership & chapter resources
+      - Cross-campus events
+      - Funding & partnership opportunities
+      - Nationwide PSA network
+    url: https://docs.google.com/forms/d/e/1FAIpQLSdGrEJAGWlThbtPHN9rWtxnBqcK_x1kzBDu-epTz7FHEUfkMA/viewform?usp=header
+    cta: Partner Your PSA →
+    accent: var(--moss-mid)
+  - tag: ALUMNI
+    title: Join the Alumni Network
+    desc: Help build the future of UPSA by joining our alumni database. Connect with fellow alumni & professionals, support mentorship initiatives, and be part of future career and industry programs.
+    perks:
+      - Alumni directory
+      - Future mentorship program
+      - Career & speaker opportunities
+      - Industry networking
+      - Give back to the community
     url: https://docs.google.com/forms/d/e/1FAIpQLSePPA5Ma8O_mUoJof4G4lHh3mYcl7LQ1Hm4NJIxqJ5NswbzHA/viewform
-    cta: Join as Alumni
+    cta: Join the Alumni Network →
     accent: var(--moss-deep)
 processTag: How It Works
 processTitle: Three steps to getting started.
