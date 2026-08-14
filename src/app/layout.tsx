@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ClerkProvider } from '@clerk/nextjs';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import OpeningMotion from '@/components/OpeningMotion';
@@ -21,17 +22,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const settings = getSiteSettings();
 
   return (
-    <html lang="en">
-      <head>
-        {/* Netlify Identity — required for Decap CMS login redirect */}
-        <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" async />
-      </head>
-      <body className="intro-lock">
-        <OpeningMotion logo={settings.logo} />
-        <Nav settings={settings} />
-        <main>{children}</main>
-        <Footer settings={settings} />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <head>
+          {/* Netlify Identity — required for Decap CMS login redirect */}
+          <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" async />
+        </head>
+        <body className="intro-lock">
+          <OpeningMotion logo={settings.logo} />
+          <Nav settings={settings} />
+          <main>{children}</main>
+          <Footer settings={settings} />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

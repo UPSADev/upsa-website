@@ -7,10 +7,11 @@ date: "2026-05-03"
 status: past
 displayOnHomepage: true
 homepageOrder: 13
-coverImage: /images/events/event-3.jpg
-homepageImage: /images/events/event-3.jpg
+coverImage: /images/events/california1.jpg
+homepageImage: /images/events/california1.jpg
 photos:
-  - /images/events/event-3.jpg
+  - /images/events/california1.jpg
+  - /images/events/california2.jpg
 attendees: 60
 description: >
   A relaxed mixer for meeting like-minded students and alumni, exchanging

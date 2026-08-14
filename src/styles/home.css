@@ -279,7 +279,7 @@ h1.hero-h1 em {
 }
 
 .about-photo-left {
-  background: url('/images/landmarks/minar-e-pakistan-3.jpg') center 35% / 150% auto no-repeat;
+  background: url('/images/landmarks/minar-e-pakistan-3.jpg') center / cover no-repeat;
 }
 
 .about-photo-right {

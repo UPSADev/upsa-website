@@ -111,6 +111,26 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <section style={{background: 'rgba(0,0,0,.02)', padding: '64px 0', marginTop: '64px'}}>
+        <div className="container">
+          <h2 className="sec-h2">Nonprofit Verification & Transparency</h2>
+          <p style={{fontSize: '15px', lineHeight: '1.7', marginTop: '16px', maxWidth: '600px', marginBottom: '32px'}}>
+            United Pakistani Students &amp; Alumni Association Inc. is a registered U.S. 501(c)(3) nonprofit organization (EIN: 39-3197690). Our nonprofit status is verified through the IRS and we operate with full transparency and public accountability.
+          </p>
+          <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px'}}>
+            <a href="https://www.irs.gov/charities-non-profits/tax-exempt-organization-search" target="_blank" rel="noopener" className="btn-outline" style={{textAlign: 'center', padding: '16px', textDecoration: 'none'}}>
+              Verify on IRS Database
+            </a>
+            <Link href="/terms" className="btn-outline" style={{textAlign: 'center', padding: '16px'}}>
+              Terms of Service
+            </Link>
+            <Link href="/privacy" className="btn-outline" style={{textAlign: 'center', padding: '16px'}}>
+              Privacy Policy
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

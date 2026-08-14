@@ -2,42 +2,62 @@
 heroTag: About UPSA
 heroTitle: A network built for you.
 heroTitleEmphasis: for you
-heroDescription: UPSA unites Pakistani Student Associations across the United States, and the alumni who came through them, into a single, compounding network of opportunity, mentorship, and belonging.
+heroDescription: UPSA is a registered U.S. 501(c)(3) nonprofit organization (EIN 39-3197690) that unites Pakistani students and alumni across America into one compounding network of opportunity, mentorship, and belonging. We operate with transparency, accountability, and a commitment to public service.
 
 storyTag: Our Story
-storyTitle: We built the network we never had.
-storyTitleEmphasis: network we never had
+storyTitle: We built what none of us once had.
+storyTitleEmphasis: none of us once had
 storyParagraphs:
-  - UPSA was born from a specific kind of frustration, the kind that comes from arriving on a U.S. campus and realizing there is no roadmap. No senior who looked like you and could explain OPT. No alumni network that understood both the academic pressure and the family weight. No mentor who had navigated the American job market while carrying a Pakistani passport. We had to build all of that ourselves, and we did.
-  - Today, UPSA spans 35+ campuses across 12 states, connecting over 1,500 students and alumni through a shared identity and a common mission. From Berkeley to Brooklyn, from Houston to Hoboken, we have turned what was once individual isolation into collective strength. Every new member who joins inherits a network it took years to build, and becomes part of building it for the next generation.
+  - - UPSA is the phoenix that rose from the silence every Pakistani student knows too well — no hand lent, no hand held, no trail left behind. Surrounded by new faces who couldn't grasp the quiet weight of carrying our family's hopes across an ocean, realizing there's no way to go but up. There was no map, no guide, no guarantee. So we became all three — together.
+
+  - As a registered U.S. 501(c)(3) nonprofit, UPSA exists to serve students and alumni with transparency, accountability, and a mission rooted in community support rather than private gain.
+
+  - Every member who joins inherits a network forged over years of hard work and harder
+    lessons — and takes on the responsibility of building it further for those who come next.
 
 founderTag: From the Founder
-founderQuote: When I founded UPSA, I wanted to build something I never had, a network where every Pakistani student in America could find mentorship, opportunity, and community from day one. We didn't just want chapters. We wanted a movement that compounds across years, cities, and careers. That vision is becoming real, and we're just getting started.
+founderQuote: UPSA was founded on a belief that no one should have to navigate their journey alone. By bringing students, alumni, & professionals together under one community, we created a place where experience meets ambition, guidance becomes accessible, & meaningful connections are formed.
+
+  What started as an idea has evolved into a nationwide network dedicated to helping people succeed.
 founderCredit: Shahrukh Khan, Founder & President
 
 missionTitle: Our Mission
-missionDescription: To unite every Pakistani Student Association in America, and the alumni who came through them, into a single compounding network where no student faces the job market alone, loses their cultural footing, or hits a crisis without a community behind them.
+missionDescription: To unite Pakistani student associations and alumni networks across America into one living, growing community — where opportunity is shared, guidance is passed forward, and no student faces life's defining challenges alone. As a registered U.S. 501(c)(3) nonprofit, UPSA also works to provide reliable support, transparent leadership, and public service to the communities we represent.
 
 visionTitle: Our Vision
-visionDescription: A United States where the next Pakistani student who lands at JFK already has a mentor, a chapter, and a career path waiting. Where belonging is not something you earn after years of grinding, it is the first thing we give you.
+visionDescription: A future where every Pakistani student arriving in the United States finds more than a university waiting for them.
+ A mentor before uncertainty. A community before loneliness. A path before confusion.
+ A future where belonging is not something earned after years of struggle, but the first gift we offer one another.
 
 cultureTag: Why We Exist
-cultureTitle: Built because we needed it ourselves.
+cultureTitle: Built from lived experience.
 cultureTitleEmphasis: needed it ourselves
-cultureDescription: UPSA was not founded to fill a calendar with events. It was built to solve a real and specific problem, the experience of being Pakistani, driven, and completely on your own in America.
+cultureDescription: UPSA was never created to fill calendars with events or collect names on a membership list.
+
+  It was born from a reality many of us know too well — arriving in America with ambition, hope, and very few people to lean on.
+
+  We built the network we wished had existed when we first arrived — one that turns uncertainty into guidance, isolation into community, and individual success into collective progress.
 cultureCards:
   - icon: 🧭
     title: No Roadmap, No Guide
-    desc: When Pakistani students first arrive in America, there is no blueprint. No one to explain OPT deadlines, CPT eligibility, or what a U.S. job offer actually requires of you. UPSA built the guide we all needed and never had.
+    desc: There is no blueprint for arriving in America as a Pakistani student. No one hands you the OPT deadlines, explains CPT eligibility, or tells you what a U.S. job offer actually demands. UPSA built that guide — the one we all needed and no one gave us.
+      OR 
+      For many Pakistani students, there is no handbook for navigating life in America. The rules, opportunities, and expectations often feel hidden behind trial and error.
+
+      UPSA exists to make the path clearer — sharing the knowledge, resources, and lessons that previous generations had to discover on their own.
   - icon: 🤝
-    title: Mentors Who Actually Get It
-    desc: Generic career advice doesn't account for visa timelines, name bias, or the weight of being the first in your family to build a career abroad. UPSA connects you with mentors who have been in your exact position and come out the other side.
+    title: Mentorship That Understands
+    desc: The challenges of building a life abroad are rarely generic.
+
+      Visa deadlines, cultural expectations, family sacrifices, and the pressure to succeed require guidance from people who have lived the same journey.
+
+      Our mentors offer more than advice — they offer perspective, understanding, and proof that the path forward is possible.
   - icon: 📍
-    title: Finding Your People
-    desc: Campus can be lonely. Cities can be lonelier. Whether you're a grad student in Ithaca or a working professional in Houston, UPSA makes sure you are never the only Pakistani in the room, and never navigating it alone.
+    title: A Community Wherever You Ares
+    desc: Studying abroad can be isolating. New Cities even more so. Whether you're a grad student in Ithaca or a professional in Houston, UPSA makes sure you're never the only Pakistani in the room — and never navigating it alone.
   - icon: 🛡️
-    title: Support When Things Go Wrong
-    desc: From visa emergencies to mental health crises, Pakistani students in America often have no safety net. UPSA fills that gap, with real resources, real people, and emergency support when it counts most.
+    title: Support When It Matters Most
+    desc: Visa emergencies, financial pressure, mental health crises — Pakistani students in America often face these without a safety net. UPSA fills that gap with real resources, real people, and real support when it counts.
 
 valuesTag: Our Values
 valuesTitle: What we stand for.
@@ -45,22 +65,22 @@ valuesTitleEmphasis: stand for
 values:
   - number: "01"
     title: Unity
-    description: We bring Pakistani students and alumni together across the U.S. into a single, compounding network. No one navigates this journey alone when they are part of UPSA.
+    description: We bring students and alumnis together into one compounding network. UPSA is here to ensure no one walks this path alone like we once did.
   - number: "02"
     title: Inclusivity
-    description: We create a welcoming space for all backgrounds, perspectives, and experiences. Every Pakistani student in America has a place here, regardless of where they come from or where they are headed.
+    description: Every Pakistani student in America has a place here — regardless of background, campus, or where they're headed next.
   - number: "03"
     title: Cultural Pride
-    description: We celebrate and share Pakistani heritage, traditions, and achievements. We hold our culture close while building our futures, and we make sure the next generation does the same.
+    description: We carry our heritage forward without apology. We celebrate who we are while building who we're becoming — and make sure the next generation does the same.
   - number: "04"
     title: Leadership
-    description: We develop the next generation of Pakistani American leaders through skill building, mentorship, and real opportunities that prepare students for careers and their communities.
+    description: We develop the next generation of Pakistani American leaders through real skills, real mentorship, and real opportunity.
   - number: "05"
     title: Service
-    description: We are committed to serving our community through volunteering, mentorship, and social initiatives. The strength of this network depends on every member choosing to show up and give back.
+    description: This network only compounds if every member gives back. We show up for each other — through mentorship, volunteering, and initiatives that outlast any single generation.
   - number: "06"
     title: Professionalism
-    description: We uphold the highest standards of excellence, integrity, and ethical conduct in all our endeavors, from how we run our chapters to how we represent the community we belong to.
+    description: We hold ourselves to the highest standards — in how we run our chapters, how we show up for members, and how we represent the community we're proud to be part of.
 
 stats:
   - n: 35+

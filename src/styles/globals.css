@@ -35,7 +35,12 @@
 
 /* ---- Reset ---- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; overflow-x: hidden; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  /* Anchor targets land below the fixed navbar */
+  scroll-padding-top: calc(var(--nav-h) + 12px);
+}
 body {
   background: var(--paper);
   color: var(--ink);
@@ -43,9 +48,14 @@ body {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  cursor: default;
+  caret-color: transparent;
 }
 body, button, input, textarea, select {
   text-size-adjust: 100%;
+}
+input, textarea, select, [contenteditable] {
+  caret-color: auto;
 }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }

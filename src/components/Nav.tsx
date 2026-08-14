@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { SignInButton, UserButton, useAuth } from '@clerk/nextjs';
 import type { SiteSettings } from '@/lib/content';
 
 export default function Nav({ settings }: { settings: SiteSettings }) {
   const pathname = usePathname();
+  const { isLoaded, isSignedIn } = useAuth();
   const isHome = pathname === '/';
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -16,6 +18,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
+    onScroll(); // initialize in case the page loads already scrolled (anchor links, refresh)
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -77,20 +80,31 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
         </Link>
 
         <div className="nav-links">
-          <Link href="/" onClick={close}>Home</Link>
-
-          <div className={`nav-drop-group${desktopDropdown === 'about' ? ' open' : ''}`}>
-            <button
-              type="button"
-              className="nav-drop-trigger"
-              aria-haspopup="true"
-              aria-expanded={desktopDropdown === 'about'}
-              onClick={() => toggleDesktopDropdown('about')}
-            >
-              About
-            </button>
+          <div
+            className={`nav-drop-group${desktopDropdown === 'home' ? ' open' : ''}`}
+            onMouseEnter={() => setDesktopDropdown('home')}
+            onMouseLeave={() => setDesktopDropdown(d => (d === 'home' ? null : d))}
+          >
+            <Link href="/" onClick={close} aria-haspopup="true" aria-expanded={desktopDropdown === 'home'}>
+              Home
+            </Link>
             <div className="nav-dropdown">
-              <Link href="/about" onClick={close}>Story</Link>
+              <Link href="/#gallery" onClick={close}>Meetups</Link>
+              <Link href="/#events" onClick={close}>Calendar</Link>
+              <Link href="/#team" onClick={close}>Team</Link>
+              <Link href="/#join" onClick={close}>Join Us</Link>
+            </div>
+          </div>
+
+          <div
+            className={`nav-drop-group${desktopDropdown === 'about' ? ' open' : ''}`}
+            onMouseEnter={() => setDesktopDropdown('about')}
+            onMouseLeave={() => setDesktopDropdown(d => (d === 'about' ? null : d))}
+          >
+            <Link href="/about" onClick={close} aria-haspopup="true" aria-expanded={desktopDropdown === 'about'}>
+              About
+            </Link>
+            <div className="nav-dropdown">
               <Link href="/about#mission" onClick={close}>Mission</Link>
               <Link href="/about#values" onClick={close}>Values</Link>
             </div>
@@ -98,12 +112,27 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
 
           <Link href="/meetups" onClick={close}>Gallery</Link>
 
+          <Link href="/contact" onClick={close}>Contact</Link>
+
           {settings.navLinks.map(link => (
             <Link href={link.href} key={link.href} onClick={close}>{link.label}</Link>
           ))}
         </div>
 
-        <Link href={settings.ctaHref} className="nav-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
+        <div className="nav-auth">
+          {!isLoaded ? null : !isSignedIn ? (
+            <>
+              <Link href={settings.ctaHref} className="nav-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
+              <SignInButton mode="modal">
+                <button type="button" className="nav-signin">Sign In</button>
+              </SignInButton>
+            </>
+          ) : (
+            <div className="nav-userbutton">
+              <UserButton />
+            </div>
+          )}
+        </div>
 
         <button
           className={`nav-burger${menuOpen ? ' open' : ''}`}
@@ -119,14 +148,20 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
       </nav>
 
       <div className={`mobile-menu${menuOpen ? ' open' : ''}`}>
-        <div className="m-item">
-          <Link href="/" className="m-link" onClick={close}>Home</Link>
+        <div className={`m-item${openSection === 'home' ? ' open' : ''}`}>
+          <button className="m-link" onClick={() => toggleSection('home')}>Home <span className="m-caret-icon">+</span></button>
+          <div className="m-sub">
+            <Link href="/#gallery" onClick={close}>Meetups</Link>
+            <Link href="/#events" onClick={close}>Calendar</Link>
+            <Link href="/#team" onClick={close}>Team</Link>
+            <Link href="/#join" onClick={close}>Join Us</Link>
+          </div>
         </div>
 
         <div className={`m-item${openSection === 'about' ? ' open' : ''}`}>
-          <button className="m-link" onClick={() => toggleSection('about')}>About <span className="m-caret-icon">+</span></button>
+          <Link href="/about" className="m-link" onClick={() => { close(); }}>About</Link>
+          <button className="m-toggle" onClick={() => toggleSection('about')}><span className="m-caret-icon">+</span></button>
           <div className="m-sub">
-            <Link href="/about" onClick={close}>Story</Link>
             <Link href="/about#mission" onClick={close}>Mission</Link>
             <Link href="/about#values" onClick={close}>Values</Link>
           </div>
@@ -136,13 +171,26 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
           <Link href="/meetups" className="m-link" onClick={close}>Gallery</Link>
         </div>
 
+        <div className="m-item">
+          <Link href="/contact" className="m-link" onClick={close}>Contact</Link>
+        </div>
+
         {settings.navLinks.map(link => (
           <div className="m-item" key={link.href}>
             <Link href={link.href} className="m-link" onClick={close}>{link.label}</Link>
           </div>
         ))}
 
-        <Link href={settings.ctaHref} className="m-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
+        <div className="mobile-auth" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
+          {!isLoaded ? null : !isSignedIn ? (
+            <SignInButton mode="modal">
+              <button type="button" className="m-cta">Sign In</button>
+            </SignInButton>
+          ) : (
+            <UserButton />
+          )}
+          <Link href={settings.ctaHref} className="m-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
+        </div>
       </div>
     </>
   );

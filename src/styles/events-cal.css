@@ -329,6 +329,8 @@
   line-height: 1.74;
   color: var(--ink-2);
   margin-bottom: 28px;
+  white-space: pre-line;
+  overflow-wrap: break-word;
 }
 .cal-modal-foot {
   display: flex;
@@ -355,6 +357,47 @@
   font-size: 14px;
   color: var(--ink-3);
   font-style: italic;
+}
+
+/* Add to Calendar */
+.cal-modal-atc {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: var(--hairline);
+}
+.cal-atc-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+}
+.cal-atc-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cal-atc-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: 1px solid var(--ink-4, rgba(26,31,24,.18));
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-2);
+  background: var(--paper);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .2s, border-color .2s, transform .2s;
+  white-space: nowrap;
+}
+.cal-atc-btn:hover {
+  background: var(--paper-deep);
+  border-color: var(--ink-3);
+  transform: translateY(-1px);
+  color: var(--ink);
 }
 
 /* ============================================================

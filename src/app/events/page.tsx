@@ -1,39 +1,13 @@
-import { getEvents, getWorkshops } from '@/lib/content';
-import EventCalendar, { type CalEvent } from '@/components/EventCalendar';
+import { getGoogleCalendarEvents } from '@/lib/google-calendar';
+import EventCalendar from '@/components/EventCalendar';
 import '@/styles/events-cal.css';
+
+export const revalidate = 300; // regenerate every 5 minutes
 
 export const metadata = { title: 'Events & Calendar' };
 
-export default function EventsPage() {
-  const rawEvents = getEvents();
-  const rawWorkshops = getWorkshops();
-
-  const calEvents: CalEvent[] = [
-    ...rawEvents
-      .filter(e => e.status === 'upcoming')
-      .map(e => ({
-        slug:        `event-${e.slug}`,
-        title:       e.title,
-        date:        e.date,
-        location:    e.location,
-        category:    e.category,
-        description: e.description,
-        registerUrl: e.registerUrl,
-        status:      e.status,
-      })),
-    ...rawWorkshops
-      .filter(w => w.status === 'upcoming')
-      .map(w => ({
-        slug:        `ws-${w.slug}`,
-        title:       w.title,
-        date:        w.date,
-        location:    w.location,
-        category:    w.type,
-        description: w.description,
-        registerUrl: w.registerUrl,
-        status:      w.status,
-      })),
-  ];
+export default async function EventsPage() {
+  const calEvents = await getGoogleCalendarEvents();
 
   return (
     <>

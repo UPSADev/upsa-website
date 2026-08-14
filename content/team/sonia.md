@@ -1,8 +1,8 @@
 ---
-name: Sonia
+name: Sonia Parveen
 role: Head of Operations
-order: 5
-bio: Oversee operations across UPSA and help build systems that enable the organization to scale more efficiently
+order: 4
+bio: Driving operational excellence to support UPSA's programs and initiatives
 photo: /images/team/sonia.jpg
 linkedin: https://www.linkedin.com/in/sonia-parveen-327738297/
 ---
