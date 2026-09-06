@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { SignInButton, UserButton, useAuth } from '@clerk/nextjs';
+import { UserButton, useAuth } from '@clerk/nextjs';
 import type { SiteSettings } from '@/lib/content';
 
 export default function Nav({ settings }: { settings: SiteSettings }) {
@@ -70,6 +70,8 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
     setDesktopDropdown(prev => (prev === id ? null : id));
   }
 
+  if (pathname?.startsWith('/portal')) return null;
+
   return (
     <>
       <nav className={`top${scrolled ? ' scrolled' : ''}${!isHome ? ' page-nav' : ''}`}>
@@ -121,12 +123,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
 
         <div className="nav-auth">
           {!isLoaded ? null : !isSignedIn ? (
-            <>
-              <Link href={settings.ctaHref} className="nav-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
-              <SignInButton mode="modal">
-                <button type="button" className="nav-signin">Sign In</button>
-              </SignInButton>
-            </>
+            <Link href={settings.ctaHref} className="nav-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
           ) : (
             <div className="nav-userbutton">
               <UserButton />
@@ -183,13 +180,10 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
 
         <div className="mobile-auth" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
           {!isLoaded ? null : !isSignedIn ? (
-            <SignInButton mode="modal">
-              <button type="button" className="m-cta">Sign In</button>
-            </SignInButton>
+            <Link href={settings.ctaHref} className="m-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
           ) : (
             <UserButton />
           )}
-          <Link href={settings.ctaHref} className="m-cta" onClick={close}>{settings.ctaLabel} &rarr;</Link>
         </div>
       </div>
     </>

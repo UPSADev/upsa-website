@@ -1,9 +1,15 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import type { SiteSettings } from '@/lib/content';
 
 export default function Footer({ settings }: { settings: SiteSettings }) {
+  const pathname = usePathname();
   const year = new Date().getFullYear();
+
+  if (pathname?.startsWith('/portal')) return null;
 
   return (
     <footer className="site-footer">

@@ -3,8 +3,8 @@ logo: /images/logos/upsa-logo.png
 footerDescription: A nationwide nonprofit network connecting Pakistani students and alumni at 35+ US universities.
 contactEmail: upsa.network@gmail.com
 websiteUrl: https://unitedpsa.org
-ctaLabel: Join the Network
-ctaHref: /join
+ctaLabel: Mentor Portal
+ctaHref: /portal
 navLinks:
   - label: Resources
     href: /resources
