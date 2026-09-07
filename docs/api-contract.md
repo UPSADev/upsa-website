@@ -1,94 +1,74 @@
 # Portal API Contract
 
-What the frontend needs from the backend. Grounded in the actual mock data types used in the `/portal` skeleton (`src/app/portal/_lib/mock-data.ts`), so field names here match what the frontend already expects.
+Notes for whoever's building the backend, so you know what the frontend already expects instead of guessing. Field names below match `src/app/portal/_lib/mock-data.ts` on the `umerportal` branch, that's the mock data standing in until this is real.
 
-Every endpoint below requires a signed-in member (Clerk JWT) unless noted. No endpoint should return more fields than the frontend actually uses.
+Every route needs a signed-in user (Clerk JWT) unless I say otherwise. Don't send back more fields than the screen actually shows, no reason to leak stuff.
 
-## Member (profile)
+## Member / profile
 
-Fields the frontend reads and writes:
+```
+name
+university
+major          (optional)
+company        (optional, professionals)
+role           (optional, job title)
+industry       (optional)
+location       (optional)
+bio
+skills[]       (just free text, comma separated on the frontend)
+availability.mentor      (bool, off by default)
+availability.networking  (bool, off by default)
+availability.referrals   (bool, "open to discussing", never a promise)
+isProfessional (bool, this drives the Mentor/Professional vs Member tag)
+```
 
-| Field | Type | Notes |
-|---|---|---|
-| `name` | string | |
-| `university` | string | |
-| `major` | string, optional | |
-| `company` | string, optional | professionals only |
-| `role` | string, optional | job title, professionals only |
-| `industry` | string, optional | |
-| `location` | string, optional | |
-| `bio` | string | |
-| `skills` | string[] | free text, comma-separated in the UI |
-| `availability.mentor` | boolean | opt-in, off by default |
-| `availability.networking` | boolean | opt-in, off by default |
-| `availability.referrals` | boolean | "open to discussing a referral," never a guarantee |
-| `isProfessional` | boolean | drives the "Mentor / Professional" vs "Member" tag |
-
-**Endpoints needed:**
-- `GET /api/members/me/`: own full profile
-- `PATCH /api/members/me/`: update own profile
-- `GET /api/members/{id}/`: someone else's profile, only the fields they've made visible, never email or resume
+Need:
+- `GET /api/members/me/` and `PATCH` to update
+- `GET /api/members/{id}/` for viewing someone else, but only whatever fields they've made visible, never their email or resume here
 
 ## Discover
 
-- `GET /api/professionals/`: paginated list
-- Must support filtering by: `company`, `industry`, `university`, `availability.mentor`, `availability.networking`
-- Only returns members with `availability.mentor` or `availability.networking` true
-- Never returns members who've deactivated their account
+- `GET /api/professionals/`, paginated
+- filters: company, industry, university, availability.mentor, availability.networking
+- only show people who've turned mentor or networking on
+- skip anyone who's deactivated
 
 ## Connection requests
 
-| Field | Type | Notes |
-|---|---|---|
-| `fromId` / `toId` | member id | never trust a client-supplied id for who's sending |
-| `requestType` | `"networking"` \| `"mentorship"` \| `"referral"` | required, shown before the message |
-| `message` | string | required, short |
-| `status` | `"pending"` \| `"accepted"` \| `"declined"` \| `"expired"` \| `"cancelled"` | |
-| `createdAt` | timestamp | |
+Fields: `fromId`, `toId`, `requestType` (`networking` / `mentorship` / `referral`), `message`, `status` (`pending` / `accepted` / `declined` / `expired` / `cancelled`), `createdAt`.
 
-**Endpoints needed:**
-- `GET /api/requests/?direction=incoming|outgoing`: scoped to the signed-in member only
-- `POST /api/requests/`: body needs `toId`, `requestType`, `message`
-- `POST /api/requests/{id}/accept/`: recipient only
-- `POST /api/requests/{id}/decline/`: recipient only. No reason field, and the fact of a decline should never be visible to anyone but the requester
-- `POST /api/requests/{id}/cancel/`: requester only, pending requests only
-- Auto-expire unanswered requests after a set number of days (exact number is a non-blocking decision, not fixed yet)
-- Reject a new request if an open one already exists between the same two members
+Don't ever trust `fromId` from the request body, that comes from the auth token.
+
+- `GET /api/requests/?direction=incoming|outgoing`, scoped to whoever's logged in
+- `POST /api/requests/` with `toId`, `requestType`, `message`
+- `POST /api/requests/{id}/accept/` and `/decline/`, recipient only. Declines don't take a reason, and the requester is the only one who should ever know it was declined
+- `POST /api/requests/{id}/cancel/`, requester only, and only while it's still pending
+- block a second request if there's already an open one between the same two people
+- expire unanswered ones after some number of days, we haven't picked the exact number yet
 
 ## Connections
 
-| Field | Type | Notes |
-|---|---|---|
-| `status` | `"active"` \| `"completed"` \| `"cancelled"` | |
-| `since` | timestamp | when the request was accepted |
+Fields: `status` (`active` / `completed` / `cancelled`), `since`.
 
-**Endpoints needed:**
-- `GET /api/connections/`: mine only
-- `POST /api/connections/{id}/complete/`: either party
-- `POST /api/connections/{id}/cancel/`: either party, active connections only
+- `GET /api/connections/`, mine only
+- `POST /api/connections/{id}/complete/` and `/cancel/`, either person in the connection can do these
 
 ## Resume
 
-- Private by default. Never returned in any list response, only fetched directly by the owner or an approved connection.
-- `GET/POST/DELETE /api/resume/`: owner only
-- `POST /api/connections/{id}/share-resume/`: owner only, grants that one connection access
-- `GET /api/resume/{id}/download/`: returns a short-lived signed URL, only for the owner or a connection it's been shared with
-- Accept PDF, DOC, DOCX only, validate the actual file type server-side (not just the extension), cap size around 5MB
+Private, always. Never show it in a list response, only serve it directly to the owner or someone it's been shared with.
+
+- `GET/POST/DELETE /api/resume/`, owner only
+- `POST /api/connections/{id}/share-resume/`, owner grants access to that one connection
+- `GET /api/resume/{id}/download/` returns a signed URL that expires quickly
+- PDF/DOC/DOCX only, check the actual file type server side not just the extension, cap it around 5MB
 
 ## Messages
 
-| Field | Type | Notes |
-|---|---|---|
-| `connectionId` | id | messages only exist within an active/completed connection |
-| `senderId` | member id | |
-| `text` | string | |
-| `createdAt` | timestamp | |
+Fields: `connectionId`, `senderId`, `text`, `createdAt`. Only exist inside an active or completed connection.
 
-**Endpoints needed:**
-- `GET /api/connections/{id}/messages/`: either party to that connection only
-- `POST /api/connections/{id}/messages/`: same
-- Refresh-based is fine. No real-time delivery, no read receipts, no typing indicators needed for the first version.
+- `GET` and `POST /api/connections/{id}/messages/`, either person in that connection
+- doesn't need to be real time, refresh on load is fine for now, no read receipts or typing indicators
 
-## The one rule that matters most
+## The important part
 
-Every endpoint above has to check three things on its own, no matter what the frontend sends: who is making this request, do they actually own the thing they're asking for, and are they allowed to do this specific action. Never trust a client-supplied id as proof of ownership.
+Every route above needs to check three things itself, not trust the frontend for any of it: who's actually asking, do they own the thing they're asking about, and are they allowed to do this specific action. If a client sends an id claiming to own something, verify it, don't just believe it.
