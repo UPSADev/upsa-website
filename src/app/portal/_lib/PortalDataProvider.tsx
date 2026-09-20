@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { useUser } from '@clerk/nextjs';
 import {
   CURRENT_USER_ID,
   SEED_CONNECTIONS,
@@ -32,6 +33,7 @@ type PortalState = {
   resume: Resume;
   resumeSharedWith: string[];
   deactivated: boolean;
+  identityClaimed: boolean;
 };
 
 const SEED_STATE: PortalState = {
@@ -42,7 +44,13 @@ const SEED_STATE: PortalState = {
   resume: { fileName: 'Aisha_Raza_Resume.pdf', sizeLabel: '184 KB', uploadedAt: '3 weeks ago' },
   resumeSharedWith: ['c1'],
   deactivated: false,
+  identityClaimed: false,
 };
+
+function initialsFromName(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  return parts.slice(0, 2).map(p => p[0]!.toUpperCase()).join('') || 'U';
+}
 
 type PortalContextValue = {
   state: PortalState;
@@ -69,6 +77,7 @@ function uid(prefix: string) {
 export function PortalDataProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<PortalState>(SEED_STATE);
   const [hydrated, setHydrated] = useState(false);
+  const { user, isLoaded: userLoaded } = useUser();
 
   useEffect(() => {
     try {
@@ -76,7 +85,7 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
       if (saved) {
         const parsed = JSON.parse(saved) as Partial<PortalState>;
         if (parsed.members && parsed.requests && parsed.connections && Array.isArray(parsed.resumeSharedWith)) {
-          setState(parsed as PortalState);
+          setState({ identityClaimed: false, ...parsed } as PortalState);
         }
       }
     } catch {
@@ -93,6 +102,32 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
       // storage might be full or blocked, not critical, state still works in memory
     }
   }, [state, hydrated]);
+
+  // First time a real Clerk user shows up, replace the seeded demo identity
+  // (name/initials/headline) with theirs so the portal isn't showing "Aisha Raza" as them.
+  // The mock member id itself stays CURRENT_USER_ID so the seeded requests/connections/
+  // messages built around it keep making sense until there's a real backend.
+  useEffect(() => {
+    if (!hydrated || !userLoaded || !user || state.identityClaimed) return;
+    const fullName = user.fullName?.trim();
+    if (!fullName) return;
+
+    setState(prev => ({
+      ...prev,
+      identityClaimed: true,
+      members: {
+        ...prev.members,
+        [CURRENT_USER_ID]: {
+          ...prev.members[CURRENT_USER_ID],
+          name: fullName,
+          initials: initialsFromName(fullName),
+          headline: '',
+        },
+      },
+      resume: null,
+      resumeSharedWith: [],
+    }));
+  }, [hydrated, userLoaded, user, state.identityClaimed]);
 
   const currentUser = state.members[CURRENT_USER_ID];
 

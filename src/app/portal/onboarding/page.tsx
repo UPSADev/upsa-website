@@ -11,6 +11,7 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(1);
 
   const [name, setName] = useState(currentUser.name);
+  const [headline, setHeadline] = useState(currentUser.headline);
   const [university, setUniversity] = useState(currentUser.university);
   const [major, setMajor] = useState(currentUser.major ?? '');
   const [bio, setBio] = useState(currentUser.bio);
@@ -20,6 +21,7 @@ export default function OnboardingPage() {
   function finish() {
     updateProfile({
       name,
+      headline,
       university,
       major,
       bio,
@@ -53,6 +55,15 @@ export default function OnboardingPage() {
               <div className="field">
                 <label htmlFor="name">Full name</label>
                 <input id="name" value={name} onChange={e => setName(e.target.value)} />
+              </div>
+              <div className="field">
+                <label htmlFor="headline">Title</label>
+                <input
+                  id="headline"
+                  value={headline}
+                  onChange={e => setHeadline(e.target.value)}
+                  placeholder="e.g. CS Junior @ UCF, or Software Engineer @ Microsoft"
+                />
               </div>
               <div className="field-row">
                 <div className="field">

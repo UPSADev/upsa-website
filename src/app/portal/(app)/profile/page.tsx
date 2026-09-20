@@ -11,6 +11,7 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState(currentUser.name);
+  const [headline, setHeadline] = useState(currentUser.headline);
   const [university, setUniversity] = useState(currentUser.university);
   const [major, setMajor] = useState(currentUser.major ?? '');
   const [bio, setBio] = useState(currentUser.bio);
@@ -19,6 +20,7 @@ export default function ProfilePage() {
   function save() {
     updateProfile({
       name,
+      headline,
       university,
       major,
       bio,
@@ -67,6 +69,15 @@ export default function ProfilePage() {
           <div className="field">
             <label htmlFor="p-name">Full name</label>
             <input id="p-name" value={name} onChange={e => setName(e.target.value)} />
+          </div>
+          <div className="field">
+            <label htmlFor="p-headline">Title</label>
+            <input
+              id="p-headline"
+              value={headline}
+              onChange={e => setHeadline(e.target.value)}
+              placeholder="e.g. CS Junior @ UCF, or Software Engineer @ Microsoft"
+            />
           </div>
           <div className="field-row">
             <div className="field">
