@@ -153,5 +153,15 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "users.clerk_auth.ClerkJWTAuthentication",
     ],
-    "DEFAULT_PERMISSION_CLASSES": [],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20,
 }
+
+# Local disk storage for now (fine for dev). Swap MEDIA_ROOT for an R2/S3
+# backend via django-storages before this goes to production, so uploaded
+# resumes survive redeploys.
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"

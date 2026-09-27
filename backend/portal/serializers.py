@@ -1,0 +1,112 @@
+from rest_framework import serializers
+
+from .models import (
+    REQUEST_TYPE_CHOICES,
+    Connection,
+    ConnectionRequest,
+    Message,
+    Profile,
+    Resume,
+)
+
+MAX_RESUME_SIZE = 5 * 1024 * 1024
+ALLOWED_RESUME_CONTENT_TYPES = {
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+}
+
+
+class AvailabilitySerializer(serializers.Serializer):
+    mentor = serializers.BooleanField()
+    networking = serializers.BooleanField()
+    referrals = serializers.BooleanField()
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source="user_id", read_only=True)
+    availability = AvailabilitySerializer()
+    isProfessional = serializers.BooleanField(source="is_professional")
+
+    class Meta:
+        model = Profile
+        fields = [
+            "id",
+            "name",
+            "university",
+            "major",
+            "company",
+            "role",
+            "industry",
+            "location",
+            "bio",
+            "skills",
+            "availability",
+            "isProfessional",
+        ]
+
+    def update(self, instance, validated_data):
+        availability = validated_data.pop("availability", None)
+        if availability is not None:
+            instance.mentor_available = availability["mentor"]
+            instance.networking_available = availability["networking"]
+            instance.referrals_available = availability["referrals"]
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
+        instance.save()
+        return instance
+
+
+class ConnectionRequestSerializer(serializers.ModelSerializer):
+    fromId = serializers.IntegerField(source="from_user_id", read_only=True)
+    toId = serializers.IntegerField(source="to_user_id")
+    requestType = serializers.ChoiceField(source="request_type", choices=REQUEST_TYPE_CHOICES)
+    createdAt = serializers.DateTimeField(source="created_at", read_only=True)
+
+    class Meta:
+        model = ConnectionRequest
+        fields = ["id", "fromId", "toId", "requestType", "message", "status", "createdAt"]
+        read_only_fields = ["id", "status"]
+
+
+class ConnectionSerializer(serializers.ModelSerializer):
+    requestId = serializers.IntegerField(source="request_id", read_only=True)
+    memberIds = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Connection
+        fields = ["id", "requestId", "memberIds", "status", "since"]
+
+    def get_memberIds(self, obj):
+        return [obj.member_a_id, obj.member_b_id]
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    connectionId = serializers.IntegerField(source="connection_id", read_only=True)
+    senderId = serializers.IntegerField(source="sender_id", read_only=True)
+    createdAt = serializers.DateTimeField(source="created_at", read_only=True)
+
+    class Meta:
+        model = Message
+        fields = ["id", "connectionId", "senderId", "text", "createdAt"]
+
+
+class ResumeSerializer(serializers.ModelSerializer):
+    fileName = serializers.SerializerMethodField()
+    sizeLabel = serializers.SerializerMethodField()
+    uploadedAt = serializers.DateTimeField(source="uploaded_at", read_only=True)
+
+    class Meta:
+        model = Resume
+        fields = ["fileName", "sizeLabel", "uploadedAt"]
+
+    def get_fileName(self, obj):
+        return obj.file.name.rsplit("/", 1)[-1]
+
+    def get_sizeLabel(self, obj):
+        size = obj.file.size
+        if size < 1024:
+            return f"{size} B"
+        if size < 1024 * 1024:
+            return f"{size // 1024} KB"
+        return f"{size / (1024 * 1024):.1f} MB"

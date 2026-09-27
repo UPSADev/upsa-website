@@ -44,7 +44,7 @@ Don't ever trust `fromId` from the request body, that comes from the auth token.
 - `POST /api/requests/{id}/accept/` and `/decline/`, recipient only. Declines don't take a reason, and the requester is the only one who should ever know it was declined
 - `POST /api/requests/{id}/cancel/`, requester only, and only while it's still pending
 - block a second request if there's already an open one between the same two people
-- expire unanswered ones after some number of days, we haven't picked the exact number yet
+- requests never expire on their own, they just sit pending until the recipient accepts, declines, or the requester cancels
 
 ## Connections
 
