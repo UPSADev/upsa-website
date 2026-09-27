@@ -1,13 +1,15 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { CURRENT_USER_ID, usePortalData } from '../../_lib/PortalDataProvider';
-import { COMPANIES, INDUSTRIES, UNIVERSITIES } from '../../_lib/mock-data';
+import { usePortalData } from '../../_lib/PortalDataProvider';
+import type { Member } from '../../_lib/types';
 import Avatar from '../../_components/Avatar';
 
 export default function DiscoverPage() {
-  const { state } = usePortalData();
+  const { loadProfessionals } = usePortalData();
+  const [results, setResults] = useState<Member[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [company, setCompany] = useState('');
   const [industry, setIndustry] = useState('');
@@ -15,25 +17,39 @@ export default function DiscoverPage() {
   const [mentorOnly, setMentorOnly] = useState(false);
   const [networkingOnly, setNetworkingOnly] = useState(false);
 
-  const results = useMemo(() => {
-    return Object.values(state.members).filter(m => {
-      if (!m.isProfessional || !m.visible || m.id === CURRENT_USER_ID) return false;
-      if (company && m.company !== company) return false;
-      if (industry && m.industry !== industry) return false;
-      if (university && m.university !== university) return false;
-      if (mentorOnly && !m.availability.mentor) return false;
-      if (networkingOnly && !m.availability.networking) return false;
-      if (search) {
-        const q = search.toLowerCase();
+  useEffect(() => {
+    let cancelled = false;
+    // A fresh search is starting - not derivable from existing state, so this
+    // has to be an explicit flag rather than a computed value.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
+    loadProfessionals({ company, industry, university, mentor: mentorOnly, networking: networkingOnly })
+      .then(list => {
+        if (!cancelled) setResults(list);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [company, industry, university, mentorOnly, networkingOnly]);
+
+  const visible = search
+    ? results.filter(m => {
         const haystack = `${m.name} ${m.role ?? ''} ${m.company ?? ''} ${m.skills.join(' ')}`.toLowerCase();
-        if (!haystack.includes(q)) return false;
-      }
-      return true;
-    });
-  }, [state.members, search, company, industry, university, mentorOnly, networkingOnly]);
+        return haystack.includes(search.toLowerCase());
+      })
+    : results;
 
   function resetFilters() {
-    setSearch(''); setCompany(''); setIndustry(''); setUniversity(''); setMentorOnly(false); setNetworkingOnly(false);
+    setSearch('');
+    setCompany('');
+    setIndustry('');
+    setUniversity('');
+    setMentorOnly(false);
+    setNetworkingOnly(false);
   }
 
   const hasFilters = search || company || industry || university || mentorOnly || networkingOnly;
@@ -52,24 +68,15 @@ export default function DiscoverPage() {
         </div>
         <div className="filter-field">
           <label htmlFor="f-company">Company</label>
-          <select id="f-company" value={company} onChange={e => setCompany(e.target.value)}>
-            <option value="">All companies</option>
-            {COMPANIES.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
+          <input id="f-company" placeholder="Any company" value={company} onChange={e => setCompany(e.target.value)} />
         </div>
         <div className="filter-field">
           <label htmlFor="f-industry">Industry</label>
-          <select id="f-industry" value={industry} onChange={e => setIndustry(e.target.value)}>
-            <option value="">All industries</option>
-            {INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}
-          </select>
+          <input id="f-industry" placeholder="Any industry" value={industry} onChange={e => setIndustry(e.target.value)} />
         </div>
         <div className="filter-field">
           <label htmlFor="f-university">University</label>
-          <select id="f-university" value={university} onChange={e => setUniversity(e.target.value)}>
-            <option value="">All universities</option>
-            {UNIVERSITIES.map(u => <option key={u} value={u}>{u}</option>)}
-          </select>
+          <input id="f-university" placeholder="Any university" value={university} onChange={e => setUniversity(e.target.value)} />
         </div>
         <div className="filter-checks">
           <label className="filter-check">
@@ -82,13 +89,15 @@ export default function DiscoverPage() {
         {!!hasFilters && <button className="filter-reset" onClick={resetFilters}>Clear filters</button>}
       </div>
 
-      <p className="filter-count">{results.length} professional{results.length === 1 ? '' : 's'} found</p>
+      <p className="filter-count">
+        {loading ? 'Searching…' : `${visible.length} professional${visible.length === 1 ? '' : 's'} found`}
+      </p>
 
-      {results.length === 0 ? (
+      {!loading && visible.length === 0 ? (
         <div className="empty-state"><span>No one matches those filters yet. Try clearing a few.</span></div>
       ) : (
         <div className="pf-grid">
-          {results.map(pro => (
+          {visible.map(pro => (
             <Link href={`/portal/professionals/${pro.id}`} key={pro.id} className="card pf-card">
               <div className="pf-card-top">
                 <Avatar name={pro.name} initials={pro.initials} color={pro.avatarColor} size="md" />

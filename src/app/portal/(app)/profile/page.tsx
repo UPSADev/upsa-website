@@ -2,12 +2,14 @@
 
 import { useRef, useState } from 'react';
 import { usePortalData } from '../../_lib/PortalDataProvider';
+import { ApiError } from '../../_lib/api';
 import Avatar from '../../_components/Avatar';
 import RoleTag from '../../_components/RoleTag';
 
 export default function ProfilePage() {
-  const { currentUser, state, updateProfile, setResume } = usePortalData();
+  const { currentUser, state, updateProfile, uploadResume, deleteResume, downloadResume } = usePortalData();
   const [editing, setEditing] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState(currentUser.name);
@@ -17,19 +19,23 @@ export default function ProfilePage() {
   const [bio, setBio] = useState(currentUser.bio);
   const [skillsText, setSkillsText] = useState(currentUser.skills.join(', '));
 
-  function save() {
-    updateProfile({
-      name,
-      headline,
-      university,
-      major,
-      bio,
-      skills: skillsText.split(',').map(s => s.trim()).filter(Boolean),
-    });
-    setEditing(false);
+  async function save() {
+    try {
+      await updateProfile({
+        name,
+        headline,
+        university,
+        major,
+        bio,
+        skills: skillsText.split(',').map(s => s.trim()).filter(Boolean),
+      });
+      setEditing(false);
+    } catch (err) {
+      window.alert(err instanceof ApiError ? err.message : 'Could not save your profile. Try again.');
+    }
   }
 
-  function handleFilePick(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFilePick(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     const okType = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(file.type);
@@ -41,7 +47,31 @@ export default function ProfilePage() {
       window.alert('Resume files are limited to 5 MB.');
       return;
     }
-    setResume({ fileName: file.name, sizeLabel: `${Math.round(file.size / 1024)} KB`, uploadedAt: 'Just now' });
+    setUploading(true);
+    try {
+      await uploadResume(file);
+    } catch (err) {
+      window.alert(err instanceof ApiError ? err.message : 'Could not upload that file. Try again.');
+    } finally {
+      setUploading(false);
+      e.target.value = '';
+    }
+  }
+
+  async function handleDelete() {
+    try {
+      await deleteResume();
+    } catch (err) {
+      window.alert(err instanceof ApiError ? err.message : 'Could not delete your resume. Try again.');
+    }
+  }
+
+  async function handleDownload() {
+    try {
+      await downloadResume();
+    } catch (err) {
+      window.alert(err instanceof ApiError ? err.message : 'Could not download your resume. Try again.');
+    }
   }
 
   return (
@@ -140,9 +170,11 @@ export default function ProfilePage() {
               <div className="meta">{state.resume.sizeLabel} &middot; uploaded {state.resume.uploadedAt} &middot; private by default</div>
             </div>
             <div className="resume-actions">
-              <button className="btn-outline btn-sm">Download</button>
-              <button className="btn-outline btn-sm" onClick={() => fileInputRef.current?.click()}>Replace</button>
-              <button className="btn-ghost" onClick={() => setResume(null)}>Delete</button>
+              <button className="btn-outline btn-sm" onClick={handleDownload}>Download</button>
+              <button className="btn-outline btn-sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                {uploading ? 'Uploading…' : 'Replace'}
+              </button>
+              <button className="btn-ghost" onClick={handleDelete}>Delete</button>
             </div>
           </div>
         ) : (
@@ -150,7 +182,9 @@ export default function ProfilePage() {
             <strong>No resume uploaded</strong>
             Kept private here. You choose who to share it with from your Connections.
             <div style={{ marginTop: 14 }}>
-              <button className="btn-primary btn-sm" onClick={() => fileInputRef.current?.click()}>Upload resume</button>
+              <button className="btn-primary btn-sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                {uploading ? 'Uploading…' : 'Upload resume'}
+              </button>
             </div>
           </div>
         )}

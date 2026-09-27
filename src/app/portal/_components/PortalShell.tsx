@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useClerk } from '@clerk/nextjs';
-import { usePortalData, CURRENT_USER_ID } from '../_lib/PortalDataProvider';
+import { usePortalData } from '../_lib/PortalDataProvider';
 import Avatar from './Avatar';
 import RoleTag from './RoleTag';
 
@@ -22,10 +22,10 @@ export default function PortalShell({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
   const { signOut } = useClerk();
-  const { currentUser, state } = usePortalData();
+  const { currentUser, currentUserId, state } = usePortalData();
   const [open, setOpen] = useState(false);
 
-  const incomingCount = state.requests.filter(r => r.toId === CURRENT_USER_ID && r.status === 'pending').length;
+  const incomingCount = state.requests.filter(r => r.toId === currentUserId && r.status === 'pending').length;
 
   return (
     <div className="portal-shell">

@@ -1,21 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { CURRENT_USER_ID, usePortalData } from '../../../_lib/PortalDataProvider';
+import { usePortalData } from '../../../_lib/PortalDataProvider';
 import Avatar from '../../../_components/Avatar';
 import StatusPill from '../../../_components/StatusPill';
 import RoleTag from '../../../_components/RoleTag';
 import SendRequestModal from '../../../_components/SendRequestModal';
 
 export default function ProfessionalDetail({ id }: { id: string }) {
-  const { state } = usePortalData();
+  const { state, currentUserId, loadMember } = usePortalData();
   const [modalOpen, setModalOpen] = useState(false);
   const [justSent, setJustSent] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   const professional = state.members[id];
 
+  useEffect(() => {
+    if (professional) return;
+    loadMember(id).then(member => {
+      if (!member) setNotFound(true);
+    });
+  }, [id, professional, loadMember]);
+
   if (!professional) {
+    if (!notFound) return null;
     return (
       <div className="empty-state">
         <span>We couldn&apos;t find that profile.</span>
@@ -24,8 +33,8 @@ export default function ProfessionalDetail({ id }: { id: string }) {
     );
   }
 
-  const existingRequest = state.requests.find(r => r.fromId === CURRENT_USER_ID && r.toId === id);
-  const canRequest = !existingRequest || ['declined', 'expired', 'cancelled'].includes(existingRequest.status);
+  const existingRequest = state.requests.find(r => r.fromId === currentUserId && r.toId === id);
+  const canRequest = !existingRequest || ['declined', 'cancelled'].includes(existingRequest.status);
 
   return (
     <>

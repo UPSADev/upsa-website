@@ -33,6 +33,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "name",
+            "headline",
             "university",
             "major",
             "company",
@@ -43,6 +44,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "skills",
             "availability",
             "isProfessional",
+            "deactivated",
         ]
 
     def update(self, instance, validated_data):
@@ -95,10 +97,11 @@ class ResumeSerializer(serializers.ModelSerializer):
     fileName = serializers.SerializerMethodField()
     sizeLabel = serializers.SerializerMethodField()
     uploadedAt = serializers.DateTimeField(source="uploaded_at", read_only=True)
+    sharedWith = serializers.PrimaryKeyRelatedField(source="shared_with", many=True, read_only=True)
 
     class Meta:
         model = Resume
-        fields = ["fileName", "sizeLabel", "uploadedAt"]
+        fields = ["id", "fileName", "sizeLabel", "uploadedAt", "sharedWith"]
 
     def get_fileName(self, obj):
         return obj.file.name.rsplit("/", 1)[-1]

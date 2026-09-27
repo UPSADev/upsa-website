@@ -1,15 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { CURRENT_USER_ID, usePortalData } from '../../_lib/PortalDataProvider';
-import { REQUEST_TYPE_LABELS } from '../../_lib/mock-data';
+import { usePortalData } from '../../_lib/PortalDataProvider';
+import { REQUEST_TYPE_LABELS } from '../../_lib/types';
 import Avatar from '../../_components/Avatar';
 import StatusPill from '../../_components/StatusPill';
 
 export default function ConnectionsPage() {
-  const { state, completeConnection, cancelConnection, shareResumeWithConnection } = usePortalData();
+  const { state, currentUserId, completeConnection, cancelConnection, shareResumeWithConnection } = usePortalData();
 
-  const connections = state.connections.filter(c => c.memberIds.includes(CURRENT_USER_ID));
+  const connections = state.connections.filter(c => c.memberIds.includes(currentUserId));
 
   return (
     <>
@@ -26,8 +26,9 @@ export default function ConnectionsPage() {
       ) : (
         <div className="conn-grid">
           {connections.map(c => {
-            const otherId = c.memberIds.find(id => id !== CURRENT_USER_ID)!;
+            const otherId = c.memberIds.find(id => id !== currentUserId)!;
             const other = state.members[otherId];
+            if (!other) return null;
             const sourceRequest = state.requests.find(r => r.id === c.requestId);
             return (
               <div className="conn-card" key={c.id}>

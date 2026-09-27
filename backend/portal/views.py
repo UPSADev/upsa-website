@@ -60,11 +60,11 @@ class ProfessionalListView(generics.ListAPIView):
         )
         params = self.request.query_params
         if company := params.get("company"):
-            qs = qs.filter(company__iexact=company)
+            qs = qs.filter(company__icontains=company)
         if industry := params.get("industry"):
-            qs = qs.filter(industry__iexact=industry)
+            qs = qs.filter(industry__icontains=industry)
         if university := params.get("university"):
-            qs = qs.filter(university__iexact=university)
+            qs = qs.filter(university__icontains=university)
         if params.get("availability.mentor") == "true":
             qs = qs.filter(mentor_available=True)
         if params.get("availability.networking") == "true":

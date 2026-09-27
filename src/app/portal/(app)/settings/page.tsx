@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { usePortalData } from '../../_lib/PortalDataProvider';
 
 export default function SettingsPage() {
-  const { currentUser, state, updateProfile, setDeactivated } = usePortalData();
+  const { currentUser, updateProfile, setDeactivated } = usePortalData();
   const [toast, setToast] = useState<string | null>(null);
 
   function flash(msg: string) {
@@ -23,7 +23,7 @@ export default function SettingsPage() {
     }
   }
 
-  if (state.deactivated) {
+  if (!currentUser.visible) {
     return (
       <div className="empty-state">
         <span>Your account is deactivated.</span>

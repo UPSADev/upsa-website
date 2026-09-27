@@ -2,17 +2,17 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { CURRENT_USER_ID, usePortalData } from '../../_lib/PortalDataProvider';
-import { REQUEST_TYPE_LABELS } from '../../_lib/mock-data';
+import { usePortalData } from '../../_lib/PortalDataProvider';
+import { REQUEST_TYPE_LABELS } from '../../_lib/types';
 import Avatar from '../../_components/Avatar';
 import StatusPill from '../../_components/StatusPill';
 
 export default function RequestsPage() {
-  const { state, respondToRequest, cancelRequest } = usePortalData();
+  const { state, currentUserId, respondToRequest, cancelRequest } = usePortalData();
   const [tab, setTab] = useState<'incoming' | 'outgoing'>('incoming');
 
-  const incoming = state.requests.filter(r => r.toId === CURRENT_USER_ID).slice().reverse();
-  const outgoing = state.requests.filter(r => r.fromId === CURRENT_USER_ID).slice().reverse();
+  const incoming = state.requests.filter(r => r.toId === currentUserId).slice().reverse();
+  const outgoing = state.requests.filter(r => r.fromId === currentUserId).slice().reverse();
   const pendingIncoming = incoming.filter(r => r.status === 'pending').length;
   const pendingOutgoing = outgoing.filter(r => r.status === 'pending').length;
 

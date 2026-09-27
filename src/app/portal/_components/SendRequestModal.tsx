@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { Member, RequestType } from '../_lib/mock-data';
-import { REQUEST_TYPE_LABELS } from '../_lib/mock-data';
+import type { Member, RequestType } from '../_lib/types';
+import { REQUEST_TYPE_LABELS } from '../_lib/types';
 import { usePortalData } from '../_lib/PortalDataProvider';
+import { ApiError } from '../_lib/api';
 
 export default function SendRequestModal({
   professional,
@@ -15,6 +16,7 @@ export default function SendRequestModal({
   onSent: () => void;
 }) {
   const { sendRequest } = usePortalData();
+  const [sending, setSending] = useState(false);
 
   const availableTypes: RequestType[] = [
     ...(professional.availability.mentor ? (['mentorship'] as const) : []),
@@ -37,11 +39,17 @@ export default function SendRequestModal({
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [onClose]);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!message.trim()) return;
-    sendRequest(professional.id, requestType, message.trim());
-    onSent();
+    if (!message.trim() || sending) return;
+    setSending(true);
+    try {
+      await sendRequest(professional.id, requestType, message.trim());
+      onSent();
+    } catch (err) {
+      window.alert(err instanceof ApiError ? err.message : 'Could not send that request. Try again.');
+      setSending(false);
+    }
   }
 
   return (
@@ -100,7 +108,9 @@ export default function SendRequestModal({
 
           <div className="modal-actions">
             <button type="button" className="btn-outline btn-sm" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn-primary btn-sm">Send request &rarr;</button>
+            <button type="submit" className="btn-primary btn-sm" disabled={sending}>
+              {sending ? 'Sending…' : <>Send request &rarr;</>}
+            </button>
           </div>
         </form>
       </div>

@@ -2,28 +2,32 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { CURRENT_USER_ID, usePortalData } from '../../../_lib/PortalDataProvider';
+import { usePortalData } from '../../../_lib/PortalDataProvider';
 import Avatar from '../../../_components/Avatar';
 
 export default function ChatThread({ connectionId }: { connectionId: string }) {
-  const { state, sendMessage } = usePortalData();
+  const { state, currentUserId, sendMessage } = usePortalData();
   const [draft, setDraft] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const connection = state.connections.find(c => c.id === connectionId);
-  const myConnections = state.connections.filter(c => c.memberIds.includes(CURRENT_USER_ID));
+  const myConnections = state.connections.filter(c => c.memberIds.includes(currentUserId));
   const threadMessages = state.messages.filter(m => m.connectionId === connectionId);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [threadMessages.length, connectionId]);
 
-  if (!connection || !connection.memberIds.includes(CURRENT_USER_ID)) {
+  if (!connection || !connection.memberIds.includes(currentUserId)) {
     return <div className="empty-state"><span>Conversation not found.</span></div>;
   }
 
-  const otherId = connection.memberIds.find(id => id !== CURRENT_USER_ID)!;
+  const otherId = connection.memberIds.find(id => id !== currentUserId)!;
   const other = state.members[otherId];
+
+  if (!other) {
+    return <div className="empty-state"><span>Conversation not found.</span></div>;
+  }
 
   function handleSend(e: React.FormEvent) {
     e.preventDefault();
@@ -38,8 +42,9 @@ export default function ChatThread({ connectionId }: { connectionId: string }) {
       <div className="msg-layout">
         <div className="thread-list">
           {myConnections.map(c => {
-            const oId = c.memberIds.find(id => id !== CURRENT_USER_ID)!;
+            const oId = c.memberIds.find(id => id !== currentUserId)!;
             const o = state.members[oId];
+            if (!o) return null;
             const msgs = state.messages.filter(m => m.connectionId === c.id);
             const last = msgs[msgs.length - 1];
             return (
@@ -67,7 +72,7 @@ export default function ChatThread({ connectionId }: { connectionId: string }) {
               <div className="chat-empty">Say hello to {other.name.split(' ')[0]}</div>
             ) : (
               threadMessages.map(m => (
-                <div className={`chat-bubble ${m.senderId === CURRENT_USER_ID ? 'mine' : 'theirs'}`} key={m.id}>
+                <div className={`chat-bubble ${m.senderId === currentUserId ? 'mine' : 'theirs'}`} key={m.id}>
                   {m.text}
                   <span className="time">{m.time}</span>
                 </div>

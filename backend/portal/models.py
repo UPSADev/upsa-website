@@ -27,6 +27,7 @@ class Profile(models.Model):
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
     name = models.CharField(max_length=150, blank=True)
+    headline = models.CharField(max_length=200, blank=True)
     university = models.CharField(max_length=200, blank=True)
     major = models.CharField(max_length=200, blank=True)
     company = models.CharField(max_length=200, blank=True)

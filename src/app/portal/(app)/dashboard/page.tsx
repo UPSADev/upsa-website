@@ -1,26 +1,36 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { CURRENT_USER_ID, usePortalData } from '../../_lib/PortalDataProvider';
+import { usePortalData } from '../../_lib/PortalDataProvider';
+import type { Member } from '../../_lib/types';
 import Avatar from '../../_components/Avatar';
 import StatusPill from '../../_components/StatusPill';
 
 export default function DashboardPage() {
-  const { currentUser, state } = usePortalData();
+  const { currentUser, currentUserId, state, loadProfessionals } = usePortalData();
+  const [suggested, setSuggested] = useState<Member[]>([]);
 
-  const outgoing = state.requests.filter(r => r.fromId === CURRENT_USER_ID);
-  const incomingPending = state.requests.filter(r => r.toId === CURRENT_USER_ID && r.status === 'pending');
+  useEffect(() => {
+    loadProfessionals({}).then(list => {
+      const alreadyRequested = new Set(
+        state.requests.filter(r => r.fromId === currentUserId).map(r => r.toId)
+      );
+      setSuggested(list.filter(m => m.id !== currentUserId && !alreadyRequested.has(m.id)).slice(0, 3));
+    });
+    // Only ever needs to run once on mount, against whatever's already loaded.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const outgoing = state.requests.filter(r => r.fromId === currentUserId);
+  const incomingPending = state.requests.filter(r => r.toId === currentUserId && r.status === 'pending');
   const activeConnections = state.connections.filter(
-    c => c.memberIds.includes(CURRENT_USER_ID) && c.status === 'active'
+    c => c.memberIds.includes(currentUserId) && c.status === 'active'
   );
   const pendingOutgoing = outgoing.filter(r => r.status === 'pending');
 
-  const suggested = Object.values(state.members)
-    .filter(m => m.isProfessional && m.visible && !state.requests.some(r => r.fromId === CURRENT_USER_ID && r.toId === m.id))
-    .slice(0, 3);
-
   const recentActivity = [...state.requests]
-    .filter(r => r.fromId === CURRENT_USER_ID || r.toId === CURRENT_USER_ID)
+    .filter(r => r.fromId === currentUserId || r.toId === currentUserId)
     .slice(-4)
     .reverse();
 
@@ -96,8 +106,9 @@ export default function DashboardPage() {
       ) : (
         <div className="req-list">
           {recentActivity.map(r => {
-            const outgoingReq = r.fromId === CURRENT_USER_ID;
+            const outgoingReq = r.fromId === currentUserId;
             const other = state.members[outgoingReq ? r.toId : r.fromId];
+            if (!other) return null;
             return (
               <div className="req-card" key={r.id}>
                 <Avatar name={other.name} initials={other.initials} color={other.avatarColor} size="sm" />

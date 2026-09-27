@@ -1,12 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { CURRENT_USER_ID, usePortalData } from '../../_lib/PortalDataProvider';
+import { usePortalData } from '../../_lib/PortalDataProvider';
 import Avatar from '../../_components/Avatar';
 
 export default function MessagesIndexPage() {
-  const { state } = usePortalData();
-  const connections = state.connections.filter(c => c.memberIds.includes(CURRENT_USER_ID));
+  const { state, currentUserId } = usePortalData();
+  const connections = state.connections.filter(c => c.memberIds.includes(currentUserId));
 
   return (
     <>
@@ -21,8 +21,9 @@ export default function MessagesIndexPage() {
         <div className="msg-layout">
           <div className="thread-list">
             {connections.map(c => {
-              const otherId = c.memberIds.find(id => id !== CURRENT_USER_ID)!;
+              const otherId = c.memberIds.find(id => id !== currentUserId)!;
               const other = state.members[otherId];
+              if (!other) return null;
               const threadMessages = state.messages.filter(m => m.connectionId === c.id);
               const last = threadMessages[threadMessages.length - 1];
               return (
