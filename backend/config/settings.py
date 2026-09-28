@@ -102,7 +102,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 if os.environ.get("DATABASE_URL"):
-    DATABASES = {"default": dj_database_url.parse(os.environ["DATABASE_URL"], conn_max_age=600)}
+    DATABASES = {"default": dj_database_url.parse(os.environ["DATABASE_URL"], conn_max_age=600, conn_health_checks=True)}
 else:
     DATABASES = {
         'default': {
@@ -236,6 +236,13 @@ REST_FRAMEWORK = {
         "uploads": "20/hour",
     },
 }
+
+# Shared cache. Rate limits and the message-email cooldown live here, so with
+# more than one server (or worker process) they only count correctly if every
+# copy shares one cache. Set REDIS_URL for that; without it each process keeps
+# its own in memory, which is fine for a single small server.
+if os.environ.get("REDIS_URL"):
+    CACHES = {"default": {"BACKEND": "django.core.cache.backends.redis.RedisCache", "LOCATION": os.environ["REDIS_URL"]}}
 
 # Uploads (resumes, profile photos). Local disk in development. Set the R2_*
 # variables to store them in Cloudflare R2 instead, which is required on a

@@ -50,6 +50,9 @@ class Profile(models.Model):
     deactivated = models.BooleanField(default=False)
     email_notifications = models.BooleanField(default=True)
 
+    class Meta:
+        indexes = [models.Index(fields=["is_professional", "deactivated"])]
+
     def __str__(self):
         return self.name or f"profile:{self.user_id}"
 
@@ -69,9 +72,14 @@ class ConnectionRequest(models.Model):
     message = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=REQUEST_STATUS_CHOICES, default="pending")
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["to_user", "status"]),
+            models.Index(fields=["from_user", "status"]),
+        ]
 
     def __str__(self):
         return f"{self.from_user_id} -> {self.to_user_id} ({self.request_type}, {self.status})"
@@ -83,6 +91,15 @@ class Connection(models.Model):
     member_b = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="connections_as_b")
     status = models.CharField(max_length=20, choices=CONNECTION_STATUS_CHOICES, default="active")
     since = models.DateTimeField(auto_now_add=True)
+    # Bumped on any change, including a new message. The portal asks "has
+    # anything changed?" with a single cheap query on this instead of
+    # re-downloading everything.
+    updated_at = models.DateTimeField(auto_now=True)
+    # The latest message, kept here so listing connections shows a preview
+    # without a query per connection.
+    last_message_at = models.DateTimeField(null=True, blank=True)
+    last_message_text = models.CharField(max_length=140, blank=True)
+    last_message_sender_id = models.IntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ["-since"]
@@ -99,6 +116,7 @@ class Message(models.Model):
 
     class Meta:
         ordering = ["created_at"]
+        indexes = [models.Index(fields=["connection", "created_at"])]
 
 
 def resume_upload_path(instance, filename):

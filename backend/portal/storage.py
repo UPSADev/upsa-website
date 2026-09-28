@@ -27,7 +27,14 @@ def _r2_storage(bucket, public):
     }
     if public:
         base = urlparse(settings.R2_PUBLIC_BASE_URL)
-        options.update(querystring_auth=False, custom_domain=base.netloc, url_protocol=f"{base.scheme}:")
+        options.update(
+            querystring_auth=False,
+            custom_domain=base.netloc,
+            url_protocol=f"{base.scheme}:",
+            # Every upload is stored under a new name, so browsers and the CDN
+            # can keep a photo for a year without ever serving a stale one.
+            object_parameters={"CacheControl": "public, max-age=31536000, immutable"},
+        )
     return S3Storage(**options)
 
 

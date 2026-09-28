@@ -97,10 +97,16 @@ class ConnectionRequestSerializer(serializers.ModelSerializer):
 class ConnectionSerializer(serializers.ModelSerializer):
     requestId = serializers.IntegerField(source="request_id", read_only=True)
     memberIds = serializers.SerializerMethodField()
+    lastMessage = serializers.SerializerMethodField()
 
     class Meta:
         model = Connection
-        fields = ["id", "requestId", "memberIds", "status", "since"]
+        fields = ["id", "requestId", "memberIds", "status", "since", "lastMessage"]
+
+    def get_lastMessage(self, obj):
+        if obj.last_message_at is None:
+            return None
+        return {"text": obj.last_message_text, "senderId": obj.last_message_sender_id, "createdAt": obj.last_message_at}
 
     def get_memberIds(self, obj):
         return [obj.member_a_id, obj.member_b_id]

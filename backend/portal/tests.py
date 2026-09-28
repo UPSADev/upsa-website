@@ -11,7 +11,7 @@ from rest_framework.settings import api_settings
 from rest_framework.test import APITestCase
 from rest_framework.throttling import SimpleRateThrottle
 
-from .models import Connection, ConnectionRequest, Profile, Resume
+from .models import Connection, ConnectionRequest, Message, Profile, Resume
 from users.models import ClerkIdentity
 
 from .storage import avatar_storage, resume_storage
@@ -480,6 +480,132 @@ class NotificationTests(APITestCase):
         self.assertFalse(Profile.objects.get(user=self.sender).email_notifications)
 
 
+@override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+class ScalingTests(APITestCase):
+    """The guarantees that keep the portal fast with many members."""
+
+    def setUp(self):
+        cache.clear()
+        self.addCleanup(cache.clear)
+        self.me = User.objects.create(username="clerk:me")
+        self.friend = User.objects.create(username="clerk:friend")
+        self.client.force_authenticate(user=self.me)
+
+    def connect(self, other=None):
+        other = other or self.friend
+        req = ConnectionRequest.objects.create(from_user=self.me, to_user=other, request_type="networking", status="accepted")
+        return Connection.objects.create(request=req, member_a=self.me, member_b=other)
+
+    def image_upload(self, size, mode="RGB", name="photo.png", content_type="image/png"):
+        import io
+
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from PIL import Image
+
+        buffer = io.BytesIO()
+        Image.new(mode, size, "green" if mode == "RGB" else 128).save(buffer, "PNG")
+        return SimpleUploadedFile(name, buffer.getvalue(), content_type=content_type)
+
+    # --- the cheap "has anything changed?" check -----------------------------
+
+    def test_sync_is_two_queries_however_much_data_there_is(self):
+        connection = self.connect()
+        Message.objects.bulk_create([Message(connection=connection, sender=self.me, text=f"m{i}") for i in range(50)])
+        with self.assertNumQueries(2):
+            res = self.client.get(reverse("sync"))
+        self.assertEqual(res.status_code, 200)
+
+    def test_sync_version_moves_when_something_changes(self):
+        empty = self.client.get(reverse("sync")).data["version"]
+        self.assertEqual(empty, "0")
+
+        self.client.force_authenticate(user=self.friend)
+        self.client.post(reverse("requests"), {"toId": self.me.id, "requestType": "networking", "message": "hi"}, format="json")
+        self.client.force_authenticate(user=self.me)
+        after_request = self.client.get(reverse("sync")).data["version"]
+        self.assertNotEqual(after_request, empty)
+
+        request_id = ConnectionRequest.objects.get().id
+        self.client.post(reverse("request-accept", args=[request_id]))
+        after_accept = self.client.get(reverse("sync")).data["version"]
+        self.assertNotEqual(after_accept, after_request)
+
+        connection = Connection.objects.get()
+        self.client.post(reverse("connection-messages", args=[connection.id]), {"text": "hello"}, format="json")
+        after_message = self.client.get(reverse("sync")).data["version"]
+        self.assertNotEqual(after_message, after_accept)
+
+        # nothing changed since: same version, so the portal downloads nothing
+        self.assertEqual(self.client.get(reverse("sync")).data["version"], after_message)
+
+    def test_sync_ignores_other_peoples_activity(self):
+        a, b = User.objects.create(username="clerk:a"), User.objects.create(username="clerk:b")
+        before = self.client.get(reverse("sync")).data["version"]
+        req = ConnectionRequest.objects.create(from_user=a, to_user=b, request_type="networking")
+        Connection.objects.create(request=req, member_a=a, member_b=b)
+        self.assertEqual(self.client.get(reverse("sync")).data["version"], before)
+
+    def test_sync_requires_a_signed_in_member(self):
+        self.client.force_authenticate(user=None)
+        self.assertIn(self.client.get(reverse("sync")).status_code, (401, 403))
+
+    # --- conversation previews and bounded threads -----------------------------
+
+    def test_connection_list_carries_the_latest_message_preview(self):
+        connection = self.connect()
+        first = self.client.get(reverse("connections")).data[0]
+        self.assertIsNone(first["lastMessage"])
+
+        self.client.post(reverse("connection-messages", args=[connection.id]), {"text": "x" * 300}, format="json")
+        preview = self.client.get(reverse("connections")).data[0]["lastMessage"]
+        self.assertEqual(preview["senderId"], self.me.id)
+        self.assertEqual(len(preview["text"]), 140)
+
+    def test_connection_list_needs_no_query_per_connection(self):
+        for i in range(10):
+            self.connect(User.objects.create(username=f"clerk:c{i}"))
+        with self.assertNumQueries(1):
+            res = self.client.get(reverse("connections"))
+        self.assertEqual(len(res.data), 10)
+
+    def test_a_long_conversation_returns_only_the_latest_messages(self):
+        connection = self.connect()
+        Message.objects.bulk_create([Message(connection=connection, sender=self.me, text=f"m{i}") for i in range(250)])
+        res = self.client.get(reverse("connection-messages", args=[connection.id]))
+        self.assertEqual(len(res.data), 200)
+        self.assertEqual(res.data[0]["text"], "m50")
+        self.assertEqual(res.data[-1]["text"], "m249")
+
+    # --- profile photos --------------------------------------------------------
+
+    def test_photos_are_shrunk_to_a_small_webp(self):
+        res = self.client.post(reverse("upload-avatar"), {"file": self.image_upload((1600, 900))}, format="multipart")
+        self.assertEqual(res.status_code, 201)
+
+        from PIL import Image
+
+        profile = Profile.objects.get(user=self.me)
+        self.assertTrue(profile.avatar.name.endswith(".webp"))
+        with profile.avatar.open("rb") as stored:
+            image = Image.open(stored)
+            self.assertEqual(image.format, "WEBP")
+            self.assertLessEqual(max(image.size), 256)
+            self.assertAlmostEqual(image.size[0] / image.size[1], 1600 / 900, places=1)
+        self.assertLess(profile.avatar.size, 20_000)
+
+    def test_a_file_that_is_not_really_an_image_is_refused(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        fake = SimpleUploadedFile("photo.png", b"this is not an image at all", content_type="image/png")
+        res = self.client.post(reverse("upload-avatar"), {"file": fake}, format="multipart")
+        self.assertEqual(res.status_code, 400)
+        self.assertFalse(Profile.objects.filter(user=self.me).exclude(avatar="").exists())
+
+    def test_absurdly_large_dimensions_are_refused(self):
+        res = self.client.post(reverse("upload-avatar"), {"file": self.image_upload((6000, 5000), mode="L")}, format="multipart")
+        self.assertEqual(res.status_code, 400)
+
+
 R2_TEST_SETTINGS = dict(
     R2_ENABLED=True,
     R2_ACCOUNT_ID="acct",
@@ -497,6 +623,7 @@ class StorageSelectionTests(SimpleTestCase):
         storage = avatar_storage()
         self.assertEqual(storage.bucket_name, "public-bkt")
         self.assertEqual(storage.url("avatars/1/me.png"), "https://photos.example.org/avatars/1/me.png")
+        self.assertIn("immutable", storage.object_parameters["CacheControl"])
 
     @override_settings(**R2_TEST_SETTINGS)
     def test_resumes_use_the_private_bucket_with_signed_urls(self):
