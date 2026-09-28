@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { usePortalData } from '../../../_lib/PortalDataProvider';
+import { OPEN_THREAD_INTERVAL_MS, usePortalData } from '../../../_lib/PortalDataProvider';
 import Avatar from '../../../_components/Avatar';
 
 export default function ChatThread({ connectionId }: { connectionId: string }) {
-  const { state, currentUserId, sendMessage } = usePortalData();
+  const { state, currentUserId, sendMessage, loadMessages } = usePortalData();
   const [draft, setDraft] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -17,6 +17,17 @@ export default function ChatThread({ connectionId }: { connectionId: string }) {
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [threadMessages.length, connectionId]);
+
+  // Only the conversation on screen is downloaded and kept fresh; the list of
+  // conversations gets its previews from the connections themselves.
+  useEffect(() => {
+    const refresh = () => {
+      if (!document.hidden) loadMessages(connectionId).catch(() => {});
+    };
+    refresh();
+    const timer = window.setInterval(refresh, OPEN_THREAD_INTERVAL_MS);
+    return () => window.clearInterval(timer);
+  }, [connectionId, loadMessages]);
 
   if (!connection || !connection.memberIds.includes(currentUserId)) {
     return <div className="empty-state"><span>Conversation not found.</span></div>;
@@ -45,8 +56,7 @@ export default function ChatThread({ connectionId }: { connectionId: string }) {
             const oId = c.memberIds.find(id => id !== currentUserId)!;
             const o = state.members[oId];
             if (!o) return null;
-            const msgs = state.messages.filter(m => m.connectionId === c.id);
-            const last = msgs[msgs.length - 1];
+            const last = c.lastMessage;
             return (
               <Link href={`/portal/messages/${c.id}`} key={c.id} className={`thread-item${c.id === connectionId ? ' active' : ''}`}>
                 <Avatar name={o.name} initials={o.initials} color={o.avatarColor} imageUrl={o.avatarUrl} size="sm" />

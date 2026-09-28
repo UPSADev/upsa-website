@@ -24,8 +24,7 @@ export default function MessagesIndexPage() {
               const otherId = c.memberIds.find(id => id !== currentUserId)!;
               const other = state.members[otherId];
               if (!other) return null;
-              const threadMessages = state.messages.filter(m => m.connectionId === c.id);
-              const last = threadMessages[threadMessages.length - 1];
+              const last = c.lastMessage;
               return (
                 <Link href={`/portal/messages/${c.id}`} key={c.id} className="thread-item">
                   <Avatar name={other.name} initials={other.initials} color={other.avatarColor} imageUrl={other.avatarUrl} size="sm" />

@@ -57,6 +57,8 @@ export type Connection = {
   memberIds: [string, string];
   status: ConnectionStatus;
   since: string;
+  // The newest message, so a conversation list needs no per-thread download.
+  lastMessage: { text: string; senderId: string; time: string } | null;
 };
 
 export type ChatMessage = {

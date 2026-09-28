@@ -61,6 +61,7 @@ type ApiConnection = {
   memberIds: number[];
   status: Connection['status'];
   since: string;
+  lastMessage?: { text: string; senderId: number; createdAt: string } | null;
 };
 
 type ApiMessage = {
@@ -162,6 +163,9 @@ function toConnection(c: ApiConnection): Connection {
     memberIds: [String(c.memberIds[0]), String(c.memberIds[1])],
     status: c.status,
     since: timeAgo(c.since),
+    lastMessage: c.lastMessage
+      ? { text: c.lastMessage.text, senderId: String(c.lastMessage.senderId), time: timeAgo(c.lastMessage.createdAt) }
+      : null,
   };
 }
 
@@ -182,7 +186,12 @@ function toResume(r: NonNullable<ApiResume>): NonNullable<Resume> {
 // Shown for a profile whose owner hasn't entered a name yet.
 export const PLACEHOLDER_NAME = 'New member';
 
-const REFRESH_INTERVAL_MS = 10_000;
+// How often an idle tab asks the server "has anything changed?" (a tiny request).
+// Real data is only downloaded when the answer is yes. Each tab is jittered by
+// up to 20% so thousands of tabs never all ask at the same instant.
+const SYNC_INTERVAL_MS = 30_000;
+// An open conversation refreshes faster, but only that one conversation.
+export const OPEN_THREAD_INTERVAL_MS = 5_000;
 
 const EMPTY_MEMBER: Member = {
   id: '',
@@ -262,6 +271,7 @@ type PortalContextValue = {
   setDeactivated: (value: boolean) => Promise<void>;
   loadMember: (id: string) => Promise<Member | null>;
   loadProfessionals: (filters: ProfessionalFilters, page?: number) => Promise<ProfessionalPage>;
+  loadMessages: (connectionId: string) => Promise<void>;
 };
 
 const PortalContext = createContext<PortalContextValue | null>(null);
@@ -281,26 +291,38 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
   // with data fetched just before it.
   const writeVersion = useRef(0);
   const knownMembers = useRef<Record<string, Member>>({});
+  const syncVersion = useRef<string | null>(null);
 
-  const call = useCallback(
-    async <T,>(path: string, init?: RequestInit) => {
-      const isWrite = Boolean(init?.method) && init?.method !== 'GET';
+  // Kept in a ref so `call` (and everything built on it) has a permanently
+  // stable identity. Timers and effects that depend on it then never restart
+  // just because Clerk handed back a fresh getToken function.
+  const getTokenRef = useRef(getToken);
+  useEffect(() => {
+    getTokenRef.current = getToken;
+  }, [getToken]);
+
+  const call = useCallback(async <T,>(path: string, init?: RequestInit) => {
+    const isWrite = Boolean(init?.method) && init?.method !== 'GET';
+    if (isWrite) writeVersion.current++;
+    try {
+      const token = await getTokenRef.current();
+      return await apiRequest<T>(path, token, init);
+    } finally {
       if (isWrite) writeVersion.current++;
-      try {
-        const token = await getToken();
-        return await apiRequest<T>(path, token, init);
-      } finally {
-        if (isWrite) writeVersion.current++;
-      }
-    },
-    [getToken]
-  );
+    }
+  }, []);
 
-  // Everything the portal shows about "me": profile, requests, connections,
-  // messages and resume. Profiles of other people are only fetched when they
-  // aren't already known.
+  // Everything the portal shows about "me": profile, requests, connections and
+  // resume. Profiles of other people are only fetched when they aren't already
+  // known. Messages are NOT part of this: a conversation loads its own when it
+  // is opened (and connections already carry a preview of the latest message),
+  // so the cost of a refresh doesn't grow with how many conversations you have.
   const fetchSnapshot = useCallback(
-    async (known: Record<string, Member> = {}) => {
+    async (known: Record<string, Member> = {}, knownVersion?: string) => {
+      // Asked first: if something changes while the rest downloads, the version
+      // we keep is older than the data, so the next check simply refreshes again.
+      const version = knownVersion ?? (await call<{ version: string }>('/api/sync/')).version;
+
       const [me, incomingRaw, outgoingRaw, connectionsRaw, resumeRaw] = await Promise.all([
         call<ApiProfile>('/api/members/me/'),
         call<ApiRequest[]>('/api/requests/?direction=incoming'),
@@ -323,20 +345,15 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
         if (p) members[String(p.id)] = toMember(p);
       });
 
-      const connections = connectionsRaw.map(toConnection);
-      const messageLists = await Promise.all(
-        connections.map(c => call<ApiMessage[]>(`/api/connections/${c.id}/messages/`).catch(() => []))
-      );
-
       const snapshot: PortalState = {
         members,
         requests: [...incomingRaw, ...outgoingRaw].map(toRequest),
-        connections,
-        messages: messageLists.flat().map(toChatMessage),
+        connections: connectionsRaw.map(toConnection),
+        messages: [],
         resume: resumeRaw ? toResume(resumeRaw) : null,
         resumeSharedWith: resumeRaw ? resumeRaw.sharedWith.map(String) : [],
       };
-      return { userId: String(me.id), snapshot };
+      return { userId: String(me.id), snapshot, version };
     },
     [call]
   );
@@ -350,7 +367,8 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
     loadStartedRef.current = true;
 
     fetchSnapshot()
-      .then(({ userId, snapshot }) => {
+      .then(({ userId, snapshot, version }) => {
+        syncVersion.current = version;
         setState(snapshot);
         setCurrentUserId(userId);
         setReady(true);
@@ -361,37 +379,53 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
       });
   }, [publicRoute, authLoaded, isSignedIn, fetchSnapshot]);
 
-  // Quiet background refresh so new requests, accepted connections and
-  // messages show up without reloading the page.
+  // Quiet background refresh so new requests and accepted connections show up
+  // without reloading. Every SYNC_INTERVAL_MS an idle tab makes ONE tiny request
+  // ("what's the version of my data?") and downloads nothing unless it changed.
   useEffect(() => {
     if (!ready || publicRoute) return;
     let running = false;
+    let timer: number | undefined;
 
-    async function refresh() {
+    async function check() {
       if (document.hidden || running) return;
       running = true;
       const versionAtStart = writeVersion.current;
       try {
-        const { snapshot } = await fetchSnapshot(knownMembers.current);
-        if (versionAtStart !== writeVersion.current) return;
-        setState(prev => ({ ...snapshot, members: { ...prev.members, ...snapshot.members } }));
+        const { version } = await call<{ version: string }>('/api/sync/');
+        if (version === syncVersion.current) return;
+        const fresh = await fetchSnapshot(knownMembers.current, version);
+        if (versionAtStart !== writeVersion.current) return; // a save overlapped; try again next time
+        syncVersion.current = fresh.version;
+        setState(prev => ({
+          ...fresh.snapshot,
+          messages: prev.messages,
+          members: { ...prev.members, ...fresh.snapshot.members },
+        }));
       } catch {
-        // transient (offline, sleeping laptop); the next tick simply tries again
+        // transient (offline, sleeping laptop); the next check simply tries again
       } finally {
         running = false;
       }
     }
 
-    const timer = window.setInterval(refresh, REFRESH_INTERVAL_MS);
+    function schedule() {
+      timer = window.setTimeout(async () => {
+        await check();
+        schedule();
+      }, SYNC_INTERVAL_MS * (0.8 + Math.random() * 0.4));
+    }
+    schedule();
+
     const onVisible = () => {
-      if (!document.hidden) refresh();
+      if (!document.hidden) check();
     };
     document.addEventListener('visibilitychange', onVisible);
     return () => {
-      window.clearInterval(timer);
+      window.clearTimeout(timer);
       document.removeEventListener('visibilitychange', onVisible);
     };
-  }, [ready, publicRoute, fetchSnapshot]);
+  }, [ready, publicRoute, call, fetchSnapshot]);
 
   const loadMember = useCallback(
     async (id: string): Promise<Member | null> => {
@@ -496,6 +530,30 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
     [call]
   );
 
+  // Loads one conversation's messages (the latest 200). Called when a
+  // conversation is opened and every few seconds while it stays open.
+  const loadMessages = useCallback(
+    async (connectionId: string) => {
+      const versionAtStart = writeVersion.current;
+      const raw = await call<ApiMessage[]>(`/api/connections/${connectionId}/messages/`);
+      if (versionAtStart !== writeVersion.current) return; // a send overlapped; the next call catches up
+      const list = raw.map(toChatMessage);
+      const last = raw[raw.length - 1];
+      setState(prev => ({
+        ...prev,
+        messages: [...prev.messages.filter(m => m.connectionId !== connectionId), ...list],
+        connections: last
+          ? prev.connections.map(c =>
+              c.id === connectionId
+                ? { ...c, lastMessage: { text: last.text.slice(0, 140), senderId: String(last.senderId), time: timeAgo(last.createdAt) } }
+                : c
+            )
+          : prev.connections,
+      }));
+    },
+    [call]
+  );
+
   const sendMessage = useCallback(
     async (connectionId: string, text: string) => {
       const trimmed = text.trim();
@@ -504,7 +562,15 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
         method: 'POST',
         body: JSON.stringify({ text: trimmed }),
       });
-      setState(prev => ({ ...prev, messages: [...prev.messages, toChatMessage(created)] }));
+      setState(prev => ({
+        ...prev,
+        messages: [...prev.messages, toChatMessage(created)],
+        connections: prev.connections.map(c =>
+          c.id === connectionId
+            ? { ...c, lastMessage: { text: created.text.slice(0, 140), senderId: String(created.senderId), time: 'Just now' } }
+            : c
+        ),
+      }));
     },
     [call]
   );
@@ -618,6 +684,7 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
     setDeactivated,
     loadMember,
     loadProfessionals,
+    loadMessages,
   };
 
   return <PortalContext.Provider value={value}>{children}</PortalContext.Provider>;
