@@ -15,6 +15,8 @@ from .models import ClerkIdentity
 
 _jwks_client = None
 
+CLOCK_SKEW_LEEWAY_SECONDS = 10
+
 
 def _get_jwks_client():
     global _jwks_client
@@ -50,6 +52,9 @@ class ClerkJWTAuthentication(BaseAuthentication):
                 algorithms=["RS256"],
                 issuer=settings.CLERK_ISSUER,
                 options={"require": ["exp", "iat", "sub"]},
+                # Server clocks drift by a second or two; without this a token
+                # issued "just now" gets rejected as not yet valid (iat).
+                leeway=CLOCK_SKEW_LEEWAY_SECONDS,
             )
         except jwt.PyJWTError as exc:
             raise AuthenticationFailed(f"Invalid Clerk token: {exc}") from exc
@@ -57,9 +62,8 @@ class ClerkJWTAuthentication(BaseAuthentication):
         return (self._get_or_create_user(claims["sub"]), claims)
 
     def _get_or_create_user(self, clerk_user_id):
-        try:
-            return ClerkIdentity.objects.select_related("user").get(clerk_id=clerk_user_id).user
-        except ClerkIdentity.DoesNotExist:
-            user = get_user_model().objects.create(username=f"clerk:{clerk_user_id}")
-            ClerkIdentity.objects.create(clerk_id=clerk_user_id, user=user)
-            return user
+        # The portal fires several requests at once on first load, so a brand
+        # new user hits this concurrently - get_or_create keeps that safe.
+        user, _ = get_user_model().objects.get_or_create(username=f"clerk:{clerk_user_id}")
+        identity, _ = ClerkIdentity.objects.get_or_create(clerk_id=clerk_user_id, defaults={"user": user})
+        return identity.user
