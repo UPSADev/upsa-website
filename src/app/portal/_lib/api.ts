@@ -2,7 +2,7 @@
 // caller's current Clerk session token attached as a Bearer header -
 // PortalDataProvider is the only place that should call this directly.
 
-const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000').replace(/\/$/, '');
+export const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000').replace(/\/$/, '');
 
 export class ApiError extends Error {
   status: number;
@@ -33,7 +33,13 @@ export async function apiRequest<T>(path: string, token: string | null, init: Re
   }
 
   if (res.status === 204) return undefined as T;
-  return (await res.json()) as T;
+
+  // DRF's Response(None) renders as a genuinely empty body (not the string
+  // "null"), e.g. GET /api/resume/ when there's no resume yet - res.json()
+  // throws on that, so check for empty text first.
+  const text = await res.text();
+  if (!text) return null as T;
+  return JSON.parse(text) as T;
 }
 
 export async function apiDownload(path: string, token: string | null): Promise<Blob> {

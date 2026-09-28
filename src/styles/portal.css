@@ -257,6 +257,7 @@
 .avatar-plum  { background: #5F5069; }
 .avatar-clay  { background: #8C4E38; }
 .avatar-slate { background: #4A5568; }
+.avatar-photo { object-fit: cover; }
 
 .portal-nav { flex: 1; padding: 14px 12px; overflow-y: auto; }
 .portal-nav a {

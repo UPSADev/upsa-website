@@ -12,6 +12,8 @@ export type Member = {
   name: string;
   initials: string;
   avatarColor: string;
+  avatarUrl?: string;
+  hasAvatar: boolean;
   headline: string;
   university: string;
   major?: string;

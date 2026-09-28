@@ -28,7 +28,7 @@ export default function MessagesIndexPage() {
               const last = threadMessages[threadMessages.length - 1];
               return (
                 <Link href={`/portal/messages/${c.id}`} key={c.id} className="thread-item">
-                  <Avatar name={other.name} initials={other.initials} color={other.avatarColor} size="sm" />
+                  <Avatar name={other.name} initials={other.initials} color={other.avatarColor} imageUrl={other.avatarUrl} size="sm" />
                   <div>
                     <div className="thread-item-name">{other.name}</div>
                     <div className="thread-item-preview">{last ? last.text : 'Say hello'}</div>

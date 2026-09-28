@@ -49,7 +49,7 @@ export default function ChatThread({ connectionId }: { connectionId: string }) {
             const last = msgs[msgs.length - 1];
             return (
               <Link href={`/portal/messages/${c.id}`} key={c.id} className={`thread-item${c.id === connectionId ? ' active' : ''}`}>
-                <Avatar name={o.name} initials={o.initials} color={o.avatarColor} size="sm" />
+                <Avatar name={o.name} initials={o.initials} color={o.avatarColor} imageUrl={o.avatarUrl} size="sm" />
                 <div>
                   <div className="thread-item-name">{o.name}</div>
                   <div className="thread-item-preview">{last ? last.text : 'Say hello'}</div>
@@ -61,7 +61,7 @@ export default function ChatThread({ connectionId }: { connectionId: string }) {
 
         <div className="chat-panel">
           <div className="chat-head">
-            <Avatar name={other.name} initials={other.initials} color={other.avatarColor} size="sm" />
+            <Avatar name={other.name} initials={other.initials} color={other.avatarColor} imageUrl={other.avatarUrl} size="sm" />
             <div>
               <div className="chat-head-name">{other.name}</div>
               <div className="chat-head-sub">{other.role ? `${other.role} · ${other.company}` : other.headline}</div>

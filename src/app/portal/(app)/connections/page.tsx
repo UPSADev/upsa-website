@@ -33,7 +33,7 @@ export default function ConnectionsPage() {
             return (
               <div className="conn-card" key={c.id}>
                 <div className="conn-card-top">
-                  <Avatar name={other.name} initials={other.initials} color={other.avatarColor} size="md" />
+                  <Avatar name={other.name} initials={other.initials} color={other.avatarColor} imageUrl={other.avatarUrl} size="md" />
                   <div>
                     <div className="conn-card-name">{other.name}</div>
                     <div className="conn-card-sub">{other.role ? `${other.role} · ${other.company}` : other.headline}</div>

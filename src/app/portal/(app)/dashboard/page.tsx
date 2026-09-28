@@ -86,7 +86,7 @@ export default function DashboardPage() {
         {suggested.map(pro => (
           <Link href={`/portal/professionals/${pro.id}`} key={pro.id} className="card pf-card">
             <div className="pf-card-top">
-              <Avatar name={pro.name} initials={pro.initials} color={pro.avatarColor} size="md" />
+              <Avatar name={pro.name} initials={pro.initials} color={pro.avatarColor} imageUrl={pro.avatarUrl} size="md" />
               <div>
                 <div className="pf-card-name">{pro.name}</div>
                 <div className="pf-card-headline">{pro.role} &middot; {pro.company}</div>
@@ -111,7 +111,7 @@ export default function DashboardPage() {
             if (!other) return null;
             return (
               <div className="req-card" key={r.id}>
-                <Avatar name={other.name} initials={other.initials} color={other.avatarColor} size="sm" />
+                <Avatar name={other.name} initials={other.initials} color={other.avatarColor} imageUrl={other.avatarUrl} size="sm" />
                 <div className="req-card-body">
                   <div className="req-card-top">
                     <span className="req-card-name">

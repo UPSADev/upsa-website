@@ -9,7 +9,9 @@ from rest_framework.views import APIView
 
 from .models import Connection, ConnectionRequest, Message, Profile, Resume
 from .serializers import (
+    ALLOWED_AVATAR_CONTENT_TYPES,
     ALLOWED_RESUME_CONTENT_TYPES,
+    MAX_AVATAR_SIZE,
     MAX_RESUME_SIZE,
     ConnectionRequestSerializer,
     ConnectionSerializer,
@@ -46,6 +48,31 @@ class MemberProfileView(generics.RetrieveAPIView):
     queryset = Profile.objects.filter(deactivated=False)
     lookup_url_kwarg = "user_id"
     lookup_field = "user_id"
+
+
+@api_view(["POST", "DELETE"])
+def upload_avatar(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+
+    if request.method == "DELETE":
+        if profile.avatar:
+            profile.avatar.delete(save=False)
+            profile.save(update_fields=["avatar"])
+        return Response(ProfileSerializer(profile).data)
+
+    file = request.FILES.get("file")
+    if not file:
+        raise ValidationError("No file uploaded.")
+    if file.content_type not in ALLOWED_AVATAR_CONTENT_TYPES:
+        raise ValidationError("Profile photo must be a JPG, PNG, or WEBP image.")
+    if file.size > MAX_AVATAR_SIZE:
+        raise ValidationError("Profile photo must be under 5MB.")
+
+    if profile.avatar:
+        profile.avatar.delete(save=False)
+    profile.avatar = file
+    profile.save(update_fields=["avatar"])
+    return Response(ProfileSerializer(profile).data, status=status.HTTP_201_CREATED)
 
 
 # --- Discover -------------------------------------------------------------

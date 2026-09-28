@@ -21,11 +21,16 @@ CONNECTION_STATUS_CHOICES = [
 ]
 
 
+def avatar_upload_path(instance, filename):
+    return f"avatars/{instance.user_id}/{filename}"
+
+
 class Profile(models.Model):
     """A member's portal profile. One per Django user, created on first
     touch of /api/members/me/ rather than at sign-up time."""
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
+    avatar = models.ImageField(upload_to=avatar_upload_path, blank=True, null=True)
     name = models.CharField(max_length=150, blank=True)
     headline = models.CharField(max_length=200, blank=True)
     university = models.CharField(max_length=200, blank=True)

@@ -7,10 +7,12 @@ import Avatar from '../../_components/Avatar';
 import RoleTag from '../../_components/RoleTag';
 
 export default function ProfilePage() {
-  const { currentUser, state, updateProfile, uploadResume, deleteResume, downloadResume } = usePortalData();
+  const { currentUser, state, updateProfile, uploadResume, deleteResume, downloadResume, uploadAvatar, removeAvatar } = usePortalData();
   const [editing, setEditing] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [photoBusy, setPhotoBusy] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState(currentUser.name);
   const [headline, setHeadline] = useState(currentUser.headline);
@@ -32,6 +34,41 @@ export default function ProfilePage() {
       setEditing(false);
     } catch (err) {
       window.alert(err instanceof ApiError ? err.message : 'Could not save your profile. Try again.');
+    }
+  }
+
+  async function handlePhotoPick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      window.alert('Please upload a JPG, PNG, or WEBP image.');
+      e.target.value = '';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      window.alert('Profile photos are limited to 5 MB.');
+      e.target.value = '';
+      return;
+    }
+    setPhotoBusy(true);
+    try {
+      await uploadAvatar(file);
+    } catch (err) {
+      window.alert(err instanceof ApiError ? err.message : 'Could not upload that photo. Try again.');
+    } finally {
+      setPhotoBusy(false);
+      e.target.value = '';
+    }
+  }
+
+  async function handlePhotoRemove() {
+    setPhotoBusy(true);
+    try {
+      await removeAvatar();
+    } catch (err) {
+      window.alert(err instanceof ApiError ? err.message : 'Could not remove your photo. Try again.');
+    } finally {
+      setPhotoBusy(false);
     }
   }
 
@@ -85,7 +122,7 @@ export default function ProfilePage() {
       </div>
 
       <div className="profile-head">
-        <Avatar name={currentUser.name} initials={currentUser.initials} color={currentUser.avatarColor} size="lg" />
+        <Avatar name={currentUser.name} initials={currentUser.initials} color={currentUser.avatarColor} imageUrl={currentUser.avatarUrl} size="lg" />
         <div>
           <div style={{ marginBottom: 8 }}><RoleTag isProfessional={currentUser.isProfessional} /></div>
           <h1>{currentUser.name}</h1>
@@ -96,6 +133,22 @@ export default function ProfilePage() {
       {editing ? (
         <div className="detail-card">
           <h3>Edit details</h3>
+          <div className="field">
+            <label>Profile photo</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+              <Avatar name={currentUser.name} initials={currentUser.initials} color={currentUser.avatarColor} imageUrl={currentUser.avatarUrl} size="lg" />
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <button type="button" className="btn-outline btn-sm" onClick={() => photoInputRef.current?.click()} disabled={photoBusy}>
+                  {photoBusy ? 'Working…' : currentUser.hasAvatar ? 'Replace photo' : 'Upload photo'}
+                </button>
+                {currentUser.hasAvatar && (
+                  <button type="button" className="btn-ghost" onClick={handlePhotoRemove} disabled={photoBusy}>Remove photo</button>
+                )}
+              </div>
+              <input ref={photoInputRef} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={handlePhotoPick} />
+            </div>
+            <span className="hint">JPG, PNG, or WEBP, up to 5 MB. Photo changes save right away, no need to click Save changes.</span>
+          </div>
           <div className="field">
             <label htmlFor="p-name">Full name</label>
             <input id="p-name" value={name} onChange={e => setName(e.target.value)} />

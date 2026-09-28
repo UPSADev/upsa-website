@@ -39,7 +39,7 @@ export default function ProfessionalDetail({ id }: { id: string }) {
   return (
     <>
       <div className="pf-detail-head">
-        <Avatar name={professional.name} initials={professional.initials} color={professional.avatarColor} size="lg" />
+        <Avatar name={professional.name} initials={professional.initials} color={professional.avatarColor} imageUrl={professional.avatarUrl} size="lg" />
         <div className="pf-detail-info">
           <div style={{ marginBottom: 8 }}><RoleTag isProfessional={professional.isProfessional} /></div>
           <h1>{professional.name}</h1>

@@ -100,7 +100,7 @@ export default function DiscoverPage() {
           {visible.map(pro => (
             <Link href={`/portal/professionals/${pro.id}`} key={pro.id} className="card pf-card">
               <div className="pf-card-top">
-                <Avatar name={pro.name} initials={pro.initials} color={pro.avatarColor} size="md" />
+                <Avatar name={pro.name} initials={pro.initials} color={pro.avatarColor} imageUrl={pro.avatarUrl} size="md" />
                 <div>
                   <div className="pf-card-name">{pro.name}</div>
                   <div className="pf-card-headline">{pro.role} &middot; {pro.company}</div>

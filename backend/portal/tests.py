@@ -36,6 +36,37 @@ class PortalApiTests(APITestCase):
         self.assertEqual(res.data["bio"], "Backend curious junior")
         self.assertEqual(res.data["availability"], {"mentor": False, "networking": True, "referrals": False})
 
+    def test_avatar_upload_validation(self):
+        self.as_(self.student)
+
+        wrong_type = _fake_file(b"not an image", "photo.txt", "text/plain")
+        res = self.client.post(reverse("upload-avatar"), {"file": wrong_type}, format="multipart")
+        self.assertEqual(res.status_code, 400)
+
+        too_big = _fake_image(mb=6)
+        res = self.client.post(reverse("upload-avatar"), {"file": too_big}, format="multipart")
+        self.assertEqual(res.status_code, 400)
+
+        good = _fake_image()
+        res = self.client.post(reverse("upload-avatar"), {"file": good}, format="multipart")
+        self.assertEqual(res.status_code, 201)
+        self.assertTrue(res.data["hasAvatar"])
+        self.assertIsNotNone(res.data["avatarUrl"])
+
+    def test_avatar_can_be_removed(self):
+        self.as_(self.student)
+        self.client.post(reverse("upload-avatar"), {"file": _fake_image()}, format="multipart")
+
+        res = self.client.delete(reverse("upload-avatar"))
+        self.assertEqual(res.status_code, 200)
+        self.assertFalse(res.data["hasAvatar"])
+        self.assertIsNone(res.data["avatarUrl"])
+
+        # removing when there's nothing to remove is a harmless no-op
+        res = self.client.delete(reverse("upload-avatar"))
+        self.assertEqual(res.status_code, 200)
+        self.assertFalse(res.data["hasAvatar"])
+
     # --- discover ----------------------------------------------------------
 
     def test_discover_only_shows_opted_in_professionals(self):
@@ -155,3 +186,16 @@ def _fake_file(content, name, content_type):
     from django.core.files.uploadedfile import SimpleUploadedFile
 
     return SimpleUploadedFile(name, content, content_type=content_type)
+
+
+def _fake_image(mb=None):
+    import io
+
+    from PIL import Image
+
+    buffer = io.BytesIO()
+    Image.new("RGB", (10, 10), color="green").save(buffer, format="PNG")
+    content = buffer.getvalue()
+    if mb:
+        content += b"\0" * (mb * 1024 * 1024)
+    return _fake_file(content, "photo.png", "image/png")

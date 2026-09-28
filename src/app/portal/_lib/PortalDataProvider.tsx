@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
-import { apiDownload, apiRequest } from './api';
+import { API_BASE, apiDownload, apiRequest } from './api';
 import {
   AVATAR_COLORS,
   type ChatMessage,
@@ -40,6 +40,8 @@ type ApiProfile = {
   availability: ApiAvailability;
   isProfessional: boolean;
   deactivated: boolean;
+  avatarUrl: string | null;
+  hasAvatar: boolean;
 };
 
 type ApiRequest = {
@@ -121,6 +123,8 @@ function toMember(p: ApiProfile): Member {
     name,
     initials: initialsFromName(name),
     avatarColor: colorForId(String(p.id)),
+    avatarUrl: p.avatarUrl ? `${API_BASE}${p.avatarUrl}` : undefined,
+    hasAvatar: p.hasAvatar,
     headline: p.headline || '',
     university: p.university || '',
     major: p.major || undefined,
@@ -177,6 +181,7 @@ const EMPTY_MEMBER: Member = {
   name: '',
   initials: '',
   avatarColor: 'moss',
+  hasAvatar: false,
   headline: '',
   university: '',
   bio: '',
@@ -237,6 +242,8 @@ type PortalContextValue = {
   updateProfile: (fields: ProfileUpdate) => Promise<void>;
   uploadResume: (file: File) => Promise<void>;
   deleteResume: () => Promise<void>;
+  uploadAvatar: (file: File) => Promise<void>;
+  removeAvatar: () => Promise<void>;
   downloadResume: () => Promise<void>;
   shareResumeWithConnection: (connectionId: string) => Promise<void>;
   setDeactivated: (value: boolean) => Promise<void>;
@@ -451,6 +458,23 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, resume: null, resumeSharedWith: [] }));
   }, [call]);
 
+  const uploadAvatar = useCallback(
+    async (file: File) => {
+      const form = new FormData();
+      form.append('file', file);
+      const updated = await call<ApiProfile>('/api/members/me/avatar/', { method: 'POST', body: form });
+      const member = toMember(updated);
+      setState(prev => ({ ...prev, members: { ...prev.members, [member.id]: member } }));
+    },
+    [call]
+  );
+
+  const removeAvatar = useCallback(async () => {
+    const updated = await call<ApiProfile>('/api/members/me/avatar/', { method: 'DELETE' });
+    const member = toMember(updated);
+    setState(prev => ({ ...prev, members: { ...prev.members, [member.id]: member } }));
+  }, [call]);
+
   const downloadResume = useCallback(async () => {
     if (!state.resume) return;
     const token = await getToken();
@@ -513,6 +537,8 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
     uploadResume,
     deleteResume,
     downloadResume,
+    uploadAvatar,
+    removeAvatar,
     shareResumeWithConnection,
     setDeactivated,
     loadMember,

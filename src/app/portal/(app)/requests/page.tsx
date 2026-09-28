@@ -47,7 +47,7 @@ export default function RequestsPage() {
             return (
               <div className="req-card" key={r.id}>
                 <Link href={`/portal/professionals/${other.id}`}>
-                  <Avatar name={other.name} initials={other.initials} color={other.avatarColor} size="md" />
+                  <Avatar name={other.name} initials={other.initials} color={other.avatarColor} imageUrl={other.avatarUrl} size="md" />
                 </Link>
                 <div className="req-card-body">
                   <div className="req-card-top">

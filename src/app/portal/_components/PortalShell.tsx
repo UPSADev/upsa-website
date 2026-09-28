@@ -38,7 +38,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
         </div>
 
         <div className="portal-sidebar-user">
-          <Avatar name={currentUser.name} initials={currentUser.initials} color={currentUser.avatarColor} size="sm" />
+          <Avatar name={currentUser.name} initials={currentUser.initials} color={currentUser.avatarColor} imageUrl={currentUser.avatarUrl} size="sm" />
           <div>
             <div className="name">{currentUser.name}</div>
             <div className="role">{currentUser.headline}</div>
