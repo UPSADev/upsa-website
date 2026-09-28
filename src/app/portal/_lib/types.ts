@@ -26,6 +26,7 @@ export type Member = {
   availability: Availability;
   isProfessional: boolean;
   visible: boolean;
+  emailNotifications: boolean;
 };
 
 export type RequestStatus = 'pending' | 'accepted' | 'declined' | 'cancelled';

@@ -40,6 +40,7 @@ type ApiProfile = {
   availability: ApiAvailability;
   isProfessional: boolean;
   deactivated: boolean;
+  emailNotifications?: boolean;
   avatarUrl: string | null;
   hasAvatar: boolean;
 };
@@ -138,6 +139,7 @@ function toMember(p: ApiProfile): Member {
     availability: p.availability,
     isProfessional: p.isProfessional,
     visible: !p.deactivated,
+    emailNotifications: p.emailNotifications ?? true,
   };
 }
 
@@ -195,6 +197,7 @@ const EMPTY_MEMBER: Member = {
   availability: { mentor: false, networking: false, referrals: false },
   isProfessional: false,
   visible: false,
+  emailNotifications: true,
 };
 
 type PortalState = {
@@ -236,6 +239,7 @@ type ProfileUpdate = Partial<{
   availability: Member['availability'];
   isProfessional: boolean;
   deactivated: boolean;
+  emailNotifications: boolean;
 }>;
 
 type PortalContextValue = {

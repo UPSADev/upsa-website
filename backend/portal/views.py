@@ -7,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from . import notifications
 from .models import Connection, ConnectionRequest, Message, Profile, Resume
 from .serializers import (
     ALLOWED_AVATAR_CONTENT_TYPES,
@@ -56,9 +57,9 @@ def upload_avatar(request):
 
     if request.method == "DELETE":
         if profile.avatar:
-            profile.avatar.delete(save=False)
+            profile.avatar = None
             profile.save(update_fields=["avatar"])
-        return Response(ProfileSerializer(profile).data)
+        return Response(ProfileSerializer(profile, context={"request": request}).data)
 
     file = request.FILES.get("file")
     if not file:
@@ -68,11 +69,12 @@ def upload_avatar(request):
     if file.size > MAX_AVATAR_SIZE:
         raise ValidationError("Profile photo must be under 5MB.")
 
-    if profile.avatar:
-        profile.avatar.delete(save=False)
     profile.avatar = file
     profile.save(update_fields=["avatar"])
-    return Response(ProfileSerializer(profile).data, status=status.HTTP_201_CREATED)
+    return Response(ProfileSerializer(profile, context={"request": request}).data, status=status.HTTP_201_CREATED)
+
+
+upload_avatar.cls.throttle_scope = "uploads"
 
 
 # --- Discover -------------------------------------------------------------
@@ -113,6 +115,7 @@ class ProfessionalListView(generics.ListAPIView):
 class ConnectionRequestListCreateView(generics.ListCreateAPIView):
     serializer_class = ConnectionRequestSerializer
     pagination_class = None
+    throttle_scope = "requests"
 
     def get_queryset(self):
         user = self.request.user
@@ -132,7 +135,7 @@ class ConnectionRequestListCreateView(generics.ListCreateAPIView):
         if open_between.exists():
             raise ValidationError("There's already an open request between you two.")
 
-        serializer.save(from_user=user)
+        notifications.request_received(serializer.save(from_user=user))
 
 
 @api_view(["POST"])
@@ -141,6 +144,7 @@ def accept_request(request, pk):
     req.status = "accepted"
     req.save(update_fields=["status"])
     connection = Connection.objects.create(request=req, member_a=req.from_user, member_b=req.to_user)
+    notifications.request_accepted(req)
     return Response(ConnectionSerializer(connection).data, status=status.HTTP_201_CREATED)
 
 
@@ -194,6 +198,7 @@ def cancel_connection(request, pk):
 class ConnectionMessagesView(generics.ListCreateAPIView):
     serializer_class = MessageSerializer
     pagination_class = None
+    throttle_scope = "messages"
 
     def _connection(self):
         return _connection_or_404(self.request, self.kwargs["pk"])
@@ -205,13 +210,15 @@ class ConnectionMessagesView(generics.ListCreateAPIView):
         connection = self._connection()
         if connection.status == "cancelled":
             raise ValidationError("This connection is cancelled, no new messages.")
-        serializer.save(connection=connection, sender=self.request.user)
+        notifications.message_received(serializer.save(connection=connection, sender=self.request.user))
 
 
 # --- Resume -------------------------------------------------------------
 
 
 class ResumeView(APIView):
+    throttle_scope = "uploads"
+
     def get(self, request):
         resume = Resume.objects.filter(user=request.user).first()
         if resume is None:

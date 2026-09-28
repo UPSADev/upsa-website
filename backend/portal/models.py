@@ -48,6 +48,7 @@ class Profile(models.Model):
     referrals_available = models.BooleanField(default=False)
     is_professional = models.BooleanField(default=False)
     deactivated = models.BooleanField(default=False)
+    email_notifications = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name or f"profile:{self.user_id}"

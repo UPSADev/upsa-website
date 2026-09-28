@@ -12,6 +12,21 @@ export class ApiError extends Error {
   }
 }
 
+// Turns the shapes DRF sends back for errors ("msg", ["msg"], {detail: "msg"},
+// {field: ["msg"]}) into one readable sentence for an alert.
+function readableError(status: number, body: unknown, fallback: string): string {
+  if (status === 429) return "You're doing that too quickly. Please wait a little and try again.";
+  if (typeof body === 'string') return body;
+  if (Array.isArray(body)) return body.map(String).join(' ');
+  if (body && typeof body === 'object') {
+    const fields = body as Record<string, unknown>;
+    if (typeof fields.detail === 'string') return fields.detail;
+    const parts = Object.values(fields).flatMap(v => (Array.isArray(v) ? v.map(String) : [String(v)]));
+    if (parts.length) return parts.join(' ');
+  }
+  return fallback;
+}
+
 export async function apiRequest<T>(path: string, token: string | null, init: RequestInit = {}): Promise<T> {
   const headers = new Headers(init.headers);
   if (token) headers.set('Authorization', `Bearer ${token}`);
@@ -22,14 +37,13 @@ export async function apiRequest<T>(path: string, token: string | null, init: Re
   const res = await fetch(`${API_BASE}${path}`, { ...init, headers });
 
   if (!res.ok) {
-    let detail = '';
+    let body: unknown = null;
     try {
-      const body = await res.json();
-      detail = typeof body === 'string' ? body : JSON.stringify(body);
+      body = await res.json();
     } catch {
       // response wasn't JSON, fall back to the status text below
     }
-    throw new ApiError(res.status, detail || res.statusText);
+    throw new ApiError(res.status, readableError(res.status, body, res.statusText));
   }
 
   if (res.status === 204) return undefined as T;

@@ -32,6 +32,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     isProfessional = serializers.BooleanField(source="is_professional")
     avatarUrl = serializers.SerializerMethodField()
     hasAvatar = serializers.SerializerMethodField()
+    emailNotifications = serializers.BooleanField(source="email_notifications", required=False)
 
     class Meta:
         model = Profile
@@ -52,7 +53,16 @@ class ProfileSerializer(serializers.ModelSerializer):
             "deactivated",
             "avatarUrl",
             "hasAvatar",
+            "emailNotifications",
         ]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        # A private preference: only the owner ever sees it.
+        request = self.context.get("request")
+        if request is None or request.user.id != instance.user_id:
+            data.pop("emailNotifications", None)
+        return data
 
     def get_avatarUrl(self, obj):
         return obj.avatar.url if obj.avatar else None

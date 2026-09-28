@@ -1,12 +1,19 @@
 import tempfile
+from unittest import mock
 
 from django.contrib.auth import get_user_model
+from django.core import mail
+from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
 from django.test import SimpleTestCase, override_settings
 from django.urls import reverse
+from rest_framework.settings import api_settings
 from rest_framework.test import APITestCase
+from rest_framework.throttling import SimpleRateThrottle
 
-from .models import Connection, ConnectionRequest, Resume
+from .models import Connection, ConnectionRequest, Profile, Resume
+from users.models import ClerkIdentity
+
 from .storage import avatar_storage, resume_storage
 
 User = get_user_model()
@@ -240,6 +247,237 @@ def _fake_image(mb=None):
     if mb:
         content += b"\0" * (mb * 1024 * 1024)
     return _fake_file(content, "photo.png", "image/png")
+
+
+@override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+class UploadCleanupTests(APITestCase):
+    """Files must not outlive the database rows that point at them."""
+
+    def setUp(self):
+        self.user = User.objects.create(username="clerk:cleanup")
+        self.client.force_authenticate(user=self.user)
+
+    def resume_named(self, name):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        return SimpleUploadedFile(name, b"%PDF-1.4 resume", content_type="application/pdf")
+
+    def upload_resume(self, name="cv.pdf"):
+        with self.captureOnCommitCallbacks(execute=True):
+            res = self.client.post(reverse("resume"), {"file": self.resume_named(name)}, format="multipart")
+        self.assertEqual(res.status_code, 201)
+        return Resume.objects.get(user=self.user)
+
+    def test_replacing_a_resume_deletes_the_old_file(self):
+        first = self.upload_resume("first.pdf")
+        old_name, storage = first.file.name, first.file.storage
+        self.assertTrue(storage.exists(old_name))
+
+        second = self.upload_resume("second.pdf")
+        self.assertNotEqual(second.file.name, old_name)
+        self.assertFalse(storage.exists(old_name))
+        self.assertTrue(storage.exists(second.file.name))
+
+    def test_deleting_a_resume_deletes_its_file(self):
+        resume = self.upload_resume()
+        name, storage = resume.file.name, resume.file.storage
+        with self.captureOnCommitCallbacks(execute=True):
+            res = self.client.delete(reverse("resume"))
+        self.assertEqual(res.status_code, 204)
+        self.assertFalse(storage.exists(name))
+
+    def test_replacing_and_removing_a_photo_deletes_the_file(self):
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(reverse("upload-avatar"), {"file": _fake_image()}, format="multipart")
+        profile = Profile.objects.get(user=self.user)
+        first, storage = profile.avatar.name, profile.avatar.storage
+        self.assertTrue(storage.exists(first))
+
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(reverse("upload-avatar"), {"file": _fake_image()}, format="multipart")
+        profile.refresh_from_db()
+        second = profile.avatar.name
+        self.assertNotEqual(first, second)
+        self.assertFalse(storage.exists(first))
+        self.assertTrue(storage.exists(second))
+
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.delete(reverse("upload-avatar"))
+        self.assertFalse(storage.exists(second))
+
+    def test_deleting_a_user_deletes_their_files(self):
+        resume = self.upload_resume()
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(reverse("upload-avatar"), {"file": _fake_image()}, format="multipart")
+        storage = resume.file.storage
+        resume_name = resume.file.name
+        avatar_name = Profile.objects.get(user=self.user).avatar.name
+        self.assertTrue(storage.exists(resume_name) and storage.exists(avatar_name))
+
+        with self.captureOnCommitCallbacks(execute=True):
+            self.user.delete()
+        self.assertFalse(storage.exists(resume_name))
+        self.assertFalse(storage.exists(avatar_name))
+
+    def test_a_rolled_back_change_keeps_the_file(self):
+        from django.db import transaction
+
+        resume = self.upload_resume()
+        name, storage = resume.file.name, resume.file.storage
+        with self.captureOnCommitCallbacks(execute=True):
+            try:
+                with transaction.atomic():
+                    Resume.objects.get(pk=resume.pk).delete()
+                    raise RuntimeError("boom")
+            except RuntimeError:
+                pass
+        self.assertTrue(storage.exists(name))
+
+
+class RateLimitTests(APITestCase):
+    def setUp(self):
+        cache.clear()
+        self.addCleanup(cache.clear)
+        tight = {**api_settings.DEFAULT_THROTTLE_RATES, "requests": "2/day", "messages": "2/min"}
+        patcher = mock.patch.object(SimpleRateThrottle, "THROTTLE_RATES", tight)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        self.user = User.objects.create(username="clerk:limited")
+        self.client.force_authenticate(user=self.user)
+
+    def test_sending_requests_is_limited_but_reading_them_is_not(self):
+        targets = [User.objects.create(username=f"clerk:target{i}") for i in range(3)]
+
+        def send(target):
+            return self.client.post(
+                reverse("requests"), {"toId": target.id, "requestType": "networking", "message": "hi"}, format="json"
+            )
+
+        self.assertEqual(send(targets[0]).status_code, 201)
+        self.assertEqual(send(targets[1]).status_code, 201)
+        self.assertEqual(send(targets[2]).status_code, 429)
+        for _ in range(10):
+            self.assertEqual(self.client.get(reverse("requests")).status_code, 200)
+
+    def test_sending_messages_is_limited_but_the_refresh_is_not(self):
+        other = User.objects.create(username="clerk:friend")
+        req = ConnectionRequest.objects.create(from_user=self.user, to_user=other, request_type="networking")
+        connection = Connection.objects.create(request=req, member_a=self.user, member_b=other)
+        url = reverse("connection-messages", args=[connection.id])
+
+        self.assertEqual(self.client.post(url, {"text": "one"}, format="json").status_code, 201)
+        self.assertEqual(self.client.post(url, {"text": "two"}, format="json").status_code, 201)
+        self.assertEqual(self.client.post(url, {"text": "three"}, format="json").status_code, 429)
+        for _ in range(10):
+            self.assertEqual(self.client.get(url).status_code, 200)
+
+    def test_one_users_limit_does_not_affect_another(self):
+        first, second = User.objects.create(username="clerk:t1"), User.objects.create(username="clerk:t2")
+        body = {"toId": first.id, "requestType": "networking", "message": "hi"}
+        self.client.post(reverse("requests"), body, format="json")
+        self.client.post(reverse("requests"), {**body, "toId": second.id}, format="json")
+        self.assertEqual(self.client.post(reverse("requests"), body, format="json").status_code, 429)
+
+        someone_else = User.objects.create(username="clerk:someone-else")
+        self.client.force_authenticate(user=someone_else)
+        res = self.client.post(reverse("requests"), body, format="json")
+        self.assertNotEqual(res.status_code, 429)
+
+
+@override_settings(NOTIFICATIONS_ENABLED=True, NOTIFICATIONS_ASYNC=False, PORTAL_BASE_URL="https://portal.example.org")
+class NotificationTests(APITestCase):
+    def setUp(self):
+        cache.clear()
+        self.addCleanup(cache.clear)
+        patcher = mock.patch("portal.notifications._clerk_email", side_effect=lambda clerk_id: f"{clerk_id}@example.com")
+        self.clerk_email = patcher.start()
+        self.addCleanup(patcher.stop)
+        self.sender = self.member("sender", "Sam Sender")
+        self.recipient = self.member("recipient", "Rita Recipient")
+
+    def member(self, key, name):
+        user = User.objects.create(username=f"clerk:{key}")
+        ClerkIdentity.objects.create(clerk_id=key, user=user)
+        Profile.objects.create(user=user, name=name)
+        return user
+
+    def send_request(self, message="secret details"):
+        self.client.force_authenticate(user=self.sender)
+        with self.captureOnCommitCallbacks(execute=True):
+            return self.client.post(
+                reverse("requests"), {"toId": self.recipient.id, "requestType": "mentorship", "message": message}, format="json"
+            )
+
+    def connect(self):
+        req = ConnectionRequest.objects.create(from_user=self.sender, to_user=self.recipient, request_type="networking", status="accepted")
+        return Connection.objects.create(request=req, member_a=self.sender, member_b=self.recipient)
+
+    def test_a_new_request_emails_the_recipient_without_leaking_the_message(self):
+        self.assertEqual(self.send_request("my private pitch").status_code, 201)
+        self.assertEqual(len(mail.outbox), 1)
+        email = mail.outbox[0]
+        self.assertEqual(email.to, ["recipient@example.com"])
+        self.assertIn("Sam Sender", email.subject)
+        self.assertIn("https://portal.example.org/portal/requests", email.body)
+        self.assertNotIn("my private pitch", email.subject + email.body)
+
+    def test_members_can_opt_out(self):
+        Profile.objects.filter(user=self.recipient).update(email_notifications=False)
+        self.send_request()
+        self.assertEqual(mail.outbox, [])
+
+    def test_accepting_emails_the_requester(self):
+        self.send_request()
+        mail.outbox.clear()
+        req = ConnectionRequest.objects.get()
+        self.client.force_authenticate(user=self.recipient)
+        with self.captureOnCommitCallbacks(execute=True):
+            res = self.client.post(reverse("request-accept", args=[req.id]))
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual([m.to for m in mail.outbox], [["sender@example.com"]])
+        self.assertIn("accepted", mail.outbox[0].subject)
+
+    def test_a_burst_of_messages_sends_one_email(self):
+        connection = self.connect()
+        url = reverse("connection-messages", args=[connection.id])
+        self.client.force_authenticate(user=self.sender)
+        for text in ("one", "two", "three"):
+            with self.captureOnCommitCallbacks(execute=True):
+                self.assertEqual(self.client.post(url, {"text": text}, format="json").status_code, 201)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["recipient@example.com"])
+        self.assertNotIn("one", mail.outbox[0].body.replace("Open it here", ""))
+
+    def test_a_mail_failure_never_breaks_the_request(self):
+        with mock.patch("portal.notifications.send_mail", side_effect=RuntimeError("smtp is down")):
+            res = self.send_request()
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(ConnectionRequest.objects.count(), 1)
+
+    def test_a_multiline_name_cannot_inject_email_headers(self):
+        Profile.objects.filter(user=self.sender).update(name="Sam" + chr(10) + "Bcc: attacker@example.com")
+        self.send_request()
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertNotIn(chr(10), mail.outbox[0].subject)
+        self.assertEqual(mail.outbox[0].bcc, [])
+
+    @override_settings(NOTIFICATIONS_ENABLED=False)
+    def test_nothing_is_sent_or_looked_up_when_disabled(self):
+        self.send_request()
+        self.assertEqual(mail.outbox, [])
+        self.clerk_email.assert_not_called()
+
+    def test_the_preference_is_private_to_its_owner(self):
+        self.client.force_authenticate(user=self.sender)
+        own = self.client.get(reverse("my-profile"))
+        self.assertIs(own.data["emailNotifications"], True)
+        others = self.client.get(reverse("member-profile", args=[self.recipient.id]))
+        self.assertNotIn("emailNotifications", others.data)
+
+        res = self.client.patch(reverse("my-profile"), {"emailNotifications": False}, format="json")
+        self.assertEqual(res.status_code, 200)
+        self.assertIs(res.data["emailNotifications"], False)
+        self.assertFalse(Profile.objects.get(user=self.sender).email_notifications)
 
 
 R2_TEST_SETTINGS = dict(

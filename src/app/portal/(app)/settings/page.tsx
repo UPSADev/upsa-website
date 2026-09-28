@@ -79,6 +79,26 @@ export default function SettingsPage() {
       </div>
 
       <div className="settings-section">
+        <h2>Email notifications</h2>
+        <p className="desc">We email you when someone sends you a connection request, accepts yours, or messages you. The email only says that something happened. It never includes what was written.</p>
+        <div className="settings-row">
+          <div className="copy">
+            <strong>Email me about new activity</strong>
+            <span>Message emails are sent at most once every 15 minutes per conversation.</span>
+          </div>
+          <label className="switch">
+            <input
+              aria-label="Email me about new activity"
+              type="checkbox"
+              checked={currentUser.emailNotifications}
+              onChange={e => updateProfile({ emailNotifications: e.target.checked })}
+            />
+            <span className="track" />
+          </label>
+        </div>
+      </div>
+
+      <div className="settings-section">
         <h2>Privacy</h2>
         <p className="desc">These are built in and not something you need to manage.</p>
         <div className="settings-row">

@@ -158,14 +158,28 @@ STORAGES = {
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-# The portal doesn't send email today; the console backend just prints in dev.
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend'
-        if DEBUG
-        else 'django.core.mail.backends.smtp.EmailBackend',
-    },
-}
+# Email (notifications about new requests/messages). Development prints emails
+# to the server log; on a server set EMAIL_HOST (and the other EMAIL_* values in
+# .env.example) to send for real. Without it, notifications are simply off.
+SMTP_HOST = os.environ.get("EMAIL_HOST", "")
+if SMTP_HOST:
+    MAILERS = {
+        "default": {
+            "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+            "OPTIONS": {
+                "host": SMTP_HOST,
+                "port": int(os.environ.get("EMAIL_PORT", "587")),
+                "username": os.environ.get("EMAIL_HOST_USER", ""),
+                "password": os.environ.get("EMAIL_HOST_PASSWORD", ""),
+                "use_tls": os.environ.get("EMAIL_USE_TLS", "true").lower() in ("1", "true", "yes"),
+            },
+        },
+    }
+elif DEBUG:
+    MAILERS = {"default": {"BACKEND": "django.core.mail.backends.console.EmailBackend"}}
+else:
+    MAILERS = {"default": {"BACKEND": "django.core.mail.backends.smtp.EmailBackend", "OPTIONS": {"host": "localhost"}}}
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "UPSA Portal <no-reply@localhost>")
 
 # The website's origin(s), e.g. https://unitedpsa.org - not this backend's.
 FRONTEND_ORIGINS = _env_list("FRONTEND_ORIGINS", ["http://localhost:3000"])
@@ -186,6 +200,14 @@ if not DEBUG:
 # Clerk owns auth on the frontend; Django only verifies its tokens.
 # See CLERK_ISSUER in .env.example for where to find this value.
 CLERK_ISSUER = os.environ.get("CLERK_ISSUER", "")
+# Only used to look up a member's email address when notifying them (addresses
+# are never stored here). Keep it secret; it's the same key the frontend uses.
+CLERK_SECRET_KEY = os.environ.get("CLERK_SECRET_KEY", "")
+
+# Where notification emails link to: the website, not this backend.
+PORTAL_BASE_URL = (os.environ.get("PORTAL_BASE_URL") or FRONTEND_ORIGINS[0]).rstrip("/")
+NOTIFICATIONS_ENABLED = bool(CLERK_SECRET_KEY) and (bool(SMTP_HOST) or DEBUG)
+NOTIFICATIONS_ASYNC = True  # send in a background thread so requests aren't slowed down
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -196,6 +218,23 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
+    # Rate limits per signed-in user. "user" is a generous overall cap (the
+    # portal refreshes in the background, so it has to leave room for that);
+    # the named scopes apply to writes on specific views. Counters live in
+    # Django's cache, which is per server process by default, so with several
+    # workers the effective limit is a little looser - fine for abuse protection.
+    # (Signed-out traffic is rejected before throttling runs; limit that at
+    # the host or a proxy such as Cloudflare.)
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.UserRateThrottle",
+        "portal.throttles.WriteScopedThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "user": "600/min",
+        "requests": "30/day",
+        "messages": "60/min",
+        "uploads": "20/hour",
+    },
 }
 
 # Uploads (resumes, profile photos). Local disk in development. Set the R2_*
