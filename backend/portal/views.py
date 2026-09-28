@@ -86,6 +86,14 @@ class ProfessionalListView(generics.ListAPIView):
             Q(mentor_available=True) | Q(networking_available=True)
         )
         params = self.request.query_params
+        if search := params.get("search"):
+            qs = qs.filter(
+                Q(name__icontains=search)
+                | Q(headline__icontains=search)
+                | Q(role__icontains=search)
+                | Q(company__icontains=search)
+                | Q(skills__icontains=search)
+            )
         if company := params.get("company"):
             qs = qs.filter(company__icontains=company)
         if industry := params.get("industry"):

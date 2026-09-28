@@ -78,7 +78,7 @@ type ApiResume = {
   sharedWith: number[];
 } | null;
 
-type Paginated<T> = { results: T[] } | T[];
+type Paginated<T> = { results: T[]; next?: string | null } | T[];
 
 function resultsOf<T>(data: Paginated<T>): T[] {
   return Array.isArray(data) ? data : data.results;
@@ -123,7 +123,8 @@ function toMember(p: ApiProfile): Member {
     name,
     initials: initialsFromName(name),
     avatarColor: colorForId(String(p.id)),
-    avatarUrl: p.avatarUrl ? `${API_BASE}${p.avatarUrl}` : undefined,
+    // Local dev serves photos from the backend (relative path); R2 gives a full URL.
+    avatarUrl: p.avatarUrl ? (/^https?:\/\//.test(p.avatarUrl) ? p.avatarUrl : `${API_BASE}${p.avatarUrl}`) : undefined,
     hasAvatar: p.hasAvatar,
     headline: p.headline || '',
     university: p.university || '',
@@ -176,6 +177,8 @@ function toResume(r: NonNullable<ApiResume>): NonNullable<Resume> {
   return { id: String(r.id), fileName: r.fileName, sizeLabel: r.sizeLabel, uploadedAt: timeAgo(r.uploadedAt) };
 }
 
+const REFRESH_INTERVAL_MS = 10_000;
+
 const EMPTY_MEMBER: Member = {
   id: '',
   name: '',
@@ -210,12 +213,15 @@ const EMPTY_STATE: PortalState = {
 };
 
 export type ProfessionalFilters = {
+  search?: string;
   company?: string;
   industry?: string;
   university?: string;
   mentor?: boolean;
   networking?: boolean;
 };
+
+export type ProfessionalPage = { members: Member[]; hasMore: boolean };
 
 type ProfileUpdate = Partial<{
   name: string;
@@ -248,7 +254,7 @@ type PortalContextValue = {
   shareResumeWithConnection: (connectionId: string) => Promise<void>;
   setDeactivated: (value: boolean) => Promise<void>;
   loadMember: (id: string) => Promise<Member | null>;
-  loadProfessionals: (filters: ProfessionalFilters) => Promise<Member[]>;
+  loadProfessionals: (filters: ProfessionalFilters, page?: number) => Promise<ProfessionalPage>;
 };
 
 const PortalContext = createContext<PortalContextValue | null>(null);
@@ -263,19 +269,31 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
 
   const publicRoute = isPublicPortalRoute(pathname);
 
+  // Bumped at the start and end of every write. A background refresh that
+  // overlaps a write is thrown away, so it can never clobber a fresh change
+  // with data fetched just before it.
+  const writeVersion = useRef(0);
+  const knownMembers = useRef<Record<string, Member>>({});
+
   const call = useCallback(
     async <T,>(path: string, init?: RequestInit) => {
-      const token = await getToken();
-      return apiRequest<T>(path, token, init);
+      const isWrite = Boolean(init?.method) && init?.method !== 'GET';
+      if (isWrite) writeVersion.current++;
+      try {
+        const token = await getToken();
+        return await apiRequest<T>(path, token, init);
+      } finally {
+        if (isWrite) writeVersion.current++;
+      }
     },
     [getToken]
   );
 
-  useEffect(() => {
-    if (publicRoute || !authLoaded || !isSignedIn || loadStartedRef.current) return;
-    loadStartedRef.current = true;
-
-    (async () => {
+  // Everything the portal shows about "me": profile, requests, connections,
+  // messages and resume. Profiles of other people are only fetched when they
+  // aren't already known.
+  const fetchSnapshot = useCallback(
+    async (known: Record<string, Member> = {}) => {
       const [me, incomingRaw, outgoingRaw, connectionsRaw, resumeRaw] = await Promise.all([
         call<ApiProfile>('/api/members/me/'),
         call<ApiRequest[]>('/api/requests/?direction=incoming'),
@@ -292,9 +310,8 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
       connectionsRaw.forEach(c => c.memberIds.forEach(id => otherIds.add(id)));
       otherIds.delete(me.id);
 
-      const others = await Promise.all(
-        Array.from(otherIds).map(id => call<ApiProfile>(`/api/members/${id}/`).catch(() => null))
-      );
+      const missing = Array.from(otherIds).filter(id => !known[String(id)]);
+      const others = await Promise.all(missing.map(id => call<ApiProfile>(`/api/members/${id}/`).catch(() => null)));
       others.forEach(p => {
         if (p) members[String(p.id)] = toMember(p);
       });
@@ -304,21 +321,70 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
         connections.map(c => call<ApiMessage[]>(`/api/connections/${c.id}/messages/`).catch(() => []))
       );
 
-      setState({
+      const snapshot: PortalState = {
         members,
         requests: [...incomingRaw, ...outgoingRaw].map(toRequest),
         connections,
         messages: messageLists.flat().map(toChatMessage),
         resume: resumeRaw ? toResume(resumeRaw) : null,
         resumeSharedWith: resumeRaw ? resumeRaw.sharedWith.map(String) : [],
+      };
+      return { userId: String(me.id), snapshot };
+    },
+    [call]
+  );
+
+  useEffect(() => {
+    knownMembers.current = state.members;
+  }, [state.members]);
+
+  useEffect(() => {
+    if (publicRoute || !authLoaded || !isSignedIn || loadStartedRef.current) return;
+    loadStartedRef.current = true;
+
+    fetchSnapshot()
+      .then(({ userId, snapshot }) => {
+        setState(snapshot);
+        setCurrentUserId(userId);
+        setReady(true);
+      })
+      .catch(err => {
+        console.error('Failed to load portal data', err);
+        setReady(true);
       });
-      setCurrentUserId(String(me.id));
-      setReady(true);
-    })().catch(err => {
-      console.error('Failed to load portal data', err);
-      setReady(true);
-    });
-  }, [publicRoute, authLoaded, isSignedIn, call]);
+  }, [publicRoute, authLoaded, isSignedIn, fetchSnapshot]);
+
+  // Quiet background refresh so new requests, accepted connections and
+  // messages show up without reloading the page.
+  useEffect(() => {
+    if (!ready || publicRoute) return;
+    let running = false;
+
+    async function refresh() {
+      if (document.hidden || running) return;
+      running = true;
+      const versionAtStart = writeVersion.current;
+      try {
+        const { snapshot } = await fetchSnapshot(knownMembers.current);
+        if (versionAtStart !== writeVersion.current) return;
+        setState(prev => ({ ...snapshot, members: { ...prev.members, ...snapshot.members } }));
+      } catch {
+        // transient (offline, sleeping laptop); the next tick simply tries again
+      } finally {
+        running = false;
+      }
+    }
+
+    const timer = window.setInterval(refresh, REFRESH_INTERVAL_MS);
+    const onVisible = () => {
+      if (!document.hidden) refresh();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [ready, publicRoute, fetchSnapshot]);
 
   const loadMember = useCallback(
     async (id: string): Promise<Member | null> => {
@@ -337,8 +403,10 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
   );
 
   const loadProfessionals = useCallback(
-    async (filters: ProfessionalFilters): Promise<Member[]> => {
+    async (filters: ProfessionalFilters, page = 1): Promise<ProfessionalPage> => {
       const params = new URLSearchParams();
+      if (page > 1) params.set('page', String(page));
+      if (filters.search) params.set('search', filters.search);
       if (filters.company) params.set('company', filters.company);
       if (filters.industry) params.set('industry', filters.industry);
       if (filters.university) params.set('university', filters.university);
@@ -354,7 +422,7 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
         });
         return { ...prev, members };
       });
-      return list;
+      return { members: list, hasMore: !Array.isArray(data) && Boolean(data.next) };
     },
     [call]
   );

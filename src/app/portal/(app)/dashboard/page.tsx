@@ -12,7 +12,7 @@ export default function DashboardPage() {
   const [suggested, setSuggested] = useState<Member[]>([]);
 
   useEffect(() => {
-    loadProfessionals({}).then(list => {
+    loadProfessionals({}).then(({ members: list }) => {
       const alreadyRequested = new Set(
         state.requests.filter(r => r.fromId === currentUserId).map(r => r.toId)
       );

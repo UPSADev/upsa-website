@@ -1,11 +1,13 @@
 import tempfile
 
 from django.contrib.auth import get_user_model
-from django.test import override_settings
+from django.core.files.storage import FileSystemStorage
+from django.test import SimpleTestCase, override_settings
 from django.urls import reverse
 from rest_framework.test import APITestCase
 
 from .models import Connection, ConnectionRequest, Resume
+from .storage import avatar_storage, resume_storage
 
 User = get_user_model()
 
@@ -95,6 +97,45 @@ class PortalApiTests(APITestCase):
         ids = [m["id"] for m in res.data["results"]]
         self.assertIn(self.mentor.id, ids)
         self.assertNotIn(hidden.id, ids)
+
+    def test_discover_search_matches_name_and_skills(self):
+        self.as_(self.mentor)
+        self.client.patch(
+            reverse("my-profile"),
+            {
+                "name": "Mentor Mia",
+                "isProfessional": True,
+                "skills": ["Distributed Systems", "Go"],
+                "availability": {"mentor": True, "networking": False, "referrals": False},
+            },
+            format="json",
+        )
+        self.as_(self.student)
+
+        def found(term):
+            res = self.client.get(reverse("professionals"), {"search": term})
+            return [m["id"] for m in res.data["results"]]
+
+        self.assertEqual(found("mia"), [self.mentor.id])
+        self.assertEqual(found("distributed"), [self.mentor.id])
+        self.assertEqual(found("nobody-has-this"), [])
+
+    def test_discover_is_paginated_at_twenty(self):
+        for i in range(25):
+            pro = User.objects.create(username=f"clerk:pro{i}")
+            self.as_(pro)
+            self.client.patch(
+                reverse("my-profile"),
+                {"name": f"Pro {i:02d}", "isProfessional": True, "availability": {"mentor": True, "networking": False, "referrals": False}},
+                format="json",
+            )
+        self.as_(self.student)
+        page1 = self.client.get(reverse("professionals"))
+        self.assertEqual(len(page1.data["results"]), 20)
+        self.assertIsNotNone(page1.data["next"])
+        page2 = self.client.get(reverse("professionals"), {"page": 2})
+        self.assertEqual(len(page2.data["results"]), 5)
+        self.assertIsNone(page2.data["next"])
 
     # --- requests / connections / messages ----------------------------------
 
@@ -199,3 +240,35 @@ def _fake_image(mb=None):
     if mb:
         content += b"\0" * (mb * 1024 * 1024)
     return _fake_file(content, "photo.png", "image/png")
+
+
+R2_TEST_SETTINGS = dict(
+    R2_ENABLED=True,
+    R2_ACCOUNT_ID="acct",
+    R2_ACCESS_KEY_ID="key",
+    R2_SECRET_ACCESS_KEY="secret",
+    R2_PRIVATE_BUCKET="private-bkt",
+    R2_PUBLIC_BUCKET="public-bkt",
+    R2_PUBLIC_BASE_URL="https://photos.example.org",
+)
+
+
+class StorageSelectionTests(SimpleTestCase):
+    @override_settings(**R2_TEST_SETTINGS)
+    def test_photos_use_the_public_bucket_with_plain_urls(self):
+        storage = avatar_storage()
+        self.assertEqual(storage.bucket_name, "public-bkt")
+        self.assertEqual(storage.url("avatars/1/me.png"), "https://photos.example.org/avatars/1/me.png")
+
+    @override_settings(**R2_TEST_SETTINGS)
+    def test_resumes_use_the_private_bucket_with_signed_urls(self):
+        storage = resume_storage()
+        self.assertEqual(storage.bucket_name, "private-bkt")
+        url = storage.url("resumes/1/cv.pdf")
+        self.assertIn("acct.r2.cloudflarestorage.com", url)
+        self.assertIn("X-Amz-Signature", url)
+
+    @override_settings(R2_ENABLED=False)
+    def test_falls_back_to_local_disk_when_r2_is_not_configured(self):
+        self.assertIsInstance(avatar_storage(), FileSystemStorage)
+        self.assertIsInstance(resume_storage(), FileSystemStorage)

@@ -83,8 +83,8 @@ export default function SettingsPage() {
         <p className="desc">These are built in and not something you need to manage.</p>
         <div className="settings-row">
           <div className="copy">
-            <strong>Show my email after a connection is accepted</strong>
-            <span>Your email stays hidden until both sides have accepted a request.</span>
+            <strong>Your email stays private</strong>
+            <span>Other members never see your email address, even after a connection is accepted. They only see the profile details you add.</span>
           </div>
           <span className="switch"><input type="checkbox" defaultChecked disabled /><span className="track" /></span>
         </div>
