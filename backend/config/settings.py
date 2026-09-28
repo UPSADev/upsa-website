@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 import os
 from pathlib import Path
 
+import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,16 +22,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env")
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#o8bbch9(ws(80=7*3$9bh0$_6v6)*pae$^i)d!sqo^3q8e@87'
+def _env_list(name, default):
+    raw = os.environ.get(name)
+    return [item.strip() for item in raw.split(",") if item.strip()] if raw else default
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+# Everything below is configured through environment variables (see
+# .env.example). The defaults are for local development only.
+
+# Off unless explicitly enabled, so a forgotten variable on a real server
+# can never leave debug pages (stack traces, settings) switched on.
+DEBUG = os.environ.get("DJANGO_DEBUG", "").lower() in ("1", "true", "yes")
+
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+if not SECRET_KEY:
+    if not DEBUG:
+        raise ImproperlyConfigured(
+            "DJANGO_SECRET_KEY is not set. For local development put DJANGO_DEBUG=True "
+            "in backend/.env; on a server set DJANGO_SECRET_KEY to a long random value."
+        )
+    SECRET_KEY = "django-insecure-local-development-only"
+
+ALLOWED_HOSTS = _env_list("DJANGO_ALLOWED_HOSTS", ["localhost", "127.0.0.1"])
 
 
 # Application definition
@@ -56,7 +71,12 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if not DEBUG:
+    # Serves the admin's static files in production; runserver handles them in dev.
+    MIDDLEWARE.insert(2, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 ROOT_URLCONF = 'config.urls'
 
@@ -81,12 +101,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if os.environ.get("DATABASE_URL"):
+    DATABASES = {"default": dj_database_url.parse(os.environ["DATABASE_URL"], conn_max_age=600)}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
 
 # Password validation
@@ -124,26 +147,41 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+}
 
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
+# The portal doesn't send email today; the console backend just prints in dev.
 MAILERS = {
     'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+        'BACKEND': 'django.core.mail.backends.console.EmailBackend'
+        if DEBUG
+        else 'django.core.mail.backends.smtp.EmailBackend',
     },
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
+# The website's origin(s), e.g. https://unitedpsa.org - not this backend's.
+FRONTEND_ORIGINS = _env_list("FRONTEND_ORIGINS", ["http://localhost:3000"])
+
+CORS_ALLOWED_ORIGINS = FRONTEND_ORIGINS
 
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-]
+CSRF_TRUSTED_ORIGINS = FRONTEND_ORIGINS
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SSL_REDIRECT", "true").lower() in ("1", "true", "yes")
+    SECURE_HSTS_SECONDS = 3600  # raise once HTTPS is confirmed working end to end
 
 # Clerk owns auth on the frontend; Django only verifies its tokens.
 # See CLERK_ISSUER in .env.example for where to find this value.
@@ -160,8 +198,24 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 20,
 }
 
-# Local disk storage for now (fine for dev). Swap MEDIA_ROOT for an R2/S3
-# backend via django-storages before this goes to production, so uploaded
-# resumes survive redeploys.
+# Uploads (resumes, profile photos). Local disk in development. Set the R2_*
+# variables to store them in Cloudflare R2 instead, which is required on a
+# real server since its disk is wiped on every deploy. See portal/storage.py.
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+R2_ACCOUNT_ID = os.environ.get("R2_ACCOUNT_ID", "")
+R2_ACCESS_KEY_ID = os.environ.get("R2_ACCESS_KEY_ID", "")
+R2_SECRET_ACCESS_KEY = os.environ.get("R2_SECRET_ACCESS_KEY", "")
+R2_PRIVATE_BUCKET = os.environ.get("R2_PRIVATE_BUCKET", "")  # resumes, never public
+R2_PUBLIC_BUCKET = os.environ.get("R2_PUBLIC_BUCKET", "")  # profile photos
+R2_PUBLIC_BASE_URL = os.environ.get("R2_PUBLIC_BASE_URL", "").rstrip("/")  # public URL of that bucket
+R2_ENABLED = all(
+    [R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_PRIVATE_BUCKET, R2_PUBLIC_BUCKET, R2_PUBLIC_BASE_URL]
+)
+if not DEBUG and not R2_ENABLED:
+    import warnings
+
+    warnings.warn("R2 storage is not configured: uploaded resumes and photos will not survive a redeploy.")
+
+CLERK_AUTHORIZED_PARTIES = _env_list("CLERK_AUTHORIZED_PARTIES", FRONTEND_ORIGINS)

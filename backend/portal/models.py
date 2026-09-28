@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.db import models
 
+from .storage import avatar_storage, resume_storage
+
 REQUEST_TYPE_CHOICES = [
     ("networking", "Networking"),
     ("mentorship", "Mentorship"),
@@ -30,7 +32,7 @@ class Profile(models.Model):
     touch of /api/members/me/ rather than at sign-up time."""
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
-    avatar = models.ImageField(upload_to=avatar_upload_path, blank=True, null=True)
+    avatar = models.ImageField(upload_to=avatar_upload_path, storage=avatar_storage, blank=True, null=True)
     name = models.CharField(max_length=150, blank=True)
     headline = models.CharField(max_length=200, blank=True)
     university = models.CharField(max_length=200, blank=True)
@@ -104,6 +106,6 @@ def resume_upload_path(instance, filename):
 
 class Resume(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="resume")
-    file = models.FileField(upload_to=resume_upload_path)
+    file = models.FileField(upload_to=resume_upload_path, storage=resume_storage)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     shared_with = models.ManyToManyField(Connection, blank=True, related_name="shared_resumes")

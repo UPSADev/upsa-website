@@ -59,6 +59,13 @@ class ClerkJWTAuthentication(BaseAuthentication):
         except jwt.PyJWTError as exc:
             raise AuthenticationFailed(f"Invalid Clerk token: {exc}") from exc
 
+        # "azp" is the site the token was issued to. Reject tokens minted for
+        # some other site; tokens without the claim are still accepted.
+        authorized_party = claims.get("azp")
+        allowed = settings.CLERK_AUTHORIZED_PARTIES
+        if authorized_party and allowed and authorized_party not in allowed:
+            raise AuthenticationFailed("Token was issued for a different site.")
+
         return (self._get_or_create_user(claims["sub"]), claims)
 
     def _get_or_create_user(self, clerk_user_id):

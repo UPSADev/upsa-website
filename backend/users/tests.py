@@ -26,10 +26,10 @@ class ClerkTokenVerificationTests(TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-    def authenticate(self, iat_offset):
+    def authenticate(self, iat_offset=0, **extra_claims):
         now = int(time.time())
         token = jwt.encode(
-            {"sub": "user_clock", "iss": ISSUER, "iat": now + iat_offset, "exp": now + 300},
+            {"sub": "user_clock", "iss": ISSUER, "iat": now + iat_offset, "exp": now + 300, **extra_claims},
             self.private_key,
             algorithm="RS256",
         )
@@ -43,6 +43,21 @@ class ClerkTokenVerificationTests(TestCase):
     def test_token_from_far_in_the_future_is_still_rejected(self):
         with self.assertRaises(AuthenticationFailed):
             self.authenticate(iat_offset=60)
+
+    @override_settings(CLERK_AUTHORIZED_PARTIES=["https://unitedpsa.org"])
+    def test_token_issued_for_another_site_is_rejected(self):
+        with self.assertRaises(AuthenticationFailed):
+            self.authenticate(azp="https://evil.example")
+
+    @override_settings(CLERK_AUTHORIZED_PARTIES=["https://unitedpsa.org"])
+    def test_token_issued_for_our_site_is_accepted(self):
+        user, claims = self.authenticate(azp="https://unitedpsa.org")
+        self.assertEqual(claims["sub"], "user_clock")
+
+    @override_settings(CLERK_AUTHORIZED_PARTIES=["https://unitedpsa.org"])
+    def test_token_without_azp_is_still_accepted(self):
+        user, claims = self.authenticate()
+        self.assertEqual(claims["sub"], "user_clock")
 
 
 class ClerkUserMappingTests(TestCase):
