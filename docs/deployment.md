@@ -4,7 +4,7 @@ The website (Netlify) and the portal backend (a separate host) are deployed inde
 
 ## Before you start
 
-You need accounts for: GitHub, Netlify, Clerk, Cloudflare (R2), a backend host (Railway, or Render + Neon), and an SMTP email provider (Resend, Brevo, or similar). The backend requires **Python 3.12 or newer**.
+You need accounts for: GitHub, Netlify, Clerk, Cloudflare (R2), a backend host (Azure with the nonprofit grant, or Railway; see "Choosing a host"), and an SMTP email provider (Resend, Brevo, or similar). The backend requires **Python 3.12 or newer**.
 
 ## 1. Clerk production instance
 
@@ -35,7 +35,7 @@ Deploy the `backend/` folder (set the service's root directory to `backend`).
 - **Health check path:** `/api/health/`
 - Set the environment variables listed below.
 
-Railway: about $5 per month, one dashboard, Postgres included. Render + Neon: free, but the app sleeps when idle, so the first request after a quiet spell is slow.
+Which host? For a launch that stays fast as membership grows (about 1,000 at first, 19,000 or more later) see "Choosing a host" below. Do not use Render's free plan: its web service sleeps after 15 idle minutes and takes about a minute to wake, and its free database is deleted after 30 days.
 
 ### Backend environment variables
 
@@ -54,12 +54,40 @@ Railway: about $5 per month, one dashboard, Postgres included. Render + Neon: fr
 | `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS` | for emails | Your SMTP provider's settings. Without `EMAIL_HOST`, notification emails are simply off. |
 | `DEFAULT_FROM_EMAIL` | for emails | e.g. `UPSA Portal <no-reply@unitedpsa.org>`. Must be an address your provider allows. |
 | `PORTAL_BASE_URL` | optional | Where email links point. Defaults to the first `FRONTEND_ORIGINS` entry. |
+| `REDIS_URL` | recommended at scale | Shared cache (e.g. `redis://default:password@host:6379`). Needed once you run more than one server so rate limits and the email cooldown count correctly. |
+| `WEB_CONCURRENCY` | optional | Number of gunicorn worker processes, default 3 (each runs 4 threads). Roughly one per CPU core. |
 | `DJANGO_SSL_REDIRECT` | optional | `true` by default. Set `false` only if the host already redirects http to https. |
 | `CLERK_AUTHORIZED_PARTIES` | optional | Defaults to `FRONTEND_ORIGINS`. |
 
 Do **not** set `DJANGO_DEBUG` on a server.
 
 After the first deploy, create an admin login for moderation. Open the host's shell and run `python manage.py createsuperuser`. The admin panel is at `https://<backend>/admin/`.
+
+## Choosing a host
+
+The backend is light: about 70 MB of memory per process and a few milliseconds per request. What matters is being **always on** (no sleeping), having the **database next to the app**, and being able to add servers as you grow. The portal is built so that an idle tab costs about 2 small requests a minute, so a single modest server carries thousands of members.
+
+| Members online at once | Requests per second (approx.) | A setup that copes |
+| --- | --- | --- |
+| ~50 (about 1,000 members) | 2 | One small server, one small Postgres |
+| ~950 (about 19,000 members) | 30 | 2 CPU cores and 2 GB of memory, a 1 to 2 GB Postgres |
+| ~1,900 (a spike after an announcement) | 60 | The same, comfortably; add a second server if it feels tight |
+
+(These assume roughly 5 to 10 percent of members online at once. Confirm with a load test before a big announcement.)
+
+**Recommended: Azure with the nonprofit grant.** Microsoft gives verified nonprofits $2,000 a year in Azure credits, renewing annually. Register at `https://aka.ms/nonprofitgetstarted`; validation takes up to 3 business days and needs your legal nonprofit documentation (equivalent to 501(c)(3) status). Each organization gets one grant tenant, and there is a yearly attestation. Then, in the Azure portal:
+
+1. **App Service** (Linux, Python 3.12 or newer). A Basic or Standard plan with 2 cores is plenty. Turn on **Always On**. Set the startup command to the same line as `backend/Procfile`, without the leading `web:`. Set `WEBSITES_PORT=8000`.
+2. **Azure Database for PostgreSQL, Flexible Server** (Burstable is enough to start). Keep automatic backups on. Use its connection string as `DATABASE_URL`.
+3. **Azure Cache for Redis** (Basic is enough) for `REDIS_URL`. Optional for a single server.
+4. Put all the backend variables above in the App Service's Configuration, Application settings.
+5. Add your domain and a managed certificate, then create a **budget alert** so nothing can spend past the credit.
+
+Expect roughly $60 a month for all of it (App Service $13 to $26, Postgres about $12 and up, Redis extra; check the Azure pricing calculator), well inside $2,000 a year.
+
+**If you don't get the grant: Railway.** Billed by actual use ($20 per CPU-month, $10 per GB of memory): about $5 to $10 a month at launch and around $30 to $40 at 19,000 members, including Postgres and Redis. It is the simplest host to run.
+
+**Free options for a small pilot only:** Northflank's free plan has two always-on services and one database, but its free size is small and unpublished, so test it before relying on it. Avoid hosts whose free plans sleep.
 
 ## 4. Netlify (the website)
 
@@ -82,7 +110,7 @@ Do this once after the first deploy, and again after any change to environment v
 2. Sign up a **new** account at `/portal/sign-up`. You should land on onboarding.
 3. Upload a profile photo. It should display, and its URL should be on your photo domain.
 4. Finish onboarding, edit the profile, upload and delete a resume.
-5. With a second account (private window): in the admin panel, make that account a professional (see "Making someone a mentor or professional" in the runbook; there is no button for this in the portal yet), then have it turn on "Open to networking" in Settings. From the first account, find it in Discover, send a request, accept it from the other side, and exchange a message. Check that the request showed up without reloading (it refreshes every 10 seconds).
+5. With a second account (private window): in the admin panel, make that account a professional (see "Making someone a mentor or professional" in the runbook; there is no button for this in the portal yet), then have it turn on "Open to networking" in Settings. From the first account, find it in Discover, send a request, accept it from the other side, and exchange a message. Check that the request showed up without reloading (the portal checks for changes every 30 seconds, and an open conversation refreshes every 5).
 6. Share the resume with the connection and download it from the other account. Confirm a third, unconnected account cannot.
 7. Check the browser console and Network tab for errors (CORS errors mean `FRONTEND_ORIGINS` is wrong).
 8. If email is set up, confirm a notification email arrives and contains no message text.

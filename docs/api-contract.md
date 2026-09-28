@@ -71,7 +71,7 @@ emailNotifications  boolean, default true. Only the owner ever sees this field.
 | `POST /api/members/me/avatar/` | Multipart form, field `file`. Returns 201 and the profile. Replaces any existing photo (the old file is deleted). |
 | `DELETE /api/members/me/avatar/` | Removes the photo and its file. Returns 200 and the profile. |
 
-`avatarUrl` is a full URL when R2 is configured, or a path on the backend in local development.
+The upload must be a real image (it is decoded and checked), no more than 25 million pixels, and is stored as a small WebP of at most 256 pixels on its longest side. The original is not kept. `avatarUrl` is a full URL when R2 is configured (public photos are cached by browsers and the CDN for a year; every upload gets a new name), or a path on the backend in local development.
 
 ## Discover
 
@@ -108,9 +108,12 @@ Requests never expire. They stay pending until accepted, declined or cancelled.
 ## Connections
 
 ```text
-id, requestId, memberIds [a, b], status, since
-status   active | completed | cancelled
+id, requestId, memberIds [a, b], status, since, lastMessage
+status        active | completed | cancelled
+lastMessage   { text (first 140 characters), senderId, createdAt } or null
 ```
+
+`lastMessage` is stored on the connection, so listing connections shows a preview of every conversation without a query per conversation.
 
 | Method and path | Notes |
 | --- | --- |
@@ -126,10 +129,16 @@ id, connectionId, senderId, text, createdAt
 
 | Method and path | Notes |
 | --- | --- |
-| `GET /api/connections/{id}/messages/` | Oldest first. Either member. Not paginated. |
+| `GET /api/connections/{id}/messages/` | The latest 200 messages, oldest first. Either member. A long conversation never gets slower to open. |
 | `POST /api/connections/{id}/messages/` | Body `{text}`. 400 if the connection is cancelled. Emails the other member, at most once per conversation per 15 minutes. |
 
-The portal refreshes in the background every 10 seconds, so there is no realtime channel, read receipts or typing indicators.
+There is no realtime channel, read receipts or typing indicators. An open conversation re-fetches its messages every 5 seconds; everything else uses the change check below.
+
+## Change check
+
+`GET /api/sync/` returns `{"version": "<string>"}`. The version changes whenever one of your requests or connections changes (a connection also changes on every new message), and is `"0"` if you have none. It costs two indexed queries and a few bytes.
+
+The portal calls this every 30 seconds (each tab is randomly offset by up to 20% so tabs never all ask at once) and only downloads profile, requests, connections and resume when the version differs from the last one it saw. Idle tabs therefore cost almost nothing: for a member with 20 conversations this replaced about 150 requests and 390 queries a minute with 2 requests and 4 queries.
 
 ## Resume
 
