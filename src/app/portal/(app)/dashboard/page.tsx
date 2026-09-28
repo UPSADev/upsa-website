@@ -13,10 +13,11 @@ export default function DashboardPage() {
 
   useEffect(() => {
     loadProfessionals({}).then(({ members: list }) => {
-      const alreadyRequested = new Set(
-        state.requests.filter(r => r.fromId === currentUserId).map(r => r.toId)
-      );
-      setSuggested(list.filter(m => m.id !== currentUserId && !alreadyRequested.has(m.id)).slice(0, 3));
+      const alreadyInTouch = new Set([
+        ...state.requests.map(r => (r.fromId === currentUserId ? r.toId : r.fromId)),
+        ...state.connections.flatMap(c => c.memberIds),
+      ]);
+      setSuggested(list.filter(m => m.id !== currentUserId && !alreadyInTouch.has(m.id)).slice(0, 3));
     });
     // Only ever needs to run once on mount, against whatever's already loaded.
     // eslint-disable-next-line react-hooks/exhaustive-deps

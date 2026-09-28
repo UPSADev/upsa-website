@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useClerk } from '@clerk/nextjs';
-import { usePortalData } from '../_lib/PortalDataProvider';
+import { PLACEHOLDER_NAME, usePortalData } from '../_lib/PortalDataProvider';
 import Avatar from './Avatar';
 import RoleTag from './RoleTag';
 
@@ -24,6 +24,13 @@ export default function PortalShell({ children }: { children: React.ReactNode })
   const { signOut } = useClerk();
   const { currentUser, currentUserId, state } = usePortalData();
   const [open, setOpen] = useState(false);
+
+  // Signing in (unlike signing up) skips onboarding, so send anyone who never
+  // finished it there instead of showing an empty "New member" profile.
+  const needsOnboarding = currentUser.name === PLACEHOLDER_NAME;
+  useEffect(() => {
+    if (needsOnboarding) router.replace('/portal/onboarding');
+  }, [needsOnboarding, router]);
 
   const incomingCount = state.requests.filter(r => r.toId === currentUserId && r.status === 'pending').length;
 

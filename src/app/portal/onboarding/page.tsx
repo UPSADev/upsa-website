@@ -3,7 +3,8 @@
 import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { usePortalData } from '../_lib/PortalDataProvider';
+import { useUser } from '@clerk/nextjs';
+import { PLACEHOLDER_NAME, usePortalData } from '../_lib/PortalDataProvider';
 import { ApiError } from '../_lib/api';
 import Avatar from '../_components/Avatar';
 
@@ -17,7 +18,8 @@ export default function OnboardingPage() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [name, setName] = useState(currentUser.name);
+  const { user } = useUser();
+  const [name, setName] = useState(currentUser.name === PLACEHOLDER_NAME ? (user?.fullName ?? '') : currentUser.name);
   const [headline, setHeadline] = useState(currentUser.headline);
   const [university, setUniversity] = useState(currentUser.university);
   const [major, setMajor] = useState(currentUser.major ?? '');

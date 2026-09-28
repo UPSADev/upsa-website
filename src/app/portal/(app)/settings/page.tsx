@@ -51,30 +51,30 @@ export default function SettingsPage() {
             <strong>Open to mentoring</strong>
             <span>Appear in Discover for members looking for a mentor.</span>
           </div>
-          <span className="switch">
-            <input type="checkbox" checked={currentUser.availability.mentor} onChange={e => toggle('mentor', e.target.checked)} />
+          <label className="switch">
+            <input aria-label="Open to mentoring" type="checkbox" checked={currentUser.availability.mentor} onChange={e => toggle('mentor', e.target.checked)} />
             <span className="track" />
-          </span>
+          </label>
         </div>
         <div className="settings-row">
           <div className="copy">
             <strong>Open to networking</strong>
             <span>Appear in Discover for general professional networking.</span>
           </div>
-          <span className="switch">
-            <input type="checkbox" checked={currentUser.availability.networking} onChange={e => toggle('networking', e.target.checked)} />
+          <label className="switch">
+            <input aria-label="Open to networking" type="checkbox" checked={currentUser.availability.networking} onChange={e => toggle('networking', e.target.checked)} />
             <span className="track" />
-          </span>
+          </label>
         </div>
         <div className="settings-row">
           <div className="copy">
             <strong>Consider referral conversations</strong>
             <span>Shown as a note on your profile. A referral is never guaranteed, this only signals you&apos;re open to the conversation.</span>
           </div>
-          <span className="switch">
-            <input type="checkbox" checked={currentUser.availability.referrals} onChange={e => toggle('referrals', e.target.checked)} />
+          <label className="switch">
+            <input aria-label="Consider referral conversations" type="checkbox" checked={currentUser.availability.referrals} onChange={e => toggle('referrals', e.target.checked)} />
             <span className="track" />
-          </span>
+          </label>
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { usePortalData } from '../../_lib/PortalDataProvider';
+import { PLACEHOLDER_NAME, usePortalData } from '../../_lib/PortalDataProvider';
 import { ApiError } from '../../_lib/api';
 import Avatar from '../../_components/Avatar';
 import RoleTag from '../../_components/RoleTag';
@@ -14,7 +14,7 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
 
-  const [name, setName] = useState(currentUser.name);
+  const [name, setName] = useState(currentUser.name === PLACEHOLDER_NAME ? '' : currentUser.name);
   const [headline, setHeadline] = useState(currentUser.headline);
   const [university, setUniversity] = useState(currentUser.university);
   const [major, setMajor] = useState(currentUser.major ?? '');

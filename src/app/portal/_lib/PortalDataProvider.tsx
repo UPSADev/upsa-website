@@ -117,7 +117,7 @@ function timeAgo(iso: string): string {
 }
 
 function toMember(p: ApiProfile): Member {
-  const name = p.name || 'New member';
+  const name = p.name || PLACEHOLDER_NAME;
   return {
     id: String(p.id),
     name,
@@ -176,6 +176,9 @@ function toChatMessage(m: ApiMessage): ChatMessage {
 function toResume(r: NonNullable<ApiResume>): NonNullable<Resume> {
   return { id: String(r.id), fileName: r.fileName, sizeLabel: r.sizeLabel, uploadedAt: timeAgo(r.uploadedAt) };
 }
+
+// Shown for a profile whose owner hasn't entered a name yet.
+export const PLACEHOLDER_NAME = 'New member';
 
 const REFRESH_INTERVAL_MS = 10_000;
 
