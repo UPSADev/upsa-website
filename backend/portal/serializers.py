@@ -29,7 +29,11 @@ class AvailabilitySerializer(serializers.Serializer):
 class ProfileSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="user_id", read_only=True)
     availability = AvailabilitySerializer()
-    isProfessional = serializers.BooleanField(source="is_professional")
+    # Read only: the verified flag. Only an admin sets this (Django admin), never
+    # the member via this API - that would let anyone list themselves as a
+    # verified mentor with no review.
+    isProfessional = serializers.BooleanField(source="is_professional", read_only=True)
+    professionalRequested = serializers.BooleanField(source="professional_requested", required=False)
     avatarUrl = serializers.SerializerMethodField()
     hasAvatar = serializers.SerializerMethodField()
     emailNotifications = serializers.BooleanField(source="email_notifications", required=False)
@@ -50,6 +54,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "skills",
             "availability",
             "isProfessional",
+            "professionalRequested",
             "deactivated",
             "avatarUrl",
             "hasAvatar",
@@ -76,6 +81,11 @@ class ProfileSerializer(serializers.ModelSerializer):
             instance.mentor_available = availability["mentor"]
             instance.networking_available = availability["networking"]
             instance.referrals_available = availability["referrals"]
+        requested = validated_data.get("professional_requested")
+        if requested and not instance.professional_requested:
+            from django.utils import timezone
+
+            instance.professional_requested_at = timezone.now()
         for field, value in validated_data.items():
             setattr(instance, field, value)
         instance.save()

@@ -45,6 +45,49 @@ class PortalApiTests(APITestCase):
         self.assertEqual(res.data["bio"], "Backend curious junior")
         self.assertEqual(res.data["availability"], {"mentor": False, "networking": True, "referrals": False})
 
+    def test_member_cannot_set_isProfessional_through_the_api(self):
+        # This is the actual verification gate - it must only ever change
+        # through the admin panel, never a member's own request.
+        self.as_(self.student)
+        res = self.client.patch(reverse("my-profile"), {"isProfessional": True}, format="json")
+        self.assertEqual(res.status_code, 200)
+        self.assertFalse(res.data["isProfessional"])
+        self.assertFalse(Profile.objects.get(user=self.student).is_professional)
+
+    def test_member_can_request_to_be_listed_as_a_professional(self):
+        self.as_(self.student)
+        res = self.client.patch(
+            reverse("my-profile"),
+            {"company": "Microsoft", "role": "SWE", "industry": "Technology", "location": "Seattle, WA", "professionalRequested": True},
+            format="json",
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.data["professionalRequested"])
+        self.assertFalse(res.data["isProfessional"])  # still not verified
+
+        profile = Profile.objects.get(user=self.student)
+        self.assertTrue(profile.professional_requested)
+        self.assertIsNotNone(profile.professional_requested_at)
+        self.assertEqual(profile.company, "Microsoft")
+
+        # discover stays empty until an admin actually verifies them
+        self.as_(self.mentor)
+        self.assertEqual(self.client.get(reverse("professionals")).data["results"], [])
+
+    def test_only_an_admin_approving_in_the_database_makes_them_discoverable(self):
+        self.as_(self.student)
+        self.client.patch(
+            reverse("my-profile"),
+            {"professionalRequested": True, "availability": {"mentor": True, "networking": False, "referrals": False}},
+            format="json",
+        )
+        # the equivalent of an admin ticking "is professional" in the admin panel
+        Profile.objects.filter(user=self.student).update(is_professional=True)
+
+        self.as_(self.mentor)
+        ids = [m["id"] for m in self.client.get(reverse("professionals")).data["results"]]
+        self.assertIn(self.student.id, ids)
+
     def test_avatar_upload_validation(self):
         self.as_(self.student)
 
@@ -82,21 +125,19 @@ class PortalApiTests(APITestCase):
         self.as_(self.mentor)
         self.client.patch(
             reverse("my-profile"),
-            {
-                "isProfessional": True,
-                "company": "Microsoft",
-                "availability": {"mentor": True, "networking": False, "referrals": False},
-            },
+            {"company": "Microsoft", "availability": {"mentor": True, "networking": False, "referrals": False}},
             format="json",
         )
+        Profile.objects.filter(user=self.mentor).update(is_professional=True)  # the admin's review step
 
         hidden = User.objects.create(username="clerk:hidden-pro")
         self.as_(hidden)
         self.client.patch(
             reverse("my-profile"),
-            {"isProfessional": True, "availability": {"mentor": False, "networking": False, "referrals": False}},
+            {"availability": {"mentor": False, "networking": False, "referrals": False}},
             format="json",
         )
+        Profile.objects.filter(user=hidden).update(is_professional=True)
 
         self.as_(self.student)
         res = self.client.get(reverse("professionals"))
@@ -111,12 +152,12 @@ class PortalApiTests(APITestCase):
             reverse("my-profile"),
             {
                 "name": "Mentor Mia",
-                "isProfessional": True,
                 "skills": ["Distributed Systems", "Go"],
                 "availability": {"mentor": True, "networking": False, "referrals": False},
             },
             format="json",
         )
+        Profile.objects.filter(user=self.mentor).update(is_professional=True)
         self.as_(self.student)
 
         def found(term):
@@ -133,9 +174,10 @@ class PortalApiTests(APITestCase):
             self.as_(pro)
             self.client.patch(
                 reverse("my-profile"),
-                {"name": f"Pro {i:02d}", "isProfessional": True, "availability": {"mentor": True, "networking": False, "referrals": False}},
+                {"name": f"Pro {i:02d}", "availability": {"mentor": True, "networking": False, "referrals": False}},
                 format="json",
             )
+            Profile.objects.filter(user=pro).update(is_professional=True)
         self.as_(self.student)
         page1 = self.client.get(reverse("professionals"))
         self.assertEqual(len(page1.data["results"]), 20)

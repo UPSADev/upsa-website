@@ -49,6 +49,12 @@ class Profile(models.Model):
     is_professional = models.BooleanField(default=False)
     deactivated = models.BooleanField(default=False)
     email_notifications = models.BooleanField(default=True)
+    # Self-serve: a member fills in company/role/industry/location and asks to be
+    # listed. is_professional is the actual verified flag that controls Discover -
+    # only an admin sets that (Django admin), never the member themselves, so
+    # nobody can list themselves as a verified mentor without review.
+    professional_requested = models.BooleanField(default=False)
+    professional_requested_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         indexes = [models.Index(fields=["is_professional", "deactivated"])]
