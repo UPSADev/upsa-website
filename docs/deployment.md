@@ -110,7 +110,7 @@ Do this once after the first deploy, and again after any change to environment v
 2. Sign up a **new** account at `/portal/sign-up`. You should land on onboarding.
 3. Upload a profile photo. It should display, and its URL should be on your photo domain.
 4. Finish onboarding, edit the profile, upload and delete a resume.
-5. With a second account (private window): in the admin panel, make that account a professional (see "Making someone a mentor or professional" in the runbook; there is no button for this in the portal yet), then have it turn on "Open to networking" in Settings. From the first account, find it in Discover, send a request, accept it from the other side, and exchange a message. Check that the request showed up without reloading (the portal checks for changes every 30 seconds, and an open conversation refreshes every 5).
+5. With a second account (private window): fill in company/role/industry/location in Edit Profile and click "Request to be listed as a mentor/professional", then approve it in the admin panel (see "Approving a mentor or professional" in the runbook), then have it turn on "Open to networking" in Settings. From the first account, find it in Discover, send a request, accept it from the other side, and exchange a message. Check that the request showed up without reloading (the portal checks for changes every 30 seconds, and an open conversation refreshes every 5).
 6. Share the resume with the connection and download it from the other account. Confirm a third, unconnected account cannot.
 7. Check the browser console and Network tab for errors (CORS errors mean `FRONTEND_ORIGINS` is wrong).
 8. If email is set up, confirm a notification email arrives and contains no message text.

@@ -39,6 +39,7 @@ type ApiProfile = {
   skills: string[];
   availability: ApiAvailability;
   isProfessional: boolean;
+  professionalRequested: boolean;
   deactivated: boolean;
   emailNotifications?: boolean;
   avatarUrl: string | null;
@@ -139,6 +140,7 @@ function toMember(p: ApiProfile): Member {
     skills: p.skills ?? [],
     availability: p.availability,
     isProfessional: p.isProfessional,
+    professionalRequested: p.professionalRequested,
     visible: !p.deactivated,
     emailNotifications: p.emailNotifications ?? true,
   };
@@ -205,6 +207,7 @@ const EMPTY_MEMBER: Member = {
   skills: [],
   availability: { mentor: false, networking: false, referrals: false },
   isProfessional: false,
+  professionalRequested: false,
   visible: false,
   emailNotifications: true,
 };
@@ -238,15 +241,22 @@ export type ProfessionalFilters = {
 
 export type ProfessionalPage = { members: Member[]; hasMore: boolean };
 
+// isProfessional is deliberately absent: it's the verified flag, and only an
+// admin can set it (the backend ignores it even if sent). A member can only
+// ask to be reviewed, with professionalRequested.
 type ProfileUpdate = Partial<{
   name: string;
   headline: string;
   university: string;
   major: string;
+  company: string;
+  role: string;
+  industry: string;
+  location: string;
   bio: string;
   skills: string[];
   availability: Member['availability'];
-  isProfessional: boolean;
+  professionalRequested: boolean;
   deactivated: boolean;
   emailNotifications: boolean;
 }>;

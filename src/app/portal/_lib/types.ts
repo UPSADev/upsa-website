@@ -25,6 +25,7 @@ export type Member = {
   skills: string[];
   availability: Availability;
   isProfessional: boolean;
+  professionalRequested: boolean;
   visible: boolean;
   emailNotifications: boolean;
 };

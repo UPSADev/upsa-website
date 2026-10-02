@@ -52,7 +52,13 @@ industry, location  strings
 bio                 string
 skills              array of strings
 availability        { mentor, networking, referrals }   booleans, all off by default
-isProfessional      boolean, drives the "Mentor / Professional" vs "Member" tag
+isProfessional      read only. The verified flag that drives the "Mentor / Professional" tag
+                    and whether the member shows up in Discover. Only an admin sets this,
+                    in the Django admin panel - never through this API, so nobody can list
+                    themselves as verified without review.
+professionalRequested   boolean. A member sets this themselves, alongside company/role/
+                        industry/location, to ask an admin to review and verify them.
+                        Setting it does not make isProfessional true by itself.
 deactivated         boolean, hides the profile from Discover and from other members
 avatarUrl, hasAvatar   read only; the photo (see below)
 emailNotifications  boolean, default true. Only the owner ever sees this field.
@@ -61,7 +67,7 @@ emailNotifications  boolean, default true. Only the owner ever sees this field.
 | Method and path | Notes |
 | --- | --- |
 | `GET /api/members/me/` | Your profile. |
-| `PATCH /api/members/me/` | Partial update of any field above except `id`, `avatarUrl`, `hasAvatar`. If you send `availability`, send all three keys. |
+| `PATCH /api/members/me/` | Partial update of any field above except `id`, `isProfessional`, `avatarUrl`, `hasAvatar` (sending `isProfessional` is silently ignored, not an error). If you send `availability`, send all three keys. |
 | `GET /api/members/{id}/` | Someone else's profile. 404 if they are deactivated. Never includes email or resume, and omits `emailNotifications`. |
 
 **Profile photo.** JPG, PNG or WEBP, up to 5 MB.
@@ -162,6 +168,5 @@ The backend emails a member about a new request, an accepted request, and a new 
 
 ## Known limits
 
-- There is no way for a member to set `isProfessional`, company, role, industry or location in the portal screens; an admin does it in the admin panel. The API itself lets a member set `isProfessional` on their own profile.
 - Request and message text have no length cap beyond the general request-size limit (about 2.5 MB).
 - There is no reporting or blocking between members.

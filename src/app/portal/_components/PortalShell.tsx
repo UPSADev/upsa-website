@@ -49,7 +49,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           <div>
             <div className="name">{currentUser.name}</div>
             <div className="role">{currentUser.headline}</div>
-            <div style={{ marginTop: 6 }}><RoleTag isProfessional={currentUser.isProfessional} /></div>
+            <div style={{ marginTop: 6 }}><RoleTag isProfessional={currentUser.isProfessional} professionalRequested={currentUser.professionalRequested} /></div>
           </div>
         </div>
 

@@ -23,18 +23,18 @@ You can view and edit **Profiles, Connection requests, Connections, Messages, Re
 
 To create another admin: on the host's shell run `python manage.py createsuperuser`.
 
-## Making someone a mentor or professional
+## Approving a mentor or professional
 
-**Nothing in the portal lets a member become a professional yet**, and the fields for company, role, industry and location have no editing screen either. Until that is built, an admin does it:
+A member fills in their own company, role, industry and location in Edit Profile, then clicks **Request to be listed as a mentor/professional**. That does not make them discoverable by itself — it only flags them for review. The verified flag (`isProfessional`) that actually controls Discover can only be set by an admin, in the admin panel; the API rejects a member trying to set it on themselves (silently ignored, not an error), so nobody can list themselves without review.
 
-1. Admin panel, **Portal, Profiles**, open the member (search by name).
-2. Tick **Is professional**. Fill in **Headline, Company, Role, Industry, Location**.
-3. Save.
-4. Ask the member to turn on **Open to mentoring** and/or **Open to networking** in their portal Settings. They only appear in Discover when at least one is on and they are not deactivated.
+To approve someone:
 
-Discover lists only professionals, so at launch it stays empty until you do this for your first mentors.
+1. Admin panel, **Portal, Profiles**. The list is sorted by request date, newest first, and you can filter by **Professional requested**.
+2. Open the member, check what they filled in under **Professional** (Company, Role, Industry, Location).
+3. Tick **Is professional**, then save.
+4. They'll show up in Discover once they also have **Open to mentoring** or **Open to networking** turned on in their own Settings — that part is up to them.
 
-Caveat: the API currently lets a member set `isProfessional` on their own profile if they call it directly, so a determined person could label themselves a professional. If mentor verification matters, make that field read-only for members (a small backend change).
+Discover lists only verified professionals, so it stays empty until you approve your first few. A member can also be un-verified the same way (untick **Is professional**) — they can't undo that themselves either.
 
 ## Moderating a member
 

@@ -20,6 +20,13 @@ export default function ProfilePage() {
   const [major, setMajor] = useState(currentUser.major ?? '');
   const [bio, setBio] = useState(currentUser.bio);
   const [skillsText, setSkillsText] = useState(currentUser.skills.join(', '));
+  const [company, setCompany] = useState(currentUser.company ?? '');
+  const [role, setRole] = useState(currentUser.role ?? '');
+  const [industry, setIndustry] = useState(currentUser.industry ?? '');
+  const [location, setLocation] = useState(currentUser.location ?? '');
+  const [requestingReview, setRequestingReview] = useState(false);
+
+  const hasProfessionalDetails = company.trim() && role.trim();
 
   async function save() {
     try {
@@ -30,10 +37,25 @@ export default function ProfilePage() {
         major,
         bio,
         skills: skillsText.split(',').map(s => s.trim()).filter(Boolean),
+        company,
+        role,
+        industry,
+        location,
       });
       setEditing(false);
     } catch (err) {
       window.alert(err instanceof ApiError ? err.message : 'Could not save your profile. Try again.');
+    }
+  }
+
+  async function requestReview() {
+    setRequestingReview(true);
+    try {
+      await updateProfile({ company, role, industry, location, professionalRequested: true });
+    } catch (err) {
+      window.alert(err instanceof ApiError ? err.message : 'Could not send that. Try again.');
+    } finally {
+      setRequestingReview(false);
     }
   }
 
@@ -124,7 +146,7 @@ export default function ProfilePage() {
       <div className="profile-head">
         <Avatar name={currentUser.name} initials={currentUser.initials} color={currentUser.avatarColor} imageUrl={currentUser.avatarUrl} size="lg" />
         <div>
-          <div style={{ marginBottom: 8 }}><RoleTag isProfessional={currentUser.isProfessional} /></div>
+          <div style={{ marginBottom: 8 }}><RoleTag isProfessional={currentUser.isProfessional} professionalRequested={currentUser.professionalRequested} /></div>
           <h1>{currentUser.name}</h1>
           <div className="sub">{currentUser.headline}</div>
         </div>
@@ -180,6 +202,51 @@ export default function ProfilePage() {
             <label htmlFor="p-skills">Skills &amp; interests (comma separated)</label>
             <input id="p-skills" value={skillsText} onChange={e => setSkillsText(e.target.value)} />
           </div>
+
+          <h3 style={{ marginTop: 22 }}>Professional details</h3>
+          <p className="hint" style={{ marginBottom: 14 }}>
+            Fill these in and request a review to be listed as a mentor/professional in Discover. An admin checks every
+            request before it goes live, so nobody can list themselves without review.
+          </p>
+          <div className="field-row">
+            <div className="field">
+              <label htmlFor="p-company">Company</label>
+              <input id="p-company" value={company} onChange={e => setCompany(e.target.value)} placeholder="e.g. Microsoft" />
+            </div>
+            <div className="field">
+              <label htmlFor="p-role">Job title</label>
+              <input id="p-role" value={role} onChange={e => setRole(e.target.value)} placeholder="e.g. Software Engineer" />
+            </div>
+          </div>
+          <div className="field-row">
+            <div className="field">
+              <label htmlFor="p-industry">Industry</label>
+              <input id="p-industry" value={industry} onChange={e => setIndustry(e.target.value)} placeholder="e.g. Technology" />
+            </div>
+            <div className="field">
+              <label htmlFor="p-location">Location</label>
+              <input id="p-location" value={location} onChange={e => setLocation(e.target.value)} placeholder="e.g. Seattle, WA" />
+            </div>
+          </div>
+
+          {currentUser.isProfessional ? (
+            <p className="hint" style={{ marginBottom: 14 }}>You&apos;re verified as a mentor/professional. Save changes below to update these details.</p>
+          ) : currentUser.professionalRequested ? (
+            <p className="hint" style={{ marginBottom: 14 }}>Review pending. An admin hasn&apos;t confirmed this yet.</p>
+          ) : (
+            <div style={{ marginBottom: 14 }}>
+              <button
+                type="button"
+                className="btn-outline btn-sm"
+                onClick={requestReview}
+                disabled={!hasProfessionalDetails || requestingReview}
+              >
+                {requestingReview ? 'Sending…' : 'Request to be listed as a mentor/professional'}
+              </button>
+              {!hasProfessionalDetails && <p className="hint" style={{ marginTop: 6 }}>Add a company and job title first.</p>}
+            </div>
+          )}
+
           <div className="modal-actions" style={{ justifyContent: 'flex-start' }}>
             <button className="btn-primary btn-sm" onClick={save}>Save changes</button>
             <button className="btn-outline btn-sm" onClick={() => setEditing(false)}>Cancel</button>

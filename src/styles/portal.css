@@ -347,6 +347,7 @@
 }
 .role-mentor { background: var(--moss-deep); color: #fff; }
 .role-member { background: var(--paper-deep); color: var(--ink-3); border: var(--hairline); }
+.role-pending { background: var(--gold, #b8860b); color: #fff; }
 
 /* ---------- Status pills (requests / connections) ---------- */
 .status-pill { font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 4px 11px; border-radius: 999px; white-space: nowrap; }
