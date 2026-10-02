@@ -197,6 +197,23 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SSL_REDIRECT", "true").lower() in ("1", "true", "yes")
     SECURE_HSTS_SECONDS = 3600  # raise once HTTPS is confirmed working end to end
 
+# Error tracking (Sentry). Off unless SENTRY_DSN is set, so a server with no
+# key configured just runs normally - nothing breaks, errors are simply not
+# reported anywhere. send_default_pii is deliberately off: this app handles
+# resumes and private messages, and Sentry should never see their content.
+SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
+if SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        environment=os.environ.get("SENTRY_ENVIRONMENT", "development" if DEBUG else "production"),
+        traces_sample_rate=float(os.environ.get("SENTRY_TRACES_SAMPLE_RATE", "0.1")),
+        send_default_pii=False,
+    )
+
 # Clerk owns auth on the frontend; Django only verifies its tokens.
 # See CLERK_ISSUER in .env.example for where to find this value.
 CLERK_ISSUER = os.environ.get("CLERK_ISSUER", "")
