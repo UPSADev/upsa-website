@@ -2,7 +2,7 @@
 heroTag: Legal
 heroTitle: Privacy Policy
 heroTitleEmphasis: Privacy Policy
-heroDescription: Last updated July 26, 2026. How we collect, use, and protect your personal information.
+heroDescription: Last updated October 1, 2026. How we collect, use, and protect your personal information.
 ---
 
 ## 1. Introduction
@@ -104,7 +104,27 @@ If you are located outside the United States, be aware that:
 
 We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated "Last Updated" date. Continued use of our website indicates acceptance of the updated policy.
 
-## 13. Contact Us
+## 13. Mentor Portal
+
+If you create an account on the UPSA Mentor Portal, we collect additional information specific to that feature.
+
+**Account & sign-in.** Sign-in is handled by Clerk, our authentication provider. Your email address and password are managed entirely by Clerk; we do not store your password, and we only store your email address briefly, in memory, at the moment we send you a notification email (see below) — it is never saved in our database.
+
+**Profile information.** Name, a short title, university or company, major or role, industry, location, a bio, skills, and your availability preferences (open to mentoring, networking, or referrals). You control what's filled in, and whether your profile shows up to other members at all.
+
+**Profile photo.** Stored with our file storage provider (Cloudflare R2). If your profile is visible to other members, your photo is too.
+
+**Resume.** Private by default. We never show it to anyone until you explicitly choose to share it with a specific connection. It is stored separately from photos, in a location with no public access.
+
+**Connection requests and messages.** When you request a connection or message another member, that text is stored so the conversation works. It is visible to you, the other member, and UPSA administrators who manage the portal (the same way an email administrator could technically access a work inbox) — never to other members or the public.
+
+**Becoming a listed mentor/professional.** If you request to be listed as a mentor or professional, the details you submit are reviewed by an administrator before your profile becomes discoverable to other members.
+
+**Notification emails.** We email you when you receive a connection request, have one accepted, or get a new message. These emails say only that something happened and link back to the portal — they never include the content of a request or message. You can turn these off at any time in Settings.
+
+**Deleting your portal account.** Removes your profile, photo, resume, connection requests, connections, and messages from our systems. Messages you sent to another member are removed from your account but may remain visible in that member's conversation history, the same way deleting an email doesn't delete it from the recipient's inbox.
+
+## 14. Contact Us
 
 If you have questions about this Privacy Policy or our privacy practices, please contact:
 
@@ -114,4 +134,4 @@ If you have questions about this Privacy Policy or our privacy practices, please
 
 ---
 
-**Last Updated:** July 26, 2026
+**Last Updated:** October 1, 2026

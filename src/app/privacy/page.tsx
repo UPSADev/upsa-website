@@ -10,7 +10,7 @@ export default function PrivacyPage() {
         <div className="inner">
           <span className="ph-tag">Legal</span>
           <h1>Privacy Policy</h1>
-          <p>Last updated July 26, 2026. How we collect, use, and protect your personal information.</p>
+          <p>Last updated October 1, 2026. How we collect, use, and protect your personal information.</p>
         </div>
       </div>
 
@@ -121,7 +121,20 @@ export default function PrivacyPage() {
             <h2>12. Updates to This Policy</h2>
             <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated "Last Updated" date. Continued use of our website indicates acceptance of the updated policy.</p>
 
-            <h2>13. Contact Us</h2>
+            <h2>13. Mentor Portal</h2>
+            <p>If you create an account on the UPSA Mentor Portal, we collect additional information specific to that feature.</p>
+            <ul>
+              <li><strong>Account & sign-in:</strong> Handled by Clerk, our authentication provider. Your email address and password are managed entirely by Clerk; we do not store your password, and we only hold your email address briefly, in memory, at the moment we send you a notification email (see below) &mdash; it is never saved in our database.</li>
+              <li><strong>Profile information:</strong> Name, a short title, university or company, major or role, industry, location, a bio, skills, and your availability preferences. You control what&apos;s filled in and whether your profile is visible to other members at all.</li>
+              <li><strong>Profile photo:</strong> Stored with our file storage provider (Cloudflare R2). If your profile is visible to other members, your photo is too.</li>
+              <li><strong>Resume:</strong> Private by default. We never show it to anyone until you explicitly choose to share it with a specific connection, and it&apos;s stored separately from photos, with no public access.</li>
+              <li><strong>Connection requests and messages:</strong> Stored so the conversation works. Visible to you, the other member, and UPSA administrators who manage the portal &mdash; never to other members or the public.</li>
+              <li><strong>Becoming a listed mentor/professional:</strong> If you request to be listed, the details you submit are reviewed by an administrator before your profile becomes discoverable.</li>
+              <li><strong>Notification emails:</strong> Sent when you receive a connection request, have one accepted, or get a new message. They say only that something happened and link back to the portal &mdash; never the content of a request or message. You can turn these off any time in Settings.</li>
+              <li><strong>Deleting your portal account:</strong> Removes your profile, photo, resume, connection requests, connections, and messages from our systems. Messages you sent to another member are removed from your account but may remain visible in that member&apos;s conversation history, the same way deleting an email doesn&apos;t delete it from the recipient&apos;s inbox.</li>
+            </ul>
+
+            <h2>14. Contact Us</h2>
             <p>If you have questions about this Privacy Policy or our privacy practices, please contact us:</p>
             <ul>
               <li><strong>Email:</strong> upsa.network@gmail.com</li>
@@ -130,7 +143,7 @@ export default function PrivacyPage() {
             </ul>
 
             <hr className="legal-divider" />
-            <p className="legal-footer">Last Updated: July 26, 2026</p>
+            <p className="legal-footer">Last Updated: October 1, 2026</p>
           </div>
         </div>
       </section>
