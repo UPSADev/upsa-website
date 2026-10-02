@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^7.5.9",
+    "@sentry/nextjs": "^11.2.0",
     "gray-matter": "^4.0.3",
     "next": "^16.2.6",
     "react": "19.2.4",

@@ -12,6 +12,7 @@ For first-time setup see [deployment.md](deployment.md). This page is for keepin
 | The API | Backend host (logs are in its dashboard) | Errors in the portal, "Failed to fetch" |
 | Profile photos and resumes | Cloudflare R2 (two buckets) | Broken photos, storage questions |
 | Notification emails | Your SMTP provider's dashboard | An email didn't arrive |
+| Errors and crashes | Sentry (sentry.io), if set up - see deployment.md | Something broke and you want to know before a member tells you |
 
 Quick health check: open `https://<backend>/api/health/`. It should say the backend is running.
 
@@ -95,6 +96,7 @@ Members are emailed when they receive a request, have one accepted, or get a mes
 | No notification emails | `CLERK_SECRET_KEY` or `EMAIL_HOST` is unset (emails are then off), the from-address isn't allowed by the provider, or the member opted out. Check the backend log. |
 | "You're doing that too quickly" | A rate limit was hit. It clears on its own, or on a backend restart. |
 | Discover is empty | Nobody is a professional yet (see above), or none have turned on mentoring/networking, or they are deactivated. |
+| Not sure what actually broke | If Sentry is set up (see deployment.md), check it first - it has the real stack trace. Not set up yet means errors are only in the host's logs. |
 | A member keeps landing on onboarding | Their profile has no name. Finishing onboarding fixes it. |
 | Portal works locally but not live | Compare environment variables against [deployment.md](deployment.md); `NEXT_PUBLIC_*` changes need a Netlify rebuild. |
 

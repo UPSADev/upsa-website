@@ -57,6 +57,7 @@ Which host? For a launch that stays fast as membership grows (about 1,000 at fir
 | `REDIS_URL` | recommended at scale | Shared cache (e.g. `redis://default:password@host:6379`). Needed once you run more than one server so rate limits and the email cooldown count correctly. |
 | `WEB_CONCURRENCY` | optional | Number of gunicorn worker processes, default 3 (each runs 4 threads). Roughly one per CPU core. |
 | `DJANGO_SSL_REDIRECT` | optional | `true` by default. Set `false` only if the host already redirects http to https. |
+| `SENTRY_DSN` | optional | Error tracking. Off unless set - see "Error tracking" below. |
 | `CLERK_AUTHORIZED_PARTIES` | optional | Defaults to `FRONTEND_ORIGINS`. |
 
 Do **not** set `DJANGO_DEBUG` on a server.
@@ -99,8 +100,20 @@ Set these in Site settings, Environment variables, then trigger a new deploy. **
 | `CLERK_SECRET_KEY` | Production secret key |
 | `NEXT_PUBLIC_API_BASE_URL` | The backend's public URL, e.g. `https://api.unitedpsa.org`. **If this is missing the site quietly falls back to `http://localhost:8000` and the portal will not work.** |
 | `GOOGLE_CALENDAR_ID`, `GOOGLE_API_KEY` | For the events calendar (see `docs/google-calendar.md`) |
+| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_DSN` | optional | Error tracking - see "Error tracking" below. |
 
 The build settings are already in `netlify.toml`.
+
+## Error tracking (Sentry)
+
+Off everywhere until you set it up - a deploy with no DSN configured just runs normally, nothing breaks.
+
+1. Create a free account at [sentry.io](https://sentry.io) and one project for the backend (Django) and one for the frontend (Next.js), or share one project for both.
+2. Backend: set `SENTRY_DSN` (the backend's own env var list above).
+3. Frontend (Netlify): set both `NEXT_PUBLIC_SENTRY_DSN` and `SENTRY_DSN` to the frontend project's DSN (one is read in the browser, one on the server - same value for both), then redeploy.
+4. Optional, for better stack traces (uploads source maps on every build): also set `SENTRY_ORG`, `SENTRY_PROJECT`, and `SENTRY_AUTH_TOKEN` on Netlify, from Sentry's organization settings.
+
+Deliberately not configured: `sendDefaultPii`. The portal handles resumes and private messages, and Sentry should never see their content - only the fact that an error happened, not what a member typed.
 
 ## 5. Verify the live site
 
